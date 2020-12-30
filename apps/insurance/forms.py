@@ -1,16 +1,26 @@
 #from django.forms import ModelForm, SelectDateWidget
 import datetime
 
-import django.forms as forms
+from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Row, Column, MultiWidgetField
 
-from .models import AssonaInfo, BikeleasingInfo, BusinessbikeInfo, EnraInfo, EuroradInfo
+from .models import InsuranceCompanies, AssonaInfo, BikeleasingInfo, BusinessbikeInfo, EnraInfo, EuroradInfo
 
 from ..customer_profile.models import CustomerProfile, FahrzeugProfile
 
+class CompanyForm(forms.ModelForm):
+	class Meta:
+		model = InsuranceCompanies
+		fields = '__all__'
+		
 #TODO: All forms require the same basic customer info, maybe have a separate CustomerForm and combine that with our <Insurance>Form
 class AssonaForm(forms.ModelForm):
+	class Meta:
+		model = AssonaInfo
+		fields = '__all__'
+
+	'''
 	beginn = forms.DateField(widget=forms.SelectDateWidget(years=range(2015, datetime.date.today().year+1), ))
 
 	def __init__(self, *args, **kwargs):
@@ -34,7 +44,6 @@ class AssonaForm(forms.ModelForm):
 			Submit('submit', 'Speichern')
 			)
 
-	'''
 	def save(self, commit=True):
 		new_kundennummer = KundenProfile.objects.filter('kundennummer')
 		new_rahmennummer = FahrzeugProfile.objects.filter('rahmennummer')

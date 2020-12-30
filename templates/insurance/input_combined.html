@@ -1,12 +1,11 @@
 {% extends 'common/base.html' %}
 {% load static %}
-{% load crispy_forms_tags %}
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Kundenprofil: Input Kunde</title>
+	<title>Megabike-CRM: Versicherung</title>
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<link rel="stylesheet" href="">
 	<style></style>
@@ -14,15 +13,10 @@
 </head>
 {% block content %}
 <body>
-		<h1> Input Customer Info Here </h1>
-
-		<form method='POST'>
-			{% csrf_token %}
-			{{ form.as_p }}
-			<h2>Fahrzeug</h2>
-			{{ children.as_p }}
-			<input type='submit' value='Save'>
-		</form>
+	<h1>Dynamic form to input Insurance Info</h1>
+	<br/> <br/>
+	<div>This will work eventually</div>
 </body>
 {% endblock %}
+
 </html> 

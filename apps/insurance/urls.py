@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path
 
-from .views import MainView, InputAssona, InputBikeleasing, InputBusinessbike, InputEnra, InputEurorad
+from .views import MainView, InputAssona, InputBikeleasing, InputBusinessbike, InputEnra, InputEurorad, InputCombined
 
 app_name = 'insurance'
 urlpatterns = [
@@ -11,4 +11,6 @@ urlpatterns = [
 	path('input/businessbike', InputBusinessbike.as_view(), name='input_businessbike'),
 	path('input/enra', InputEnra.as_view(), name='input_enra'),
 	path('input/eurorad', InputEurorad.as_view(), name='input_eurorad'),
+
+	path('input', InputCombined.as_view(), name='input_combined')
 ]

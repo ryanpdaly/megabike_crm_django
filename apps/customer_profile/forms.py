@@ -7,6 +7,7 @@ from crispy_forms.layout import Layout, Submit, Row, Column, MultiWidgetField
 from .models import *
 
 class CustomerForm(forms.ModelForm):
+	'''
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
 		self.helper = FormHelper()
@@ -17,8 +18,13 @@ class CustomerForm(forms.ModelForm):
 				css_class='form-row'
 				),
 			)
+	'''
+	class Meta:
+		model = CustomerProfile
+		fields = ['kundennummer']
 
 class FahrzeugForm(forms.ModelForm):
+	'''
 	def __init__(self, *args, **kwargs):	
 		super().__init__(*args, **kwargs)
 		self.helper = FormHelper()
@@ -29,3 +35,7 @@ class FahrzeugForm(forms.ModelForm):
 				css_class='form-row'
 				),
 			)
+	'''
+	class Meta:
+		model = FahrzeugProfile
+		fields = '__all__'

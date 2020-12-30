@@ -1,13 +1,30 @@
 from django.db import models
 
+class InsuranceCompanies(models.Model):
+	COMPANIES = (
+				('ASSONA', 'Assona'),
+				('BIKELEASING SERVICE', 'BikeleasingService'),
+				('BUSINESSBIKE', 'Businessbike'),
+				('ENRA', 'ENRA'),
+				('EURORAD', 'Eurorad'),
+			)
+	company_name = models.CharField(max_length=30, default='ASSONA', choices=COMPANIES)
+	
+	def __str__(self):
+		return self.name
+
 class AssonaInfo(models.Model):
+	'''
 	kundennummer = models.IntegerField()
 	nachname = models.CharField(max_length=30)
 	fahrzeug = models.CharField(max_length=50)
 	rahmennummer = models.CharField(max_length=30)
-
+	'''
 	vertragsnummer = models.CharField(max_length=10)
 	beginn = models.DateField()
+
+	def __str__(self):
+		return self.name
 
 class BikeleasingInfo(models.Model):
 	PAKET = [('P', 'Premium'), ('P+', 'Premium Plus')]

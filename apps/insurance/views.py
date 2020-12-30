@@ -35,3 +35,6 @@ class InputEurorad(CreateView):
 	model = EuroradInfo
 	form_class = EuroradForm
 	template_name = 'insurance/input_eurorad.html'
+
+class InputCombined(TemplateView):
+	template_name = 'insurance/input_combined.html'
