@@ -12,5 +12,5 @@ urlpatterns = [
 	path('input/enra', InputEnra.as_view(), name='input_enra'),
 	path('input/eurorad', InputEurorad.as_view(), name='input_eurorad'),
 
-	path('input', InputCombined.as_view(), name='input_combined')
+	path('input', InputCombined.as_view(), name='input-combined')
 ]

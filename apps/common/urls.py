@@ -1,10 +1,10 @@
 from django.urls import path
 
-from ..common.views import IndexView, LoginView
+from . import views
 
 app_name = 'common'
 urlpatterns = [
-    path('index/', IndexView.as_view()),
-    path('', LoginView.as_view()),
-
+    path('index/', views.IndexView.as_view(), name='index'),
+    path('login/', views.LoginView.as_view(), name='login'),
+    path('privacy/', views.privacy_policy, name='privacy-policy'),
 ]

@@ -1,0 +1,18 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+{% block content %}
+	<h1>{{ customer.kundennummer }}: {{customer.nachname}}</h1>
+
+	{% if bikes %}
+		{% for bike in bikes %}
+			<li>
+				<button onclick="">{{ bike.get_insurance_display }}</button> {{ bike.beschreibung }} &emsp; {{ bike.rahmennummer }}
+			</li>
+		{% endfor %}
+	{% else %}
+		<li>
+			Keine Fahrräder vorhanden.
+		</li>
+	{% endif %}
+{% endblock %} 

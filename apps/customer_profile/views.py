@@ -1,49 +1,45 @@
-from django.shortcuts import render
-from django.shortcuts import render
-from django.views.generic import TemplateView, CreateView, ListView
+from django.shortcuts import render, redirect, get_object_or_404
+from django.views import generic
 from django.forms.models import inlineformset_factory
+from django.urls import reverse, reverse_lazy
 
-from .models import CustomerProfile, FahrzeugProfile
-from .forms import CustomerForm, FahrzeugForm
+from .models import Customer, Bike
+from .forms import CustomerForm, BikeForm
 
 ChildFormset = inlineformset_factory(
-	CustomerProfile, FahrzeugProfile, fields='__all__', extra=1
+	Customer, Bike, fields='__all__', extra=1
 	)
 
+
 # Create your views here.
-class MainView(TemplateView):
-	template_name = 'customer_profile/main.html'
+class MainView(generic.TemplateView):
+	template_name = 'customers/main.html'
 
-class CustomerListView(ListView):
-	model = CustomerProfile
+class CustomerListView(generic.ListView):
+	model = Customer
+	template_name = 'customers/customer_list.html'
 
-class InputCustomer(CreateView):
-	model = CustomerProfile
+def CustomerDetailView(request, pk):
+	#TODO: This needs pagination.
+
+	customer_instance = get_object_or_404(Customer, pk=pk)
+	bikes = Bike.objects.filter(kundennummer = pk)
+
+	context = {
+		'customer': customer_instance,
+		'bikes': bikes
+	}
+
+	return render(request, 'customers/customer_detail.html', context=context)
+
+class InputCustomer(generic.CreateView):
+	model = Customer
 	#form_class = CustomerForm
-	template_name = 'customer_profile/input_customer.html'
-	fields = ['kundennummer']
+	template_name = 'customers/input_customer.html'
+	fields = '__all__'
+	success_url = reverse_lazy('customers:main')
 
-	def get_context_data(self, **kwargs):
-		data = super().get_context_data(**kwargs)
-		if self.request.POST:
-			data['children'] = ChildFormset(self.request.POST)
-		else:
-			data['children'] = ChildFormset()
-		return data
-
-	def form_valid(self, form):
-		context = self.get_context_data()
-		children = context['children']
-		self.object = form.save()
-		if children.is_valid():
-			children.instance = self.object
-			children.save()
-		return super().form_valid(form)
-
-	def get_success_url(self):
-		return reverse('parents:list')
-
-class InputFahrzeug(CreateView):
-	model = FahrzeugProfile
-	form_class = FahrzeugForm
-	template_name = 'customer_profile/fahrzeug.html'
+class InputFahrzeug(generic.CreateView):
+	model = Bike
+	form_class = BikeForm
+	template_name = 'customers/fahrzeug.html'

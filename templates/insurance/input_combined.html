@@ -13,9 +13,28 @@
 </head>
 {% block content %}
 <body>
-	<h1>Dynamic form to input Insurance Info</h1>
+	<h1>Dynamic form to input insurance Info</h1>
 	<br/> <br/>
-	<div>This will work eventually</div>
+	<form>
+		<input type='radio' name='company' value='assona'>
+		<label for='assona'>Assona</label><br/>
+		<input type='radio' name='company' value='bikeleasing'>
+		<label for='bikeleasing'>Bikeleasing Service</label><br/>
+		<input type='radio' name='company' value='business_bike'>
+		<label for='business_bike'>BusinessBike</label><br/>
+		<input type='radio' name='company' value='enra'>
+		<label for='enra'>ENRA</label><br/>
+		<input type='radio' name='company' value='eurorad'>
+		<label for='eurorad'>Eurorad</label><br/>
+		<input type='submit' value='Select'>
+	</form><br/>
+
+	<div>
+		{% block child %}
+			Specific insurance form goes here
+		{% endblock child %}
+	</div>
+
 </body>
 {% endblock %}
 

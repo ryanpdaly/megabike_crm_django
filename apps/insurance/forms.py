@@ -7,7 +7,7 @@ from crispy_forms.layout import Layout, Submit, Row, Column, MultiWidgetField
 
 from .models import InsuranceCompanies, AssonaInfo, BikeleasingInfo, BusinessbikeInfo, EnraInfo, EuroradInfo
 
-from ..customer_profile.models import CustomerProfile, FahrzeugProfile
+from ..customer_profile.models import Customer, Bike
 
 class CompanyForm(forms.ModelForm):
 	class Meta:
