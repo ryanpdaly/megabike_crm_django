@@ -2,71 +2,88 @@ from django.db import models
 
 class InsuranceCompanies(models.Model):
 	COMPANIES = (
-				('ASSONA', 'Assona'),
-				('BIKELEASING SERVICE', 'BikeleasingService'),
-				('BUSINESSBIKE', 'Businessbike'),
-				('ENRA', 'ENRA'),
-				('EURORAD', 'Eurorad'),
+				('no', 'None'),
+				('as', 'Assona'),
+				('bl', 'Bikeleasing Service'),
+				('bu', 'Businessbike'),
+				('en', 'ENRA'),
+				('eu', 'Eurorad'),
 			)
-	company_name = models.CharField(max_length=30, default='ASSONA', choices=COMPANIES)
+	
+	company_name = models.CharField(max_length=2, 
+		default='no', 
+		choices=COMPANIES,
+		)
 	
 	def __str__(self):
-		return self.name
+		return 'Insurance Company'
 
 class AssonaInfo(models.Model):
-	'''
-	kundennummer = models.IntegerField()
-	nachname = models.CharField(max_length=30)
-	fahrzeug = models.CharField(max_length=50)
 	rahmennummer = models.CharField(max_length=30)
-	'''
 	vertragsnummer = models.CharField(max_length=10)
 	beginn = models.DateField()
 
+	versicherungskarte = models.FileField(blank=True)
+
 	def __str__(self):
-		return self.name
+		return 'Assona'
 
 class BikeleasingInfo(models.Model):
-	PAKET = [('P', 'Premium'), ('P+', 'Premium Plus')]
-	BANKS = [('ALS', 'ALS Leasing GmbH'), ('Hofmann', 'Hofmann Leasing GmbH'),
-				('Digital Mobility', 'Digital Mobility Leasing GmbH')]
+	PAKET_OPTIONS = [('P', 'Premium'), ('P+', 'Premium Plus')]
+	BANK_OPTIONS = [('A', 'ALS Leasing GmbH'), ('H', 'Hofmann Leasing GmbH'),
+				('D', 'Digital Mobility Leasing GmbH')]
 
-	kundennummer = models.IntegerField()
-	nachname = models.CharField(max_length=30)
-	fahrzeug = models.CharField(max_length=50)
 	rahmennummer = models.CharField(max_length=30)
 
 	nutzer_id = models.CharField(max_length=20)
-	paket = models.CharField(max_length=20, choices=PAKET)
+	paket = models.CharField(max_length=20, choices=PAKET_OPTIONS)
 	inspektion = models.BooleanField()
-	leasingbank = models.CharField(max_length=20, choices=BANKS)
+	leasingbank = models.CharField(max_length=1, choices=BANK_OPTIONS)
 	beginn = models.DateField()
 
+	versicherungskarte = models.FileField(blank=True)
+
+	def __str__(self):
+		return f'Bikeleasing: {self.paket}'
+
 class BusinessbikeInfo(models.Model):
-	kundennummer = models.IntegerField()
-	nachname = models.CharField(max_length=30)
-	fahrzeug = models.CharField(max_length=50)
+	PAKET_OPTIONS = (
+		('D','Durchsicht'),
+		('I', 'Inspektion'),
+		('F', 'Full Service'),
+		('E', 'Instandhaltungs+ enthalten'),
+		('N', 'Instandhaltungs+ nicht enthalten'),
+	)
+
 	rahmennummer = models.CharField(max_length=30)
 
 	beginn = models.DateField()
 	ende = models.DateField()
 	policenummer = models.CharField(max_length=30)
 	paket = models.CharField(max_length=30)
+	verschleiss_guthaben = models.BooleanField(default=False)
+
+	versicherungskarte = models.FileField(blank=True)
+
+	def __str__(self):
+		return f'Businessbike: {self.get_paket_display}'
 
 class EnraInfo(models.Model):
-	kundennummer = models.IntegerField()
-	nachname = models.CharField(max_length=30)
-	fahrzeug = models.CharField(max_length=50)
 	rahmennummer = models.CharField(max_length=30)
 
-	beginnn = models.DateField()
+	beginn = models.DateField()
 	policenummer = models.CharField(max_length=20)
 
+	versicherungskarte = models.FileField(blank=True)
+
+	def __str__(self):
+		return 'ENRA'
+
 class EuroradInfo(models.Model):
-	kundennummer = models.IntegerField()
-	nachname = models.CharField(max_length=30)
-	fahrzeug = models.CharField(max_length=50)
 	rahmennummer = models.CharField(max_length=30)
 
 	beginn = models.DateField()
 	vertragsnummer = models.CharField(max_length=20)
+
+	def __str__(self):
+		return 'Eurorad'

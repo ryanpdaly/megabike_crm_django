@@ -1,0 +1,59 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+{% block title %}
+	MegabikeCRM: {{ bike.rahmennummer }}
+{% endblock %}
+
+{% block header %}
+	<h1 class="h2 mb-0 text-gray-800">{{ customer.kundennummer }}: {{ customer.nachname }}</h1>
+  
+  {% if bike.versicherungsunternehmen == 'no' %}
+	  <div class="btn-group">
+	    <button type="button" class="d-none d-sm-inline-block btn btn-primary dropdown-toggle shadow-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		  <i class="fas fa-download fa-sm text-white-50"></i> Versicherung hinzufügen
+	    </button>
+	    <div class="dropdown-menu">
+	      <a class="dropdown-item" href="{% url 'insurance:input-insurance' rn=bike.rahmennummer insurance='as' %}">Assona</a>
+	      <a class="dropdown-item" href="{% url 'insurance:input-insurance' rn=bike.rahmennummer insurance='bl' %}">Bikeleasing Service</a>
+	      <a class="dropdown-item" href="{% url 'insurance:input-insurance' rn=bike.rahmennummer insurance='bu' %}">Businessbike</a>
+		    <a class="dropdown-item" href="{% url 'insurance:input-insurance' rn=bike.rahmennummer insurance='en' %}">ENRA</a>
+		    <a class="dropdown-item" href="{% url 'insurance:input-insurance' rn=bike.rahmennummer insurance='eu' %}">Eurorad</a>
+	    </div>
+    </div>
+  {% else %}
+    <div class="btn-group">
+      <button type="button" class="d-none d-sm-inline-block btn btn-primary dropdown-toggle shadow-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <i class="fas fa-download fa-sm text-white-50"></i> Versicherung verwalten
+      </button>
+      <div class="dropdown-menu">
+        <a class="dropdown-item" href="#">Option 1</a>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  <h1 class="h4 mb-0 text-gray-800">{{ bike.beschreibung }} ({{ bike.rahmennummer }})</h1>
+
+<!-- Modal -->
+  <div class="modal fade" id="versModal" tabindex="-1" role="dialog" aria-labelledby="versModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          {{ company_form.as_p }}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

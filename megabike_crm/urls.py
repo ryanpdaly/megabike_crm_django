@@ -23,4 +23,5 @@ urlpatterns = [
     path('customers/', include('apps.customer_profile.urls')),
     path('insurance/', include('apps.insurance.urls')),
     path('warranty/', include('apps.warranty.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
 ]

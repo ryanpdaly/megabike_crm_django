@@ -1,18 +1,53 @@
 {% extends 'common/base.html' %}
 {% load static %}
 
-{% block content %}
-	<h1>{{ customer.kundennummer }}: {{customer.nachname}}</h1>
+{% block title %}
+	MegabikeCRM: Kd{{ customer.kundennummer }}
+{% endblock %}
 
+{% block header %}
+	<h1 class="h2 mb-0 text-gray-800">{{ customer.kundennummer }}: {{ customer.nachname }}</h1>
+	<a href="{% url 'customers:bike-input' pk=customer.kundennummer %}" class="d-none d-sm-inline-block btn btn-primary shadow-sm"><i class="fas fa-bicycle"></i> Fahrzeug hinzufügen</a>
+{% endblock %}
+
+{% block content %}
 	{% if bikes %}
-		{% for bike in bikes %}
-			<li>
-				<button onclick="">{{ bike.get_insurance_display }}</button> {{ bike.beschreibung }} &emsp; {{ bike.rahmennummer }}
-			</li>
+	<div class="table-responsive">
+	  <table id="dataTable" class="table table-striped">
+		<thead>
+		  <tr>
+		    <th scope="col">Versicherungsstatus</th>
+		    <th scope="col">>Beschreibung</th>
+		    <th scope="col">Rahmennummer</th>
+		  </tr>
+		</thead>
+		<tbody>
+		  {% for bike in bikes %}
+		  <tr>
+		  <!-- TODO: Dynamically color buttons depending on insurance policy -->
+		    <td scope="row"><a href="{{ bike.get_absolute_url }}" class="btn btn-primary btn-icon-split">
+		  	  <span class="icon text-white-50">
+  		  	    <i class="fas fa-flag"></i></span>
+  		  	  <span>{{ bike.get_versicherungsunternehmen_display }}</span></a>
+  		    </td>
+		    <td>{{ bike.beschreibung }}</td>
+		    <td>{{ bike.rahmennummer }}</td>
+		  </tr>
 		{% endfor %}
+		</tbody>
+	  </table>
+	</div>
 	{% else %}
 		<li>
 			Keine Fahrräder vorhanden.
 		</li>
 	{% endif %}
-{% endblock %} 
+{% endblock %}
+
+{% block javascript %}
+	{{ block.super }}
+	<link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+    <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'js/demo/datatables-demo.js' %}"></script>
+{% endblock %}

@@ -14,4 +14,4 @@ class CustomerForm(forms.ModelForm):
 class BikeForm(forms.ModelForm):
 	class Meta:
 		model = Bike
-		fields = '__all__'
+		fields = ['kundennummer', 'beschreibung', 'rahmennummer', 'versicherungsunternehmen']

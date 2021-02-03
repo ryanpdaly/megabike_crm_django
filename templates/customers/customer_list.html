@@ -1,18 +1,48 @@
 {% extends 'common/base.html' %}
 {% load static %}
 
+{% block title %}
+	MegabikeCRM: Kunden
+{% endblock %}
+
+{% block header %}
+	<h1 class="h2 mb-0 text-gray-800">Unsere Kunden</h1>
+	<a href="{% url 'customers:customer-input' %}" class="d-none d-sm-inline-block btn btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Kunde erstellen</a>
+{% endblock %}
+
 {% block content %}
-	<h1>Customer List</h1>
-	<br/>
 	{% if customer_list %}
-	<ul>
-		{% for customer in customer_list %}
-		  <li>
-		  	<a href="{{ customer.get_absolute_url }}">{{ customer.kundennummer }}:</a> {{ customer.nachname }}
-		  </li>
-		{% endfor %}
-	</ul>
+	<div class='table-responsive'>
+	    <table id="dataTable" class="table table-striped">
+	      <thead>
+	      	<tr>
+	      	  <th scope="col">KdNr</th>
+	      	  <th scope="col">Nachname</th>
+	      	  <th scope="col">Bikes<br>(Vers/Gesamt)</th>
+	      	  <th scope="col">Offene Fälle</th>
+	      	</tr>
+	      </thead>
+	      <tbody>
+	      	{% for customer in customer_list %}
+	      	<tr>
+	      		<th scope="row"><a href="{{ customer.get_absolute_url }}">{{ customer.kundennummer }}</a></th>
+	      		<td>{{ customer.nachname }}</td>
+	      		<td> 0 <!-- TODO: This needs to display number of bikes for this customer, number of insurance policies --></td>
+	      		<td> 0 <!-- TODO: Display number of open tickets (warranties + support) for this customer --></td>
+	      	</tr>
+	      	{% endfor %}
+	      </tbody>
+	    </table>
+	</div>
 	{% else %}
 	  <p>Keine Kunden vorhanden.</p>
 	{% endif %}
-{% endblock %} 
+{% endblock %}
+
+{% block javascript %}
+	{{ block.super }}
+	<link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+    <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'js/demo/datatables-demo.js' %}"></script>
+{% endblock %}

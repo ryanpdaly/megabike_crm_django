@@ -1,3 +1,9 @@
 from django.contrib import admin
 
-# Register your models here.
+from . import models
+
+admin.site.register(models.AssonaInfo)
+admin.site.register(models.BikeleasingInfo)
+admin.site.register(models.BusinessbikeInfo)
+admin.site.register(models.EnraInfo)
+admin.site.register(models.EuroradInfo)

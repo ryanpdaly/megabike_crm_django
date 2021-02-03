@@ -10,7 +10,7 @@ class Customer(models.Model):
 		verbose_name_plural = "Customers"
 
 	def __str__(self):
-		return self.nachname
+		return f'Kd{self.kundennummer}: {self.nachname}'
 
 	def get_absolute_url(self):
 		return reverse('customers:customer-detail', args=[str(self.kundennummer)])
@@ -24,18 +24,17 @@ class Bike(models.Model):
 	INSURANCE_OPTIONS = (
 		('no', 'None'),
 		('as', 'Assona'),
-		('bu', 'Businessbike'),
 		('bl', 'Bikeleasing Service'),
+		('bu', 'Businessbike'),
 		('en', 'ENRA'),
 		('eu', 'Eurorad'),
 	)
 
-	insurance = models.CharField(
+	versicherungsunternehmen = models.CharField(
 		max_length = 2,
 		choices = INSURANCE_OPTIONS,
 		blank = False,
-		default = 'no',
-		help_text = 'Versicherungsunternehmen')
+		default = 'no',)
 
 	class Meta:
 		verbose_name = "Bike"
@@ -45,4 +44,4 @@ class Bike(models.Model):
 		return self.beschreibung
 
 	def get_absolute_url(self):
-		return reverse_lazy('customers:bike-detail', args=[str(self.id)])
+		return reverse_lazy('customers:bike-detail', kwargs={'pk':self.kundennummer.kundennummer, 'rn':self.rahmennummer})

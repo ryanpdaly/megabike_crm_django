@@ -1,0 +1,22 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+{% block title %}
+	MegabikeCRM: Kd{{ customer.kundennummer }}
+{% endblock %}
+
+{% block header %}
+	<h1 class="h2 mb-0 text-gray-800">{{ customer.kundennummer }}: {{ customer.nachname }}</h1>
+{% endblock %}
+
+{% block content %}
+	<h1 class="h3 mb-0 text-gray-800">Fahrzeug erstellen</h1>
+	<br/>
+	<form action="" method="post">
+		{% csrf_token %}
+		<table>
+			{{ bike_form.as_table }}
+		</table>
+		<input type="submit" value="Submit">
+	</form>
+{% endblock %}
