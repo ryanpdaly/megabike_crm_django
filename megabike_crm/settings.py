@@ -52,7 +52,7 @@ THIRD_PARTY_APPS=[
 
 LOCAL_APPS =[
     'apps.common',
-    'apps.customer_profile',
+    'apps.customers',
     'apps.insurance',
     'apps.warranty',
 ]

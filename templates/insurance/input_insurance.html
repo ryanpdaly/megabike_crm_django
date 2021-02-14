@@ -1,0 +1,23 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+{% block title %}
+	MegabikeCRM: Versicherung {{ bike.rahmennummer }}
+{% endblock %}
+
+{% block header %}
+	<h1 class="h2 mb-0 text-gray-800">{{ bike.kunde.kundennummer }}: {{ bike.kunde.nachname }}</h1>
+{% endblock %}
+
+{% block content %}
+	<h1 class="h3 mb-0 text-gray-800">Versicherungsinformation für {{ bike.beschreibung }} ({{ bike.rahmennummer }})</h1>
+	<br/>
+	<form action="" method="post">
+		{% csrf_token %}
+		<table>
+			{{ ins_form.as_table }}
+			{{ update_bike.as_table }}
+		</table>
+		<input type="submit" value="Submit">
+	</form>
+{% endblock %}

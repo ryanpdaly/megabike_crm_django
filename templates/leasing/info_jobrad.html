@@ -1,0 +1,85 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+{% block title %}
+	MegabikeCRM: Leasing
+{% endblock %}
+
+{% block header %}
+	<h2 class="mb-0 text-gray-800">Generelle Information zur JobRad Leasing</h2>
+{% endblock %}
+
+{% block content %}
+	<div class="container-fluid">
+		<div class="row top-buffer">
+			<div class="col-xl-12">
+				<div class="card shadow mb-4 h-100">
+					<div class="card-header py-3">
+						<h6 class="m-0 font-weight-bold text-primary">Generelle Info:</h6>
+					</div>
+					<div class="card-body">
+						<ul>
+							<li><b>Keine</b> Rabatte bei nicht ZEG-Räder aufgrund eine 8% Provision</li>
+							<li>Wir erstellen den Auftrag Online</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row top-buffer">
+			<div class="col-lg-4">
+				<div class="card shadow mb-4 h-100">
+					<div class="card-header py-3">
+						<h6 class="m-0 font-weight-bold text-primary">Benötigt beim Rechnung schreiben:</h6>
+					</div>
+					<div class="card-body">
+						<ul>
+							<li>Vor- + Nachname</li>
+							<li>Adresse</li>
+							<li>Telefonnummer</li>
+							<li>Geburtsdatum</li>
+							<li>E-Mail-Adresse</li>
+						</ul>
+
+						&emsp; wenn vorhanden:
+						<ul>
+							<li>ID-Arbeitgeber</li>
+							<li>Auftrag Nr</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-lg-4">
+				<div class="card shadow mb-4 h-100">
+					<div class="card-header py-3">
+						<h6 class="m-0 font-weight-bold text-primary">Benötigt bei der Abholung:</h6>
+					</div>
+					<div class="card-body">
+						<ul>
+							<li>Personalausweis</li>
+							<li>Abholcode</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-lg-4">
+				<div class="card shadow mb-4 h-100">
+					<div class="card-header py-3">
+						<h6 class="m-0 font-weight-bold text-primary">Basics zur Versicherung:</h6>
+					</div>
+					<div class="card-body">
+						<ul>
+							<li>Basics 1</li>
+							<li>Basics 2</li>
+							<li>Basics 3</li>
+						</ul>
+						<p><b><a href="{% url 'insurance:info-page' insurance='eurorad' %}">Mehr Info</a></b></p>	
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

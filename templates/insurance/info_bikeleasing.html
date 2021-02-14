@@ -1,0 +1,146 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+{% block title %}
+	MegabikeCRM: Bikeleasing Info
+{% endblock %}
+
+{% block header %}
+	<h1 class="h2 mb-0 text-gray-800">Generelle Information zur Bikeleasing Service Versicherung</h1>
+{% endblock %}
+
+{% block content %}
+	<!--
+	<p>Things to include on this page:
+		<li>Example invoice</li>
+		<li>Policy versions</li>
+		<li>Contact information</li>
+		<li>Useful stuff for the sales team?</li>
+	</ul>
+	-->
+		<div class="container-fluid">
+		<div class="row top-buffer">
+			<div class="col-xl-8">
+				<div class="card shadow mb-4 h-100">
+					<div class="card-header py-3">
+						<h6 class="m-0 font-weight-bold text-primary">Generelle Info:</h6>
+					</div>
+					<div class="card-body">
+						<ul>
+							<li>Drei möglichkeiten zur Schadensmeldung:</li>
+								<ul>
+									<li>Telefonisch unter: 0561 - 503 433 63</li>
+									<li>Über die Bikeleasing-App (Nutzer)</li>
+									<li>Über das Händlerportal</li>
+								</ul>
+							<li>Drei mögliche Leasinggesellschaften:
+								<ul>
+									<li>ALS Leasing GmbH, Wiesenstraße 15, 37170 Uslar</li>
+									<li>Hofmann Leasing GmbH, Bötzinger Str. 46, 79111 Freiburg</li>
+									<li>Digital Mobility Leasing GmbH, Königstor 61, 34119 Kassel</li>
+								</ul>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-lg-4">
+				<div class="card shadow mb-4 h-100">
+					<div class="card-header py-3">
+						<h6 class="m-0 font-weight-bold text-primary">Kontakt Info:</h6>
+					</div>
+					<div class="card-body">
+						<ul>
+							<li><a href="https://www.bikeleasing.de/">bikeleasing.de</a></li>
+							<li><a href="https://portal.bikeleasing-service.de/">Händlerportal</a></li>
+							<li>Telefon: 0561 - 503 433 63</li>
+							<li>Fax: 0561 - 705 401 46</li>
+							<li>Email: bikeschaden@bikeleasing.de
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row top-buffer">
+			<div class="col-lg-6">
+				<div class="card shadow mb-4 h-100">
+					<div class="card-header py-3">
+						<h6 class="m-0 font-weight-bold text-primary">Von der Kunde benötigen wir:</h6>
+					</div>
+					<div class="card-body">
+						<ul>
+							<li>Namen des Nutzers</li>
+							<li>Rahmennummer</li>
+							<li>Vertragsnummer</li>
+							<li>bei Fremdkunden - Nutzer-ID</li>
+							<li>Bei Diebstahl - eine Kopie des Polizeiberichts</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-6">
+				<div class="card shadow mb-4 h-100">
+					<div class="card-header py-3">
+						<h6 class="m-0 font-weight-bold text-primary">Für den Schadensmeldung benötigen wir:</h6>
+					</div>
+					<div class="card-body">
+						<ul>
+							<li>Schadentag</li>
+							<li>Schadenort</li>
+							<li>Schilderung des Schadenhergangs</li>
+							<li>Kostenvoranschlag</li>
+							<li>Schadenbilder</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row top-buffer">
+			<div class="col-lg-6">
+				<div class="card shadow mb-4 h-100">
+					<div class="card-header py-3">
+						<h6 class="m-0 font-weight-bold text-primary">Versichert ist:</h6>
+					</div>
+					<div class="card-body">
+						<ul>
+							<li>Premium Paket:</li>
+								<ul>
+									<li>Diebstahl</li>
+									<li>Sturzschäden</li>
+									<li>Mobilitätsgarantie</li>
+								</ul>
+							<li>Premium Plus (optional):</li>
+								<ul>
+									<li>Die Leistungen des <b>Premium Pakets</b></li>
+									<li>Verschleiß</li>
+								</ul>
+							<li>Inspektion Plus (optional):</li>
+								<ul>
+									<li>2x Inspektion während des Leasinglaufzeit</li>
+								</ul>
+
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-lg-6">
+				<div class="card shadow mb-4 h-100">
+					<div class="card-header py-3">
+						<h6 class="m-0 font-weight-bold text-primary">Nicht versichert ist:</h6>
+					</div>
+					<div class="card-body">
+						<ul>
+							<li>Optische Mängel, wo die Funktionsfähigkeit nicht beeinträchtigt ist</li>
+							<li>Einstellungs- / Justierarbeiten</li>
+							<li>Austausch von funktionsfähigen Teilen</li>
+							<li>Eigenreparaturen</li>
+						</ul>	
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

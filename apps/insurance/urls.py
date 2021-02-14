@@ -5,7 +5,7 @@ from . import views
 
 app_name = 'insurance'
 urlpatterns = [
-	path('', views.MainView.as_view(), name='main'),
-	path('input_assona/<str:rn>', views.assona_input_view, name='input-assona'),
-	path('input_<str:insurance>/<str:rn>', views.input_insurance, name='input-insurance'),
+	path('input_<str:insurance>/<str:rn>/', views.input_insurance, name='input-insurance'),
+	path('view_all/', views.list_all, name='list-all'),
+	path('info_<str:insurance>/', views.info_page, name='info-page')
 ]

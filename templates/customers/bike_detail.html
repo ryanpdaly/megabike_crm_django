@@ -6,54 +6,113 @@
 {% endblock %}
 
 {% block header %}
-	<h1 class="h2 mb-0 text-gray-800">{{ customer.kundennummer }}: {{ customer.nachname }}</h1>
-  
-  {% if bike.versicherungsunternehmen == 'no' %}
-	  <div class="btn-group">
-	    <button type="button" class="d-none d-sm-inline-block btn btn-primary dropdown-toggle shadow-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-		  <i class="fas fa-download fa-sm text-white-50"></i> Versicherung hinzufügen
-	    </button>
-	    <div class="dropdown-menu">
-	      <a class="dropdown-item" href="{% url 'insurance:input-insurance' rn=bike.rahmennummer insurance='as' %}">Assona</a>
-	      <a class="dropdown-item" href="{% url 'insurance:input-insurance' rn=bike.rahmennummer insurance='bl' %}">Bikeleasing Service</a>
-	      <a class="dropdown-item" href="{% url 'insurance:input-insurance' rn=bike.rahmennummer insurance='bu' %}">Businessbike</a>
-		    <a class="dropdown-item" href="{% url 'insurance:input-insurance' rn=bike.rahmennummer insurance='en' %}">ENRA</a>
-		    <a class="dropdown-item" href="{% url 'insurance:input-insurance' rn=bike.rahmennummer insurance='eu' %}">Eurorad</a>
-	    </div>
+	<h1 class="h2 mb-0 text-gray-800">{{ bike.kunde.kundennummer }}: {{ bike.kunde.nachname }}</h1>
+  <div class="dropdown mb-4">
+    <button class="btn btn-primary shadow-dm d-none d-sm-inline-block" type="button"
+    id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <i class="fas fa-bicycle"></i>
+      Fahrzeug bearbeiten
+    </button>
+    <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
+      <a class="dropdown-item" href="{% url 'customers:customer-update' pk=bike.kunde.kundennummer %}">Kundendaten bearbeiten</a>
+      <a class="dropdown-item" href="{% url 'customers:bike-update' kd=bike.kunde.kundennummer pk=bike.id %}">Fahrzeugdaten bearbeiten</a>
+      
+      <div class="dropdown-divider"></div>
+      
     </div>
-  {% else %}
-    <div class="btn-group">
-      <button type="button" class="d-none d-sm-inline-block btn btn-primary dropdown-toggle shadow-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      <i class="fas fa-download fa-sm text-white-50"></i> Versicherung verwalten
-      </button>
-      <div class="dropdown-menu">
-        <a class="dropdown-item" href="#">Option 1</a>
-      </div>
-    </div>
-  {% endif %}
+  </div>
 {% endblock %}
 
 {% block content %}
-  <h1 class="h4 mb-0 text-gray-800">{{ bike.beschreibung }} ({{ bike.rahmennummer }})</h1>
+  <h4 class="mb-0 text-gray-800">{{ bike.beschreibung }} ({{ bike.rahmennummer }})</h4>
 
-<!-- Modal -->
-  <div class="modal fade" id="versModal" tabindex="-1" role="dialog" aria-labelledby="versModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          {{ company_form.as_p }}
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
+  <div class="container-fluid">
+    <div class="row top-buffer">
+      <div class="col-xl-8">
+        <div class="card shadow mb-4 h-100">
+          <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">
+              Versicherungsinfo
+              {% if insurance_info %}
+                <!--
+                <a href="#" class="btn btn-primary btn-sm shadow-sm float-right">
+                  <span class="text">Versicherungsinfo bearbeiten</span>
+                -->
+              {% else %}
+                <div class="dropdown show float-right">
+                  <a href="#" class="btn btn-danger dropdown-toggle btn-sm shadow-sm" role="button" id="dropdownInsurance" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="text">Versicherungsinfo hinterlegen</span>
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="dropdownInsurance">
+                    <a class="dropdown-item" href="{% url 'insurance:input-insurance' rn=bike.rahmennummer insurance='as' %}">
+                      Assona
+                    </a>
+                    <a class="dropdown-item" href="{% url 'insurance:input-insurance' rn=bike.rahmennummer insurance='bl' %}">
+                      Bikeleasing Service
+                    </a>
+                    <a class="dropdown-item" href="{% url 'insurance:input-insurance' rn=bike.rahmennummer insurance='bu' %}">
+                      Businessbike
+                    </a>
+                    <a class="dropdown-item" href="{% url 'insurance:input-insurance' rn=bike.rahmennummer insurance='en' %}">
+                      ENRA
+                    </a>
+                    <a class="dropdown-item" href="{% url 'insurance:input-insurance' rn=bike.rahmennummer insurance='eu' %}">
+                      Eurorad
+                    </a>
+                  </div>
+                </div>
+              {% endif %}
+              </a>
+            </h6>
+          </div>
+          <div class="card-body">
+            {% if insurance_info %}
+              <div class="verischerung_info">
+                <table class="table table-striped">
+                  <tr>
+                    <th>Unternehmen</th>
+                    <td>{{ insurance_info }}</td>
+                  </tr>
+                  {% for name, value in insurance_info.get_fields %}
+                    {% if value %}
+                      <tr>
+                        <th>{{ name }}</th>
+                        <td>{{ value }}</td>
+                      </tr>
+                    {% endif %}
+                  {% endfor %}
+                </table>
+              </div>
+            {% else %}
+              <div>Keine Versicherungsinformationen vorhanden </div>
+              <!--
+              <div class="btn-group dropright">
+                <button type="button" class="d-none d-sm-inline-block btn btn-primary dropdown-toggle shadow-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-download fa-sm text-white-50"></i> Versicherung hinzufügen
+                </button>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="{% url 'insurance:input-insurance' rn=bike.rahmennummer insurance='as' %}">
+                    Assona
+                  </a>
+                  <a class="dropdown-item" href="{% url 'insurance:input-insurance' rn=bike.rahmennummer insurance='bl' %}">
+                    Bikeleasing Service
+                  </a>
+                  <a class="dropdown-item" href="{% url 'insurance:input-insurance' rn=bike.rahmennummer insurance='bu' %}">
+                    Businessbike
+                  </a>
+                  <a class="dropdown-item" href="{% url 'insurance:input-insurance' rn=bike.rahmennummer insurance='en' %}">
+                    ENRA
+                  </a>
+                  <a class="dropdown-item" href="{% url 'insurance:input-insurance' rn=bike.rahmennummer insurance='eu' %}">
+                    Eurorad
+                  </a>
+                  </div>
+                </div>
+              -->
+              {% endif %}                  
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 {% endblock %}

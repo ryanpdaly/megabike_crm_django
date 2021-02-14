@@ -7,41 +7,103 @@
 
 {% block header %}
 	<h1 class="h2 mb-0 text-gray-800">{{ customer.kundennummer }}: {{ customer.nachname }}</h1>
-	<a href="{% url 'customers:bike-input' pk=customer.kundennummer %}" class="d-none d-sm-inline-block btn btn-primary shadow-sm"><i class="fas fa-bicycle"></i> Fahrzeug hinzufügen</a>
+	<div class="dropdown mb-4">
+		<button class="btn btn-primary shadow-dm d-none d-sm-inline-block" type="button"
+		id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		  <i class="fas fa-edit"></i>
+		  Kunde bearbeiten
+		</button>
+		<div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
+			<a class="dropdown-item" href="{% url 'customers:customer-update' pk=customer.kundennummer %}">Kundendaten bearbeiten</a>
+			<div class="dropdown-divider"></div>
+			<a class="dropdown-item" href="{% url 'customers:bike-input' pk=customer.kundennummer %}">Fahrzeug hinzufügen</a>
+			<a class="dropdown-item" href="{% url 'warranty:new-ticket' %}">Rekla erstellen</a>
+		</div>
+	</div>
+
 {% endblock %}
 
 {% block content %}
-	{% if bikes %}
-	<div class="table-responsive">
-	  <table id="dataTable" class="table table-striped">
-		<thead>
-		  <tr>
-		    <th scope="col">Versicherungsstatus</th>
-		    <th scope="col">>Beschreibung</th>
-		    <th scope="col">Rahmennummer</th>
-		  </tr>
-		</thead>
-		<tbody>
-		  {% for bike in bikes %}
-		  <tr>
-		  <!-- TODO: Dynamically color buttons depending on insurance policy -->
-		    <td scope="row"><a href="{{ bike.get_absolute_url }}" class="btn btn-primary btn-icon-split">
-		  	  <span class="icon text-white-50">
-  		  	    <i class="fas fa-flag"></i></span>
-  		  	  <span>{{ bike.get_versicherungsunternehmen_display }}</span></a>
-  		    </td>
-		    <td>{{ bike.beschreibung }}</td>
-		    <td>{{ bike.rahmennummer }}</td>
-		  </tr>
-		{% endfor %}
-		</tbody>
-	  </table>
+	<div class="container-fluid">
+		<div class="row top-buffer">
+			<div class="col-xl-12">
+				<div class="card shadow mb-4 h-100">
+					<a href="#collapseFahrzeuge" class="d-block card-header py-3" data-toggle="collapse" role="button" 
+						aria-expanded="true" aria-controls="collaseFahrzeuge">
+						<h6 class="m-0 font-weight-bold text-primary">Fahrzeuge:</h6>
+					</a>
+					<div class="collapse card-body" id="collapseFahrzeuge">
+						{% if bikes %}
+							<div class="table-responsive">
+							  <table id="dataTable" class="table table-striped">
+								<thead>
+								  <tr>
+								    <th scope="col">Versicherungsstatus</th>
+								    <th scope="col">Beschreibung</th>
+								    <th scope="col">Rahmennummer</th>
+								  </tr>
+								</thead>
+								<tbody>
+								  {% for bike in bikes %}
+								  <tr>
+								  <!-- TODO: Dynamically color buttons depending on insurance policy -->
+								    <td scope="row">
+								    	<a href="{{ bike.get_absolute_url }}" class="btn btn-primary btn-icon-split">
+								  	  	  <span class="icon text-white-50">
+						  		  	        <i class="fas fa-flag"></i>
+						  		  	      </span>
+						  		  	      <span class="text">{{ bike.get_insurance_display }}</span>
+						  		  	    </a>
+						  		    </td>
+								    <td>{{ bike.beschreibung }}</td>
+								    <td>{{ bike.rahmennummer }}</td>
+								  </tr>
+								{% endfor %}
+								</tbody>
+							  </table>
+							</div>
+						{% else %}
+							<li>
+								Keine Fahrräder vorhanden.
+							</li>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row top-buffer">
+			<div class="col-xl-12">
+				<div class="card shadow mb-4 h-100">
+					<a href="#collapseRekla" class="d-block card-header py-3" data-toggle="collapse" role="button" 
+						aria-expanded="true" aria-controls="collaseRekla">
+						<h6 class="m-0 font-weight-bold text-primary">Rekla Tickets:</h6>
+					</a>
+					<div class="collapse card-body" id="collapseRekla">
+						{% if rekla_tickets %}
+							<div class="table-responsive">
+							  <table id="dataTable" class="table table-striped">
+								<thead>
+								  <tr>
+								    <th scope="col">Versicherungsstatus</th>
+								    <th scope="col">Beschreibung</th>
+								    <th scope="col">Rahmennummer</th>
+								  </tr>
+								</thead>
+								<tbody>
+								</tbody>
+							  </table>
+							</div>
+						{% else %}
+							<li>
+								Keine Reklas vorhanden.
+							</li>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
-	{% else %}
-		<li>
-			Keine Fahrräder vorhanden.
-		</li>
-	{% endif %}
+
 {% endblock %}
 
 {% block javascript %}
@@ -49,5 +111,5 @@
 	<link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
     <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
     <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
-    <script src="{% static 'js/demo/datatables-demo.js' %}"></script>
+    <script src="{% static 'js/datatables.js' %}"></script>
 {% endblock %}

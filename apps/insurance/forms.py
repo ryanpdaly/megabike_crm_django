@@ -1,4 +1,3 @@
-import datetime
 from datetime import datetime
 
 from django import forms
@@ -9,9 +8,14 @@ from crispy_forms.layout import Layout, Submit, Row, Column, MultiWidgetField
 
 from .models import InsuranceCompanies, AssonaInfo, BikeleasingInfo, BusinessbikeInfo, EnraInfo, EuroradInfo
 
-from ..customer_profile.models import Customer, Bike
+from ..customers.models import Customer, Bike
 
+# TODO: I don't like that this is hard coded
 valid_years = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025,]
+#valid_years = []
+
+#for year in range(int(datetime.now.year())-5, int(datetime.now.year())+6):
+#	valid_years.append(year)
 
 class CompanyForm(forms.ModelForm):
 	class Meta:
@@ -21,7 +25,7 @@ class CompanyForm(forms.ModelForm):
 class UpdateBikeForm(forms.ModelForm):
 	class Meta:
 		model = Bike
-		fields = ('versicherungsunternehmen',)
+		fields = ('insurance',)
 
 class AssonaForm(forms.ModelForm):
 	class Meta:

@@ -1,0 +1,166 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+{% block title %}
+	MegabikeCRM: Businessbike Info
+{% endblock %}
+
+{% block header %}
+	<h1 class="h2 mb-0 text-gray-800">Generelle Information zur Businessbike Versicherung</h1>
+{% endblock %}
+
+{% block content %}
+	<!--
+	<p>Things to include on this page:
+	<ul>
+		<li>Example invoice</li>
+		<li>Policy versions</li>
+		<li>Contact information</li>
+		<li>Useful stuff for the sales team?</li>
+	</ul>
+	-->
+			<div class="container-fluid">
+		<div class="row top-buffer">
+			<div class="col-xl-8">
+				<div class="card shadow mb-4 h-100">
+					<div class="card-header py-3">
+						<h6 class="m-0 font-weight-bold text-primary">Generelle Info:</h6>
+					</div>
+					<div class="card-body">
+						<ul>
+							<li>Put some stuff here</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-lg-4">
+				<div class="card shadow mb-4 h-100">
+					<div class="card-header py-3">
+						<h6 class="m-0 font-weight-bold text-primary">Kontakt Info:</h6>
+					</div>
+					<div class="card-body">
+						<ul>
+							<li></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row top-buffer">
+			<div class="col-lg-6">
+				<div class="card shadow mb-4 h-100">
+					<div class="card-header py-3">
+						<h6 class="m-0 font-weight-bold text-primary">Von der Kunde benötigen wir:</h6>
+					</div>
+					<div class="card-body">
+						<ul>
+							<li>Versicherungskarte mit:</li>
+								<ul>
+									<li>Leasingbeginn</li>
+									<li>Leasingende</li>
+									<li>Versicherungsnummer</li>
+									<li>Rahmennummer</li>
+									<li>Versicherungspaket</li>
+								</ul>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-6">
+				<div class="card shadow mb-4 h-100">
+					<div class="card-header py-3">
+						<h6 class="m-0 font-weight-bold text-primary">Für den Schadensmeldung benötigen wir:</h6>
+					</div>
+					<div class="card-body">
+						<ul>
+							<li>Put some stuff here</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row top-buffer">
+			<div class="col-lg-6">
+				<div class="card shadow mb-4 h-100">
+					<div class="card-header py-3">
+						<h6 class="m-0 font-weight-bold text-primary">Versichert ist:</h6>
+					</div>
+					<div class="card-body">
+						<ul>
+							<li>Vollkasko + Mobilitätsgarantie</li>
+								<ul>
+									<li>In der Leasingrate Inklusive</li>
+									<li>Diebstahl / Vandalismus</li>
+									<li>Unfall-, Sturz-, Pannenschäden</li>
+									<li>Eigenverschuldung</li>
+									<li>Akkudefekt / Elektronikschäden</li>
+									<li>24-Stunden-Hotline</li>
+									<li>Pick-Up-Servce inkl. Begleitperson</li>
+								</ul>
+								<br/>
+							<li>"Alte" Service+ Pakete</li>
+								<ol>
+									<li>Durchsicht+ / Nicht enthalten</li>
+										<ul>
+											<li>Jährliche UVV in Wert von 25€</li>
+										</ul>
+									<li>Verschleiß+</li>
+										<ul>
+											<li>Jährliche UVV in Wert von 25€</li>
+											<li>75€ Guthaben pro Jahr für Verschleiß Reparaturen</li>
+										</ul>
+									<li>Inspektion+</li>
+										<ul>
+											<li>Jährliche UVV in Wert von 25€</li>
+											<li>Jährliche Inspektion in Wert von 50€</li>
+										</ul>
+									<li>Instandhaltung+</li>
+										<ul>
+											<li>Jährliche UVV in Wert von 25€</li>
+											<li>Jährliche Inspektion in Wert von 50€</li>
+											<li>75€ Guthaben pro Jahr für Verschleiß Reparaturen</li>
+										</ul>
+								</ol>
+							<li>Neue Service Pakete</li>
+								<ol>
+									<li>Durchsicht</li>
+										<ul>
+											<li>3x eine jährlich UVV in Wert von 25€</li>
+										</ul>
+									<li>Inspektion</li>
+										<ul>
+											<li>3x eine jährliche Inspektion in Wert von 75€</li>
+										</ul>
+
+									<li>Full-Service</li>
+										<ul>
+											<li>3x eine jährliche Inspektion in Wert von 75€</li>
+											<li>225€ Gesamtguthaben für Verschleißreparaturen
+										</ul>
+								</ol>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-lg-6">
+				<div class="card shadow mb-4 h-100">
+					<div class="card-header py-3">
+						<h6 class="m-0 font-weight-bold text-primary">Nicht versichert ist:</h6>
+					</div>
+					<div class="card-body">
+						<ul>
+							<li>Schäden, die nicht die Funktion beeinträchtigen</li>
+							<li>Rost oder Oxidation</li>
+							<li>Kosten für Leihräder</li>
+							<li>Nachträgliche Veränderungen, Umbauten, angebaute Teile</li>
+						</ul>	
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

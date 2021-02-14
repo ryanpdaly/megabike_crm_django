@@ -1,13 +1,8 @@
 {% extends 'common/base.html' %}
 {% load static %}
-{% load crispy_forms_tags %}
 
-{% block javascript %}
-	<script>
-		$("#id_kundennummer").change(function () {
-			console.log( $(this).val() );
-		});
-	</script>
+{% block title %}
+	MegabikeCRM: Kunde erstellen
 {% endblock %}
 
 {% block header %}
@@ -21,11 +16,26 @@
 			<table>
 				{{ form.as_table }}
 			</table>
-			<h1 class="h3 mb-0 text-gray-800">Fahrzeuge hinzufügen</h1>
-			{{ children.as_table }}
-
+			<br/>
+			<h1 class="h4 mb-0 text-gray-800">Fahrzeug hinzufügen</h1>
+			<table>
+				{{ children.as_table }}
+			</table>
 			<input type='submit' value='Save'>
 		</form>
 	</body>
 {% endblock %}
-</html> 
+
+
+{% block javascript %}
+	{{ block.super }}
+	<script>
+		$("#id_kundennummer").change(function () {
+			console.log( $(this).val() );
+		});
+
+		$("#id_bike_set-0-insurance").change(function () {
+			console.log( $(this).val() );
+		})
+	</script>
+{% endblock %}

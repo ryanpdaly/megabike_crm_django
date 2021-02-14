@@ -1,0 +1,23 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+{% block header %}
+	<h1 class="h2 mb-0 text-gray-800">Rekla Ticket: {{ reklaticket.id }}</h1>
+{% endblock %}
+
+{% block content %}
+	<body>
+		<form method='POST'>
+			{% csrf_token %}
+			<table>
+				{{ form.as_table }}
+			</table>
+			<input type='submit' value='Save'>
+		</form>
+	</body>
+{% endblock %}
+
+
+{% block javascript %}
+	{{ block.super }}
+{% endblock %}

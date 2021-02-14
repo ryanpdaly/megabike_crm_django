@@ -1,63 +1,21 @@
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import TemplateView, CreateView
+from django.views import generic
 from django.urls import reverse, reverse_lazy
 
 from . import models
 # TODO: This seems wrong, find out the right way to do this.
-from ..customer_profile import models as customer_models
+from ..customers import models as customer_models
 
 from . import forms
 
-def index(request):
-	return HttpResponse('Hello from Django!')
-
-class MainView(TemplateView):
-	template_name = 'insurance/main.html'
-"""
-class InputAssona(CreateView):
-	model = AssonaInfo
-	form_class = AssonaForm
-	template_name = 'insurance/input_assona.html'
-"""
-
-def assona_input_view(request, rn):
-	bike_instance = get_object_or_404(customer_models.Bike, rahmennummer=rn)
-	kdnr = bike_instance.kundennummer.kundennummer
-	rn = bike_instance.rahmennummer
-	customer_instance = get_object_or_404(customer_models.Customer, 
-		kundennummer=kdnr)
-	
-	if request.method == "POST":
-		assona_form = forms.AssonaForm(request.POST)
-		update_bike = forms.UpdateBikeForm(request.POST, instance=bike_instance)
-
-		if assona_form.is_valid() and update_bike.is_valid():
-			assona_form.save()
-			update_bike.save()
-
-			return HttpResponseRedirect(reverse('customers:bike-detail', kwargs={'pk':kdnr, 'rn':rn}))
-
-	else:
-		assona_form = forms.AssonaForm(initial={"rahmennummer":rn})
-		update_bike = forms.UpdateBikeForm(instance=bike_instance, initial={"versicherungsunternehmen":"as"})
-
-
-	context={
-		'bike':bike_instance,
-		'customer':customer_instance,
-		'assona_form':assona_form,
-		'update_bike':update_bike,
-	}
-
-	return render(request, 'insurance/input_assona.html', context=context)
-
+@login_required
 def input_insurance(request, rn, insurance):
 	bike_instance = get_object_or_404(customer_models.Bike, rahmennummer=rn)
-	kdnr = bike_instance.kundennummer.kundennummer
+	kdnr = bike_instance.kunde.kundennummer
 	rn = bike_instance.rahmennummer
-	customer_instance = get_object_or_404(customer_models.Customer,
-		kundennummer=kdnr)
 
 	# This will scale horribly, there absolutely has to be a better way to do this. Maybe a dictionary with {ins_code:InsForm()}?
 	if request.method == "POST":
@@ -92,13 +50,27 @@ def input_insurance(request, rn, insurance):
 			ins_form = forms.EuroradForm(initial={"rahmennummer":rn})
 
 		# This doesn't set an initial value for versicherungsunternehmen for some reason
-		update_bike = forms.UpdateBikeForm(instance=bike_instance, initial={"versicherungsunternehmen":insurance})
+		update_bike = forms.UpdateBikeForm(instance=bike_instance, initial={"insurance":insurance})
 
 	context = {
 		'bike':bike_instance,
-		'customer':customer_instance,
 		'ins_form':ins_form,
 		'update_bike':update_bike,
 	}
 
-	return render(request, 'insurance/input_bikeleasing.html', context=context)
+	return render(request, 'insurance/input_insurance.html', context=context)
+
+@login_required
+def list_all(request):
+
+	policies = customer_models.Bike.objects.exclude(insurance='no')
+
+	context = {
+		'policies':policies
+	}
+
+	return render(request, 'insurance/list_all.html', context=context)
+
+@login_required
+def info_page(request, insurance):
+	return render(request, f'insurance/info_{insurance}.html')

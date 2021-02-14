@@ -1,0 +1,86 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+{% block title %}
+	MegabikeCRM: Leasing
+{% endblock %}
+
+{% block header %}
+	<h1 class="h2 mb-0 text-gray-800">Generelle Information zur Bikeleasing Service</h1>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+	<div class="row top-buffer">
+		<div class="col-xl-12">
+			<div class="card shadow mb-4 h-100">
+				<div class="card-header py-3">
+					<h6 class="m-0 font-weight-bold text-primary">Generelle Info:</h6>
+				</div>
+				<div class="card-body">
+					<ul>
+						<li>Mögliche Leasingbanken:</li>
+							<ul>
+								<li>ALS Leasing GmbH</li>
+								<li>Hofmann Leasing GmbH</li>
+								<li>Digital Mobility Leasing GmbH</li>
+							</ul>
+						<li>More stuff, probably</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row top-buffer">
+		<div class="col-lg-4">
+			<div class="card shadow mb-4 h-100">
+				<div class="card-header py-3">
+					<h6 class="m-0 font-weight-bold text-primary">Benötigt beim Rechnung schreiben:</h6>
+				</div>
+				<div class="card-body">
+					<ul>
+						<li>Vor- + Nachname</li>
+						<li>Adresse</li>
+						<li>Telefonnummer</li>
+						<li>Geburtsdatum</li>
+						<li>E-Mail-Adresse</li>
+					</ul>
+
+					&emsp; wenn vorhanden:
+					<ul>
+						<li>ID-Arbeitgeber</li>
+						<li>Auftrag Nr</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-lg-4">
+			<div class="card shadow mb-4 h-100">
+				<div class="card-header py-3">
+					<h6 class="m-0 font-weight-bold text-primary">Ablauf:</h6>
+				</div>
+				<div class="card-body">
+					<p>Fill in some stuff here, man.</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-lg-4">
+			<div class="card shadow mb-4 h-100">
+				<div class="card-header py-3">
+					<h6 class="m-0 font-weight-bold text-primary">Basics zur Versicherung:</h6>
+				</div>
+				<div class="card-body">
+					<ul>
+						<li>Mit oder ohne Verschleiß</li>
+						<li>Mit oder ohne Inspektion</li>
+					</ul>
+					<p><b><a href="{% url 'insurance:info-page' insurance='bikeleasing' %}">Mehr Info</a></b></p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

@@ -15,13 +15,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import RedirectView
 
 urlpatterns = [
+    path('', RedirectView.as_view(url='customers/', permanent=True)),
+    path('accounts/', include('django.contrib.auth.urls')),    
     path('admin/', admin.site.urls),
 
-    path('', include('apps.common.urls')),
-    path('customers/', include('apps.customer_profile.urls')),
+    path('common/', include('apps.common.urls')),
+        
+    path('customers/', include('apps.customers.urls')),
     path('insurance/', include('apps.insurance.urls')),
+    path('leasing/', include('apps.leasing.urls')),
     path('warranty/', include('apps.warranty.urls')),
-    path('accounts/', include('django.contrib.auth.urls')),
 ]

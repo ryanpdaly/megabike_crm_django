@@ -1,0 +1,106 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+{% block title %}
+	MegabikeCRM: Leasing
+{% endblock %}
+
+{% block header %}
+	<h1 class="h2 mb-0 text-gray-800">Generelle Information zur Eurorad Leasing</h1>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+	<div class="row top-buffer">
+		<div class="col-xl-8">
+			<div class="card shadow mb-4 h-100">
+				<div class="card-header py-3">
+					<h6 class="m-0 font-weight-bold text-primary">Generelle Info:</h6>
+				</div>
+				<div class="card-body">
+					<ul>
+						<li>Leasingbank: AGL-Leasing</li>
+						<li>Token-Nr --> alles bereits bei Eurorad hinterlegt</li>
+						<li><b>Keine</b> Rabatte bei nicht ZEG-Räder aufgrund eine 8% Provision</li>
+						<li>Mit F8 keine Rabatte</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+			<div class="col-lg-4">
+				<div class="card shadow mb-4 h-100">
+					<div class="card-header py-3">
+						<h6 class="m-0 font-weight-bold text-primary">Kontakt Info:</h6>
+					</div>
+					<div class="card-body">
+						<ul>
+							<li><a href="https://www.eurorad.de/">Consumerseite</a></li>
+							<li><a href="#">Händlerportal</a></li>
+							<li>Telefon: 0221 - 017959-670</li>
+							<li>Email: </li>
+						</ul>
+					</div>
+				</div>
+			<!--
+				<li>Eurorad Deutschland GmbH, Longericher Straße 2, 50739 Köln</li>
+				<li>Telefon: 0221 - 017959-670</li>
+			-->
+			</div>
+		</div>
+
+	<div class="row top-buffer">
+		<div class="col-lg-4">
+			<div class="card shadow mb-4 h-100">
+				<div class="card-header py-3">
+					<h6 class="m-0 font-weight-bold text-primary">Benötigt beim Rechnung schreiben:</h6>
+				</div>
+				<div class="card-body">
+					<ul>
+						<li>Vor- + Nachname</li>
+						<li>Adresse</li>
+						<li>Telefonnummer</li>
+						<li>Geburtsdatum</li>
+						<li>E-Mail-Adresse</li>
+						<br/>
+						<li>Token-Nummer</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-lg-4">
+			<div class="card shadow mb-4 h-100">
+				<div class="card-header py-3">
+					<h6 class="m-0 font-weight-bold text-primary">Benötigt bei der Abholung:</h6>
+				</div>
+				<div class="card-body">
+					<p>Fill in some stuff here, man.</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-lg-4">
+			<div class="card shadow mb-4 h-100">
+				<div class="card-header py-3">
+					<h6 class="m-0 font-weight-bold text-primary">Basics zur Versicherung:</h6>
+				</div>
+				<div class="card-body">
+					<ul>
+						<li>Premium Versicherung durch Assona</li>
+						<li>Inklusive Verschleiß</li>
+						<li>Jährliche UVV Prufüng (30€)</li>
+						<li>Keine:
+							<ul>
+								<li>Inspektion</li>
+								<li>Wartungsarbeiten</li>
+								<li>Einstellarbeiten</li>
+							</ul>
+					</ul>
+					<p><b><a href="{% url 'insurance:info-page' insurance='eurorad' %}">Mehr Info</a></b></p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
