@@ -32,7 +32,7 @@ SECRET_KEY = '1b^hzox3ssx0_sln0e^7@0l#a4g(=j5b!5b+0ym5*#itm98zly'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', '192.168.0.152',]
 
 
 # Application definition
@@ -55,6 +55,7 @@ LOCAL_APPS =[
     'apps.customers',
     'apps.insurance',
     'apps.warranty',
+    'apps.leasing',
 ]
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS

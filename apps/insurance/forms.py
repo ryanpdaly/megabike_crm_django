@@ -30,7 +30,8 @@ class UpdateBikeForm(forms.ModelForm):
 class AssonaForm(forms.ModelForm):
 	class Meta:
 		model = AssonaInfo
-		fields = '__all__'
+		#fields = '__all__'
+		exclude = ('id',)
 		widgets = {'beginn': SelectDateWidget(years = valid_years)}
 
 class BikeleasingForm(forms.ModelForm):

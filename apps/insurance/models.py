@@ -102,6 +102,8 @@ class EuroradInfo(models.Model):
 	beginn = models.DateField()
 	vertragsnummer = models.CharField(max_length=20)
 
+	versicherungskarte = models.FileField(blank=True)
+
 	def __str__(self):
 		return 'Eurorad'
 

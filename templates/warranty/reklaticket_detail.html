@@ -3,52 +3,72 @@
 
 {% block header %}
 	<h1 class="h2 mb-0 text-gray-800">Rekla Ticket: {{ reklaticket.id }}</h1>
-	<a href="{% url 'warranty:update-ticket' pk=reklaticket.id %}" class="d-none d-sm-inline-block btn btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Ticket bearbeiten</a>
 {% endblock %}
 
 {% block content %}
-	<table class='table table-striped'>
-		<tr>
-			<th scope='row'>Kunde:</th>
-			<td>{{ reklaticket.kunde }}</td>
-		</tr>
-		<tr>
-			<th scope='row'>Status:</th>
-			<td>{{ reklaticket.get_status_display }}</td>
-		</tr>
-		<tr>
-			<th scope='row'>Sachbearbeiter: </th>
-			<td>{{ reklaticket.get_sachbearbeiter_display }}</td>
-		</tr>
-		<tr>
-			<th scope='row'>Erstellt an: </th>
-			<td>{{ reklaticket.date_created }}</td>
-		</tr>
-		<tr>
-			<th scope='row'>Hersteller: </th>
-			<td>{{ reklaticket.hersteller }}</td>
-		</tr>
-		<tr>
-			<th scope='row'>Artikelnummer: </th>
-			<td>{{ reklaticket.artikelnr }}</td>
-		</tr>
-		<tr>
-			<th scope='row'>Bezeichnung: </th>
-			<td>{{ reklaticket.bezeichnung }}</td>
-		</tr>
-		<tr>
-			<th scope='row'>Menge: </th>
-			<td>{{ reklaticket.menge }}</td>
-		</tr>
-		<tr>
-			<th scope='row'>Auftragsnr: </th>
-			<td>{{ reklaticket.auftragsnr }}</td>
-		</tr>
-		<tr>
-			<th scope='row'>Fehlerbeschreibung: </th>
-			<td>{{ reklaticket.fehlerbeschreibung }}</td>
-		</tr>
-	</table>
+<div class="container-fluid">
+		<div class="row top-buffer">
+			<div class="col-xl-8">
+				<div class="card shadow mb-4 h-100">
+					<div class="card-header py-3">
+						<h6 class="m-0 font-weight-bold text-primary">
+							Aktuelle Stand:
+							<a href="{% url 'warranty:update-ticket' pk=reklaticket.id %}" class="d-none d-sm-inline-block btn btn-primary shadow-sm float-right">
+								<i class="fas fa-download fa-sm text-white-50"></i> 
+								Ticket bearbeiten
+							</a>
+						</h6>
+
+					</div>
+					<div class="card-body">
+						<table class='table table-striped'>
+							<tr>
+								<th scope='row'>Kunde:</th>
+								<td>{{ reklaticket.kunde }}</td>
+							</tr>
+							<tr>
+								<th scope='row'>Status:</th>
+								<td>{{ reklaticket.get_status_display }}</td>
+							</tr>
+							<tr>
+								<th scope='row'>Sachbearbeiter: </th>
+								<td>{{ reklaticket.get_sachbearbeiter_display }}</td>
+							</tr>
+							<tr>
+								<th scope='row'>Erstellt an: </th>
+								<td>{{ reklaticket.date_created }}</td>
+							</tr>
+							<tr>
+								<th scope='row'>Hersteller: </th>
+								<td>{{ reklaticket.hersteller }}</td>
+							</tr>
+							<tr>
+								<th scope='row'>Artikelnummer: </th>
+								<td>{{ reklaticket.artikelnr }}</td>
+							</tr>
+							<tr>
+								<th scope='row'>Bezeichnung: </th>
+								<td>{{ reklaticket.bezeichnung }}</td>
+							</tr>
+							<tr>
+								<th scope='row'>Menge: </th>
+								<td>{{ reklaticket.menge }}</td>
+							</tr>
+							<tr>
+								<th scope='row'>Auftragsnr: </th>
+								<td>{{ reklaticket.auftragsnr }}</td>
+							</tr>
+							<tr>
+								<th scope='row'>Fehlerbeschreibung: </th>
+								<td>{{ reklaticket.fehlerbeschreibung }}</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
 {% endblock %}
 
 
