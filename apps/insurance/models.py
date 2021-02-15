@@ -2,6 +2,14 @@ from django.db import models
 
 from ..customers import models as customer_models
 
+def set_upload_path(bike, filename):
+	# bike object has no attribue kunde
+	'''
+	Desired filepath: uploads/kd<kdnr>/<filename>
+	Not entirely sure how to get kundennummer out of what I've passed through
+	return f'uploads/kd{bike.kunde.kundennummer}/{filename}'
+	'''
+
 class InsuranceCompanies(models.Model):
 	COMPANIES = (
 		('no', 'None'),
@@ -25,7 +33,9 @@ class AssonaInfo(models.Model):
 	vertragsnummer = models.CharField(max_length=10)
 	beginn = models.DateField()
 
-	versicherungskarte = models.FileField(blank=True)
+	versicherungskarte = models.FileField(blank=True, 
+		#upload_to=set_upload_path,
+		)
 
 	def __str__(self):
 		return 'Assona'
@@ -46,7 +56,9 @@ class BikeleasingInfo(models.Model):
 	leasingbank = models.CharField(max_length=1, choices=BANK_OPTIONS)
 	beginn = models.DateField()
 
-	versicherungskarte = models.FileField(blank=True)
+	versicherungskarte = models.FileField(blank=True, 
+		#upload_to=set_upload_path,
+		)
 
 	def __str__(self):
 		return f'Bikeleasing: {self.get_paket_display()}'
@@ -73,7 +85,9 @@ class BusinessbikeInfo(models.Model):
 	paket = models.CharField(max_length=30, choices=PAKET_OPTIONS)
 	verschleiss_guthaben = models.BooleanField(default=False)
 
-	versicherungskarte = models.FileField(blank=True)
+	versicherungskarte = models.FileField(blank=True, 
+		#upload_to=set_upload_path,
+		)
 
 	def __str__(self):
 		return f'Businessbike {self.get_paket_display()}'
@@ -88,7 +102,9 @@ class EnraInfo(models.Model):
 	beginn = models.DateField()
 	policenummer = models.CharField(max_length=20)
 
-	versicherungskarte = models.FileField(blank=True)
+	versicherungskarte = models.FileField(blank=True, 
+		#upload_to=set_upload_path,
+		)
 
 	def __str__(self):
 		return 'ENRA'
@@ -102,7 +118,9 @@ class EuroradInfo(models.Model):
 	beginn = models.DateField()
 	vertragsnummer = models.CharField(max_length=20)
 
-	versicherungskarte = models.FileField(blank=True)
+	versicherungskarte = models.FileField(blank=True, 
+		#upload_to=set_upload_path,
+		)
 
 	def __str__(self):
 		return 'Eurorad'
