@@ -16,9 +16,9 @@ class BikeForm(forms.ModelForm):
 		model = models.Bike
 		fields = ['kunde', 'beschreibung', 'rahmennummer']
 
-ChildFormset = inlineformset_factory(
-	models.Customer, models.Bike, 
-	exclude = ('insurance',), 
-	extra = 1,
-	can_delete = False,
+BikeFormset = inlineformset_factory(
+		models.Customer, models.Bike, 
+		exclude = ('insurance',), 
+		extra = 1,
+		can_delete = False,
 	)

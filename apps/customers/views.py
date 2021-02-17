@@ -12,6 +12,7 @@ from . import models
 from . import forms
 from ..insurance import forms as insurance_forms
 from ..insurance import models as insurance_models
+from ..warranty import models as warranty_models
 
 # Create your views here.
 
@@ -83,10 +84,12 @@ class BikeUpdateView(LoginRequiredMixin, generic.UpdateView):
 def customer_detail_view(request, pk):
 	customer_instance = get_object_or_404(models.Customer, pk=pk)
 	bikes = models.Bike.objects.filter(kunde = pk)
+	reklas = warranty_models.ReklaTicket.objects.filter(kunde = pk)
 
 	context = {
 		'customer': customer_instance,
-		'bikes': bikes
+		'bikes': bikes,
+		'reklas': reklas,
 	}
 
 	return render(request, 'customers/customer_detail.html', context=context)
@@ -102,18 +105,18 @@ class CustomerInputView(LoginRequiredMixin, generic.CreateView):
 	def get_context_data(self, **kwargs):
 		data = super().get_context_data(**kwargs)
 		if self.request.POST:
-			data['children'] = forms.ChildFormset(self.request.POST)
+			data['bikes'] = forms.BikeFormset(self.request.POST)
 		else:
-			data['children'] = forms.ChildFormset()
+			data['bikes'] = forms.BikeFormset()
 		return data
 
 	def form_valid(self, form):
 		context = self.get_context_data()
-		children = context['children']
+		bikes = context['bikes']
 		self.object = form.save()
-		if children.is_valid():
-			children.instance = self.object
-			children.save()
+		if bikes.is_valid():
+			bikes.instance = self.object
+			bikes.save()
 		return super().form_valid(form)
 
 class CustomerListView(LoginRequiredMixin, generic.ListView):
@@ -125,16 +128,11 @@ class CustomerListView(LoginRequiredMixin, generic.ListView):
 	def get_context_data(self, **kwargs):
 		context = super(CustomerListView, self).get_context_data(**kwargs)
 
-		# TODO: This needs to be for the customer in that row
+		# Are these still necessary?
 		context['bikes_all'] = models.Bike.objects.filter(kunde_id__exact="12345").count()
 		context['bikes_insured'] = models.Bike.objects.filter(kunde_id__exact="12345").exclude(insurance="no").count()
 
 		return context
-
-	
-	#@register.filter
-	#def with_kundennummer(bikes, kundennummer):
-	#	return bikes.filter(kundennummer=kundennummer)
 
 class CustomerUpdateView(LoginRequiredMixin, generic.UpdateView):
 	model = models.Customer

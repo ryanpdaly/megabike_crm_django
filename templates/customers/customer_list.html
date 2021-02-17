@@ -1,5 +1,6 @@
 {% extends 'common/base.html' %}
 {% load static %}
+{% load customer_filters %}
 
 {% block title %}
 	MegabikeCRM: Kunden
@@ -24,12 +25,11 @@
 	      </thead>
 	      <tbody>
 	      	{% for customer in customer_list %}
-	      		{% comment %} {% for bikes in bikes_all|with_kundennummer:customer.kundennummer %} {% endcomment %}
 	      		<tr>
 	      			<th scope="row"><a href="{% url 'customers:customer-detail' pk=customer.kundennummer %}">{{ customer.kundennummer }}</a></th>
 	      			<td>{{ customer.nachname }}</td>
-	      			<td>N/A<!-- TODO: This needs to display number of bikes for this customer, number of insurance policies --></td>
-	      			<td>N/A <!-- TODO: Display number of open tickets (warranties + support) for this customer --></td>
+	      			<td>{{ customer.kundennummer|count_insured}} / {{ customer.kundennummer|count_bikes }}</td>
+	      			<td>{{ customer.kundennummer|count_open_tickets }} <!-- TODO: Display number of open tickets (warranties + support) for this customer --></td>
 	      		</tr>
 	      		{% comment %} {% endfor %} {% endcomment %}
 	      	{% endfor %}

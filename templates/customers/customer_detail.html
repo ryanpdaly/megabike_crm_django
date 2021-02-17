@@ -1,5 +1,7 @@
 {% extends 'common/base.html' %}
 {% load static %}
+{% load customer_filters %}
+{% load warranty_filters %}
 
 {% block title %}
 	MegabikeCRM: Kd{{ customer.kundennummer }}
@@ -30,13 +32,13 @@
 				<div class="card shadow mb-4 h-100">
 					<a href="#collapseFahrzeuge" class="d-block card-header py-3" data-toggle="collapse" role="button" 
 						aria-expanded="true" aria-controls="collaseFahrzeuge">
-						<h6 class="m-0 font-weight-bold text-primary">Fahrzeuge:</h6>
+						<h6 class="m-0 font-weight-bold text-primary">Fahrzeuge ({{ customer.kundennummer|count_bikes }} stk):</h6>
 					</a>
 					<div class="collapse card-body" id="collapseFahrzeuge">
 						{% if bikes %}
 							<div class="table-responsive">
 							  <table id="dataTable" class="table table-striped">
-								<thead>
+								<thead class="thead-dark">
 								  <tr>
 								    <th scope="col">Versicherungsstatus</th>
 								    <th scope="col">Beschreibung</th>
@@ -76,20 +78,31 @@
 				<div class="card shadow mb-4 h-100">
 					<a href="#collapseRekla" class="d-block card-header py-3" data-toggle="collapse" role="button" 
 						aria-expanded="true" aria-controls="collaseRekla">
-						<h6 class="m-0 font-weight-bold text-primary">Rekla Tickets:</h6>
+						<h6 class="m-0 font-weight-bold text-primary">Rekla Tickets ({{customer.kundennummer|count_open_tickets}} stk):</h6>
 					</a>
 					<div class="collapse card-body" id="collapseRekla">
-						{% if rekla_tickets %}
+						{% if reklas %}
 							<div class="table-responsive">
 							  <table id="dataTable" class="table table-striped">
-								<thead>
+								<thead class="thead-dark">
 								  <tr>
-								    <th scope="col">Versicherungsstatus</th>
-								    <th scope="col">Beschreibung</th>
-								    <th scope="col">Rahmennummer</th>
+								  	<th scope="col"></th>
+								    <th scope="col">Ticket ID:</th>
+								    <th scope="col">Status:</th>
+								    <th scope="col">Zuletzt bearbeitet:</th>
+								    <th scope="col">Hersteller</th>
 								  </tr>
 								</thead>
 								<tbody>
+									{% for rekla in reklas %}
+										<tr scope="row">
+											<td></td>
+											<td>{{ rekla.id }}</td>
+											<td>{{ rekla.id|get_current_status }}
+											<td>vor <b>{{ rekla.id|get_last_update }}</b> Tage</td>
+											<td>{{ rekla.hersteller }}
+										</tr>
+									{% endfor %}
 								</tbody>
 							  </table>
 							</div>

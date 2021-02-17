@@ -6,15 +6,65 @@
 {% endblock %}
 
 {% block content %}
-	<body>
+	<div class="container-fluid">
+		<form method='POST'>
+			{% csrf_token %}
+			<div class="row top-buffer">
+				<div class="col-xl-6">
+					<div class="card shadow mb-4 h-100">
+						<div class="card-header py-3">
+							<h6 class="m-0 font-weight-bold text-primary">Ticket Infos:</h6>
+						</div>
+						<div class="card-body">
+							<table>
+								{{ form.as_table }}
+							</table>
+							<br/>
+							<h4 class="m-0 font-weight-bold text-primary">Aktuelle Status:</h4>
+							<table>
+								{{update.as_table }}
+							</table>
+							<input type='submit' value='Save' class='btn btn-primary btn-large btn-block'>
+
+						</div>
+					</div>
+				</div>
+				<div class="col-xl-6">
+					<div class="card shadow b-4 h-100">
+						<div class="card-header py-3">
+							<h6 class="m-0 font-weight-bold text-primary">Datein:</h6>
+						</div>
+						<div class="card-body">
+							<table>
+								{{ files.as_table }}
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+
+	{% comment %}
 		<form method='POST'>
 			{% csrf_token %}
 			<table>
 				{{ form.as_table }}
 			</table>
+			<br/>
+			<h4 class="mb-0 text-gray-800">Aktuelle Status:</h4>
+			<table>
+				{{ update.as_table }}
+			</table>
+			<br/>
+			<h4 class="mb-0 text-gray-800">Datein hinzufügen:</h4>
+			<table>
+				{{ files.as_table }}
+			</table>
 			<input type='submit' value='Save' class='btn btn-primary btn-large'>
 		</form>
-	</body>
+	{% endcomment %}
+
 {% endblock %}
 
 

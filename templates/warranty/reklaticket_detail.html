@@ -3,6 +3,19 @@
 
 {% block header %}
 	<h1 class="h2 mb-0 text-gray-800">Rekla Ticket: {{ reklaticket.id }}</h1>
+	<div class="dropdown mb-4">
+		<button class="btn btn-primary shadow-dm d-none d-sm-inline-block" type="button"
+			id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		  <i class="fas fa-edit"></i>
+		  Ticket bearbeiten
+		</button>
+		<div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
+			<a class="dropdown-item" href="{% url 'warranty:update-ticket' pk=reklaticket.id %}">Infos bearbeiten</a>
+			<div class="dropdown-divider"></div>
+			<a class="dropdown-item" href="#">Status ändern</a>
+			<a class="dropdown-item" href="#">Datei hinzufügen</a>
+		</div>
+	</div>
 {% endblock %}
 
 {% block content %}
@@ -10,37 +23,47 @@
 		<div class="row top-buffer">
 			<div class="col-xl-8">
 				<div class="card shadow mb-4 h-100">
-					<div class="card-header py-3">
+					<a href="#collapseBasicInfo" class="d-block card-header py-3" data-toggle="collapse" role="button" 
+						aria-expanded="true" aria-controls="collaseBasicInfo">
 						<h6 class="m-0 font-weight-bold text-primary">
 							Aktuelle Stand:
-							<a href="{% url 'warranty:update-ticket' pk=reklaticket.id %}" class="d-none d-sm-inline-block btn btn-primary shadow-sm float-right">
-								<i class="fas fa-download fa-sm text-white-50"></i> 
-								Ticket bearbeiten
-							</a>
 						</h6>
-
-					</div>
-					<div class="card-body">
-						<table class='table table-striped'>
+						{% comment %}
+						<div class="dropdown no-arrow">
+							<a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                    		</a>
+                    		<div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                    			<a class="dropdown-item" href="{% url 'warranty:update-ticket' pk=reklaticket.id %}">Infos bearbeiten</a>
+                    		</div>
+                    	</div>
+                    	{% endcomment %}
+					</a>
+					<div class="collapse card-body" id="collapseBasicInfo">
+						<a href="{% url 'warranty:update-ticket' pk=reklaticket.id %}" class="d-none d-sm-inline-block btn btn-primary shadow-sm btn-block">
+						<i class="fas fa-download fa-sm text-white-50"></i> 
+							Ticket bearbeiten
+						</a>
+						<table class='table table-striped top-buffer'>
 							<tr>
 								<th scope='row'>Kunde:</th>
 								<td>{{ reklaticket.kunde }}</td>
 							</tr>
 							<tr>
 								<th scope='row'>Status:</th>
-								<td>{{ reklaticket.get_status_display }}</td>
+								<td>{{ current_status.get_status_display }}</td>
 							</tr>
 							<tr>
 								<th scope='row'>Sachbearbeiter: </th>
 								<td>{{ reklaticket.get_sachbearbeiter_display }}</td>
 							</tr>
 							<tr>
-								<th scope='row'>Erstellt an: </th>
-								<td>{{ reklaticket.date_created }}</td>
+								<th scope='row'>Angenommen: </th>
+								<td>{{ reklaticket.angenommen }}</td>
 							</tr>
 							<tr>
 								<th scope='row'>Hersteller: </th>
-								<td>{{ reklaticket.hersteller }}</td>
+								<td>{{ reklaticket.get_hersteller_display }}</td>
 							</tr>
 							<tr>
 								<th scope='row'>Artikelnummer: </th>
@@ -62,6 +85,64 @@
 								<th scope='row'>Fehlerbeschreibung: </th>
 								<td>{{ reklaticket.fehlerbeschreibung }}</td>
 							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="col-xl-4">
+				<div class="card shadow mb-4 h-100">
+					<a href="#collapseFiles" class="d-block card-header py-3" data-toggle="collapse" role="button" 
+						aria-expanded="true" aria-controls="collaseFiles">
+						<h6 class="m-0 font-weight-bold text-primary">
+							Datein:
+						</h6>
+					</a>
+					<div class="collapse card-body" id="collapseFiles">
+						{% if files %}
+							<table>
+								<tr>
+									<th>Datei:</th>
+									<th>Beschreibung</th>
+								</tr>
+								{% for file in files %}
+								<tr>
+									<a href="#">{{ file.file }}</a>
+									{{ file.beschreibung }}
+								</tr>
+								{% endfor %}
+							</table>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row top-buffer">
+			<div class="col-xl-8">
+				<div class="card shadow mb-4 h-100">
+					<a href="#collapseStatus" class="d-block card-header py-3" data-toggle="collapse" role="button"
+						aria-expanded="true" aria-controls="collapseStatus">
+						<h6 class="m-0 font-weight-bold text-primary">
+							Status Updates:
+						</h6>
+					</a>
+					<div class="collapse card-body" id="collapseStatus">
+						<table class="table">
+							<thead class="thead-dark">
+								<tr scope="row">
+									<th>Datum</th>
+									<th>Status</th>
+									<th>Anmerkungen</th>
+								</tr>
+							</thead>
+							<tbody class="table-striped">
+							{% for status in status_updates %}
+								<tr scope="row">
+									<th>{{ status.date }}</th>
+									<td>{{ status.status }}</td>
+									<td>{{ status.anmerkung }}</td>
+								</tr>
+							{% endfor %}
+							</tbody>
 						</table>
 					</div>
 				</div>

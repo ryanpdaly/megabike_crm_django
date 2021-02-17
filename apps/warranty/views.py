@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
@@ -13,9 +14,9 @@ class TicketList(LoginRequiredMixin, generic.ListView):
 	model = models.ReklaTicket
 	template_name = 'warranty/list_all.html'
 
-	#rekla_tickets = models.ReklaTicket.objects.all()
-
-	#context = {"rekla_tickets":rekla_tickets,}
+	def get_context_data(self, **kwargs):
+		data = super().get_context_data(**kwargs)
+		return data
 
 class CreateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView):
 	model = models.ReklaTicket
@@ -26,13 +27,48 @@ class CreateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateVi
 
 	form_class = forms.NewTicketForm
 
+	def get_context_data(self, **kwargs):
+		data = super().get_context_data(**kwargs)
+		if self.request.POST:
+			data['update'] = forms.StatusFormset(self.request.POST)
+			data['files'] = forms.FileFormset(self.request.POST)
+		else:
+			data['update'] = forms.StatusFormset()
+			data['files'] = forms.FileFormset()
+		return data
+
+	def form_valid(self, form):
+		context = self.get_context_data()
+		status = context['update']
+		files = context['files']
+		
+		self.object = form.save()
+
+		if status.is_valid():
+			status.instance = self.object
+			status.save()
+		if files.is_valid():
+			files.instance = self.object
+			files.save()
+		return super().form_valid(form)
+
 class DisplayTicket(LoginRequiredMixin, generic.DetailView):
 	model = models.ReklaTicket
-
 	template_name_suffix = '_detail'
+
+	def get_context_data(self, **kwargs):
+		data = super().get_context_data(**kwargs)
+		
+		data['status_updates'] = models.ReklaStatusUpdate.objects.filter(rekla_ticket=self.kwargs['pk']).order_by('-id')
+		data['current_status'] = data['status_updates'][0]
+
+		data['files'] = models.ReklaFile.objects.filter(rekla_ticket=self.kwargs['pk'])
+
+		return data
 
 class UpdateTicket(LoginRequiredMixin, generic.UpdateView):
 	model = models.ReklaTicket
 	template_name_suffix = '_update_form'
+	success_url = reverse_lazy('warranty:main')
 
 	form_class = forms.NewTicketForm
