@@ -30,7 +30,7 @@
       			<td>{{ ticket.get_status_display }}
       			<td>{{ ticket.kunde.kundennummer }}</td>      				
       			<td>{{ ticket.kunde.nachname }}</td>
-      			<td>{{ ticket.hersteller }}</td>
+      			<td>{{ ticket.get_hersteller_display }}</td>
       		</tr>
 	      	{% endfor %}
 	      </tbody>

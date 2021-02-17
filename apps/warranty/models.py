@@ -45,13 +45,53 @@ class ReklaTicket(models.Model):
 	date_created = models.DateField()
 
 	# This needs to have a list of choices
-	hersteller = models.CharField(max_length = 30)
-	artikelnr = models.CharField(max_length = 30)
-	bezeichnung = models.CharField(max_length = 50)
+	HERSTELLER_CHOICES = (
+		('absolut', 'Absolut'),
+		('abus', 'Abus'),
+		('alpina', 'Alpina'),
+		('asista', 'Asista'),
+		('bergamont', 'Bergamont'),
+		('bosch', 'Bosch'),
+		('cosmic', 'Cosmic'),
+		('cube', 'Cube'),
+		('ergotec', 'Ergotec'),
+		('grofa', 'Grofa'),
+		('hamax', 'Hamax'),
+		('hartje', 'Hartje'),
+		('magura', 'Magura'),
+		('mcg', 'MCG'),
+		('new wave', 'New Wave'),
+		('oneal', "O'neal"),
+		('ortlieb', 'Ortlieb'),
+		('lange', 'Paul Lange'),
+		('puky', 'Puky'),
+		('rm', 'R&M'),
+		('roeckl', 'Roeckl'),
+		('rti', 'RIT'),
+		('sks', 'SKS'),
+		('sonstige', 'Sonstige'),
+		('sqlab','SQ-Lab'),
+		('sram', 'SRAM DSD'),
+		('supernova', 'Supernova'),
+		('trek', 'Trek'),
+		('trelock', 'Trelock'),
+		('vaude', 'Vaude'),
+		('wiener', 'Wiender'),
+		('zeg', 'ZEG')
+	)
+
+	hersteller = models.CharField(max_length = 30, choices = HERSTELLER_CHOICES,)
+	artikelnr = models.CharField(max_length = 30,)
+	bezeichnung = models.CharField(max_length = 50,)
 	menge = models.IntegerField()
-	auftragsnr = models.CharField(max_length = 10)
+	auftragsnr = models.CharField(max_length = 10,)
 
 	fehlerbeschreibung = models.TextField()
 
 	def __str__(self):
 		return f'Ticket #{self.id}: {self.hersteller}'
+
+	class Meta:
+		permissions = (
+			('can_update_status', 'Can update ReklaTicket status'),
+		)

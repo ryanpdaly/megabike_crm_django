@@ -16,7 +16,7 @@ from ..insurance import models as insurance_models
 # Create your views here.
 
 @login_required
-def BikeDetailView(request, pk, rn):
+def bike_detail_view(request, pk, rn):
 	customer_instance = get_object_or_404(models.Customer, pk=pk)
 	bike_instance = get_object_or_404(models.Bike, rahmennummer=rn)
 	insurance = bike_instance.insurance
@@ -80,7 +80,7 @@ class BikeUpdateView(LoginRequiredMixin, generic.UpdateView):
 	slug_url_kwarg = 'rn'
 
 @login_required
-def CustomerDetailView(request, pk):
+def customer_detail_view(request, pk):
 	customer_instance = get_object_or_404(models.Customer, pk=pk)
 	bikes = models.Bike.objects.filter(kunde = pk)
 

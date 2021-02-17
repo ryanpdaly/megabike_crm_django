@@ -1,5 +1,4 @@
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
@@ -18,8 +17,9 @@ class TicketList(LoginRequiredMixin, generic.ListView):
 
 	#context = {"rekla_tickets":rekla_tickets,}
 
-class CreateTicket(LoginRequiredMixin, generic.CreateView):
+class CreateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView):
 	model = models.ReklaTicket
+	permission_required = ('can_add',)
 
 	template_name = 'warranty/new_kundenrekla.html'
 	success_url = reverse_lazy('warranty:main')
