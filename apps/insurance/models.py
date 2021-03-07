@@ -1,14 +1,19 @@
+import os
+from uuid import uuid4
+
 from django.db import models
 
 from ..customers import models as customer_models
 
 def set_upload_path(bike, filename):
-	# bike object has no attribue kunde
-	'''
-	Desired filepath: uploads/kd<kdnr>/<filename>
-	Not entirely sure how to get kundennummer out of what I've passed through
-	return f'uploads/kd{bike.kunde.kundennummer}/{filename}'
-	'''
+	#TODO: can't delete this because it's used in a migrate. Fix that.
+	pass
+
+def set_path_and_rename(instance, filename):
+	ext = filename.split('.')[-1]
+	filename = f'kd{instance.rahmennummer.kunde.kundennummer}/{uuid4()}.{ext}'
+
+	return filename
 
 class InsuranceCompanies(models.Model):
 	COMPANIES = (
@@ -34,7 +39,7 @@ class AssonaInfo(models.Model):
 	beginn = models.DateField()
 
 	versicherungskarte = models.FileField(blank=True, 
-		#upload_to=set_upload_path,
+		upload_to=set_path_and_rename,
 		)
 
 	def __str__(self):
@@ -57,7 +62,7 @@ class BikeleasingInfo(models.Model):
 	beginn = models.DateField()
 
 	versicherungskarte = models.FileField(blank=True, 
-		#upload_to=set_upload_path,
+		upload_to=set_path_and_rename,
 		)
 
 	def __str__(self):
@@ -86,7 +91,7 @@ class BusinessbikeInfo(models.Model):
 	verschleiss_guthaben = models.BooleanField(default=False)
 
 	versicherungskarte = models.FileField(blank=True, 
-		#upload_to=set_upload_path,
+		upload_to=set_path_and_rename,
 		)
 
 	def __str__(self):
@@ -103,7 +108,7 @@ class EnraInfo(models.Model):
 	policenummer = models.CharField(max_length=20)
 
 	versicherungskarte = models.FileField(blank=True, 
-		#upload_to=set_upload_path,
+		upload_to=set_path_and_rename,
 		)
 
 	def __str__(self):
@@ -119,7 +124,7 @@ class EuroradInfo(models.Model):
 	vertragsnummer = models.CharField(max_length=20)
 
 	versicherungskarte = models.FileField(blank=True, 
-		#upload_to=set_upload_path,
+		upload_to=set_path_and_rename,
 		)
 
 	def __str__(self):

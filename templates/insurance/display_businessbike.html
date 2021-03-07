@@ -1,0 +1,52 @@
+{% extends 'common/modal_base.html' %}
+
+{% block size %}
+  modal-lg
+{% endblock %}
+
+{% block header %}
+  Businessbike Versicherungspolice: {{ rahmennummer }}
+{% endblock %}
+
+{% block content %}
+  <div class="modal-body">
+    <table class="table table-striped">
+      <tr>
+        <th scope="col">Rahmennummer:</th>
+        <td scope="col">{{ rahmennummer }}</td>
+      </tr>
+      <tr>
+        <th>Leasinglaufzeit:</th>
+        <td>{{ insurance_info.beginn }} bis {{ insurance_info.ende }}</td>
+      </tr>
+      <tr>
+        <th>Policenummer:</th>
+        <td>{{ insurance_info.policenummer }}</td>
+      </tr>
+      <tr>
+        <th>Paket:</th>
+        <td>{{ insurance_info.paket }}</td>
+      </tr>
+      <tr>
+        <th>Verschleiss Guthaben:</th>
+        <td>{{ insurance_info.verschleiss_guthaben }}</td>
+      </tr>
+    </table>
+
+    {% if insurance_info.versicherungskarte %}
+      <div id="file-canvas">
+        <object data="{{ insurance_info.versicherungskarte.url }}" type="application/pdf" width="100%" height="500">
+          <iframe src="{{ insurance_info.versicherungskarte.url }}" width="100%" height="500" style="border:none;">
+            <p>Your browser doesn't support PDFs. Please download the file below.</p>
+          </iframe>
+        </object>
+      </div>
+    {% endif %}
+  </div>
+  <div class="modal-footer">
+    {% if insurance_info.versicherungskarte %}
+      <a href="{{ insurance_info.versicherungskarte.url }}" class="btn btn-success">Versicherungskarte herunterladen</a>
+    {% endif %}
+    <button type="button" class="btn btn-lg btn-secondary" data-dismiss="modal">Schliessen</button>
+  </div>
+{% endblock %}

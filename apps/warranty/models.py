@@ -1,9 +1,17 @@
 import datetime
+import os
+from uuid import uuid4
 
 from django.db import models
 from django.urls import reverse, reverse_lazy
 
 from ..customers import models as customers
+
+def set_path_and_rename(instance, filename):
+	ext = filename.split('.')[-1]
+	filename = f'kd{instance.rekla_ticket.kunde.kundennummer}/{uuid4()}.{ext}'
+
+	return filename
 
 # Create your models here.
 class ReklaTicket(models.Model):
@@ -124,7 +132,7 @@ class ReklaFile(models.Model):
 	date = models.DateField()
 
 	beschreibung = models.CharField(max_length=30)
-	file = models.FileField()
+	file = models.FileField(upload_to=set_path_and_rename)
 	anmerkung = models.TextField(blank=True)
 
 	def __str__(self):

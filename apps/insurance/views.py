@@ -17,18 +17,16 @@ def input_insurance(request, rn, insurance):
 	kdnr = bike_instance.kunde.kundennummer
 	rn = bike_instance.rahmennummer
 
-	# This will scale horribly, there absolutely has to be a better way to do this. Maybe a dictionary with {ins_code:InsForm()}?
+	INSURANCE_DISPATCHER = {
+		'as':forms.AssonaForm,
+		'bl':forms.BikeleasingForm,
+		'bu':forms.BusinessbikeForm,
+		'en':forms.EnraForm,
+		'eu':forms.EuroradForm,	
+	}
+
 	if request.method == "POST":
-		if insurance == 'as':
-			ins_form = forms.AssonaForm(request.POST, request.FILES)
-		elif insurance == 'bl':
-			ins_form = forms.BikeleasingForm(request.POST, request.FILES)
-		elif insurance == 'bu':
-			ins_form = forms.BusinessbikeForm(request.POST, request.FILES)
-		elif insurance == 'en':
-			ins_form = forms.EnraForm(request.POST, request.FILES)
-		elif insurance == 'eu':
-			ins_form = forms.EuroradForm(request.POST, request.FILES)
+		ins_form = INSURANCE_DISPATCHER[insurance](request.POST, request.FILES)
 
 		update_bike = forms.UpdateBikeForm(request.POST, instance=bike_instance)
 
@@ -36,20 +34,10 @@ def input_insurance(request, rn, insurance):
 			ins_form.save()
 			update_bike.save()
 
-			return HttpResponseRedirect(reverse('customers:bike-detail', kwargs={'pk':kdnr, 'rn':rn}))
+			return HttpResponseRedirect(reverse('customers:customer-detail', kwargs={'pk':kdnr,}))
 	else:
-		if insurance == 'as':
-			ins_form = forms.AssonaForm(initial={"rahmennummer":rn})
-		elif insurance == 'bl':
-			ins_form = forms.BikeleasingForm(initial={"rahmennummer":rn})
-		elif insurance == 'bu':
-			ins_form = forms.BusinessbikeForm(initial={"rahmennummer":rn})
-		elif insurance == 'en':
-			ins_form = forms.EnraForm(initial={"rahmennummer":rn})
-		elif insurance == "eu":
-			ins_form = forms.EuroradForm(initial={"rahmennummer":rn})
+		ins_form = INSURANCE_DISPATCHER[insurance](initial={"rahmennummer":rn})
 
-		# This doesn't set an initial value for versicherungsunternehmen for some reason
 		update_bike = forms.UpdateBikeForm(instance=bike_instance, initial={"insurance":insurance})
 
 	context = {
@@ -74,3 +62,38 @@ def list_all(request):
 @login_required
 def info_page(request, insurance):
 	return render(request, f'insurance/info_{insurance}.html')
+
+@login_required
+def display_policy(request, rn):
+	bike_instance = get_object_or_404(customer_models.Bike, rahmennummer=rn)
+	insurance = bike_instance.insurance
+
+	INSURANCE_OPTIONS = {
+		'no': 'None',
+		'as': models.AssonaInfo,
+		'bl': models.BikeleasingInfo,
+		'bu': models.BusinessbikeInfo,
+		'en': models.EnraInfo,
+		'eu': models.EuroradInfo,
+	}
+
+	INSURANCE_URL = {
+		'no':'none',
+		'as':'assona',
+		'bl':'bikeleasing',
+		'bu':'businessbike',
+		'en':'enra',
+		'eu':'eurorad'
+	}
+
+	if bike_instance.insurance != 'no':
+		insurance_info = get_object_or_404(INSURANCE_OPTIONS[insurance], rahmennummer=rn)
+	else:
+		insurance_info = False
+
+	context = {
+		'rahmennummer': rn,
+		'insurance_info': insurance_info,
+	}
+
+	return render(request, f'insurance/display_{INSURANCE_URL[insurance]}.html', context=context)

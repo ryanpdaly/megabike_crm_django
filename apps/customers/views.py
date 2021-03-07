@@ -96,7 +96,6 @@ def customer_detail_view(request, pk):
 
 class CustomerInputView(LoginRequiredMixin, generic.CreateView):
 	model = models.Customer
-	#fields = '__all__'	
 	template_name = 'customers/customer_input.html'
 	success_url = reverse_lazy('customers:customer-list')
 
@@ -128,14 +127,10 @@ class CustomerListView(LoginRequiredMixin, generic.ListView):
 	def get_context_data(self, **kwargs):
 		context = super(CustomerListView, self).get_context_data(**kwargs)
 
-		# Are these still necessary?
-		context['bikes_all'] = models.Bike.objects.filter(kunde_id__exact="12345").count()
-		context['bikes_insured'] = models.Bike.objects.filter(kunde_id__exact="12345").exclude(insurance="no").count()
-
 		return context
 
 class CustomerUpdateView(LoginRequiredMixin, generic.UpdateView):
 	model = models.Customer
 
-	template_name_suffix = '_update_form'
+	template_name_suffix = '_update'
 	form_class = forms.CustomerForm

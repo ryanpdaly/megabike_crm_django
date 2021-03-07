@@ -1,0 +1,41 @@
+{% extends 'common/modal_base.html' %}
+
+{% block size %}
+  modal-lg
+{% endblock %}
+
+{% block header %}
+  Keine Versicherungspolice: {{ rahmennummer }}
+{% endblock %}
+
+{% block content %}
+	<div class="modal-body">Keine Versicherungspolice vorhanden.</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-success dropdown-toggle" id="insuranceDropdown" 
+			data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			Versicherung anlegen
+		</button>
+		<div class="dropdown-menu" aria-labelledby="insuranceDropdown">
+            <a class="dropdown-item" href="{% url 'insurance:input-insurance' rn=rahmennummer insurance='as' %}">
+              Assona
+            </a>
+            <a class="dropdown-item" href="{% url 'insurance:input-insurance' rn=rahmennummer insurance='bl' %}">
+              Bikeleasing Service
+            </a>
+            <a class="dropdown-item" href="{% url 'insurance:input-insurance' rn=rahmennummer insurance='bu' %}">
+              Businessbike
+            </a>
+            <a class="dropdown-item" href="{% url 'insurance:input-insurance' rn=rahmennummer insurance='en' %}">
+              ENRA
+            </a>
+            <a class="dropdown-item" href="{% url 'insurance:input-insurance' rn=rahmennummer insurance='eu' %}">
+              Eurorad
+            </a>
+        </div>
+		<button type="button" class="btn btn-secondary" data-dismiss="modal">Schliessen</button>
+	</div>
+{% endblock %}
+
+{% if insurance_info.versicherungskarte %}
+  <a href="{{ insurance_info.versicherungskarte.url }}" class="btn btn-success">Versicherungskarte herunterladen</a>
+{% endif %}

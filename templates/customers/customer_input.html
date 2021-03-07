@@ -1,41 +1,32 @@
-{% extends 'common/base.html' %}
-{% load static %}
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="staticBackdropLabel">Kundenprofil erstellen</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <form method='POST' enctype="multipart/form-data" action="{% url 'customers:customer-input' %}">
+      {% csrf_token %}
+      <div class="modal-body">
+      	<table>
+			{{ form.as_table }}
+		</table>
+		<br/>
+		<h4 class="mb-0 text-gray-800">Fahrzeug hinzufügen</h4>
+		<table>
+			{{ bikes.as_table }}
+		</table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <input type="submit" value="Save" class="btn btn-primary">
+      </div>
+    </form>
+  </div>
+</div>
 
-{% block title %}
-	MegabikeCRM: Kunde erstellen
-{% endblock %}
-
-{% block header %}
-	<h1 class="h2 mb-0 text-gray-800">Kundenprofil erstellen</h1>
-{% endblock %}
-
-{% block content %}
-	<body>
-		<form method='POST'>
-			{% csrf_token %}
-			<table>
-				{{ form.as_table }}
-			</table>
-			<br/>
-			<h4 class="mb-0 text-gray-800">Fahrzeug hinzufügen</h4>
-			<table>
-				{{ bikes.as_table }}
-			</table>
-			<input type='submit' class="btn btn-primary btn-lg" value='Save'>
-		</form>
-	</body>
-{% endblock %}
-
-
-{% block javascript %}
-	{{ block.super }}
-	<script>
-		$("#id_kundennummer").change(function () {
-			console.log( $(this).val() );
-		});
-
-		$("#id_bike_set-0-insurance").change(function () {
-			console.log( $(this).val() );
-		})
-	</script>
-{% endblock %}
+<script>
+    var form_options = { target: '#modal', success: function(response) {} };
+    $('#news-create').ajaxForm(form_options);
+</script>

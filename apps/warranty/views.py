@@ -68,7 +68,7 @@ class DisplayTicket(LoginRequiredMixin, generic.DetailView):
 
 class UpdateTicket(LoginRequiredMixin, generic.UpdateView):
 	model = models.ReklaTicket
-	template_name_suffix = '_update_form'
+	template_name_suffix = '_update'
 	success_url = reverse_lazy('warranty:main')
 
 	form_class = forms.NewTicketForm

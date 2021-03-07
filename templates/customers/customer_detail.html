@@ -16,14 +16,14 @@
 		  Kunde bearbeiten
 		</button>
 		<div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
-			<a class="dropdown-item" href="{% url 'customers:customer-update' pk=customer.kundennummer %}">Kundendaten bearbeiten</a>
+			<a class="dropdown-item" data-toggle="modal" data-target="#modal" 
+				data-url="{% url 'customers:customer-update' pk=customer.kundennummer %}">Kundendaten bearbeiten</a>
 			<div class="dropdown-divider"></div>
-			{% comment %}<a class="dropdown-item" href="{% url 'customers:bike-input' pk=customer.kundennummer %}">Fahrzeug hinzufügen</a>{% endcomment %}
-			<a class="dropdown-item" data-toggle="modal" data-target="#modal" data-url="{% url 'customers:bike-input' pk=customer.kundennummer %}">Fahrzeug hinzufügen</a>
+			<a class="dropdown-item" data-toggle="modal" data-target="#modal" 
+				data-url="{% url 'customers:bike-input' pk=customer.kundennummer %}">Fahrzeug hinzufügen</a>
 			<a class="dropdown-item" href="{% url 'warranty:new-ticket' %}">Rekla erstellen</a>
 		</div>
 	</div>
-
 {% endblock %}
 
 {% block content %}
@@ -52,7 +52,8 @@
 								  <tr>
 								  <!-- TODO: Dynamically color buttons depending on insurance policy -->
 								    <td scope="row">
-								    	<a href="{{ bike.get_absolute_url }}" class="btn btn-primary btn-icon-split">
+								    	<a class="btn btn-primary btn-icon-split" data-toggle="modal" data-target="#modal"
+								    		data-url="{% url 'insurance:display-policy' rn=bike.rahmennummer %}" >
 								  	  	  <span class="icon text-white-50">
 						  		  	        <i class="fas fa-flag"></i>
 						  		  	      </span>
