@@ -12,7 +12,7 @@
 {% block content %}
 	<h1 class="h3 mb-0 text-gray-800">Versicherungsinformation für {{ bike.beschreibung }} ({{ bike.rahmennummer }})</h1>
 	<br/>
-	<form action="" method="post">
+	<form action="" method="post" enctype="multipart/form-data">
 		{% csrf_token %}
 		<table>
 			{{ ins_form.as_table }}

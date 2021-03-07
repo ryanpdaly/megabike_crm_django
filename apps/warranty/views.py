@@ -31,7 +31,7 @@ class CreateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateVi
 		data = super().get_context_data(**kwargs)
 		if self.request.POST:
 			data['update'] = forms.StatusFormset(self.request.POST)
-			data['files'] = forms.FileFormset(self.request.POST)
+			data['files'] = forms.FileFormset(self.request.POST, self.request.FILES)
 		else:
 			data['update'] = forms.StatusFormset()
 			data['files'] = forms.FileFormset()
@@ -72,3 +72,46 @@ class UpdateTicket(LoginRequiredMixin, generic.UpdateView):
 	success_url = reverse_lazy('warranty:main')
 
 	form_class = forms.NewTicketForm
+
+class AddFile(LoginRequiredMixin, generic.CreateView):
+	model = models.ReklaFile
+	fields = ('beschreibung', 'file', 'anmerkung',)
+
+	template_name = 'warranty/add_file.html'
+
+	def get_context_data(self, **kwargs):
+		data = super().get_context_data(**kwargs)
+		data['ticket_id'] = self.kwargs['pk']
+		return data
+
+	def form_valid(self, form):
+		rekla_ticket = models.ReklaTicket.objects.filter(id=self.kwargs['pk'])
+		form.instance.rekla_ticket = rekla_ticket[0]
+
+		return super().form_valid(form)
+
+class UpdateStatus(LoginRequiredMixin, generic.CreateView):
+	model = models.ReklaStatusUpdate
+	fields = ('status', 'anmerkung')
+
+	template_name = 'warranty/update_status.html'
+
+	def get_context_data(self, **kwargs):
+		data = super().get_context_data(**kwargs)
+		data['ticket_id'] = self.kwargs['pk']
+		return data
+
+	def form_valid(self, form):
+		rekla_ticket = models.ReklaTicket.objects.filter(id=self.kwargs['pk'])
+		form.instance.rekla_ticket = rekla_ticket[0]
+		return super().form_valid(form)
+
+def display_file(request, pk, sk):
+	file_object = get_object_or_404(models.ReklaFile, id=sk)
+	filename = file_object.file
+
+	context={
+		'file_object':file_object,
+	}
+
+	return render(request, 'warranty/display_file.html', context=context)

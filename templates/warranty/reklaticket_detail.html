@@ -12,147 +12,184 @@
 		<div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
 			<a class="dropdown-item" href="{% url 'warranty:update-ticket' pk=reklaticket.id %}">Infos bearbeiten</a>
 			<div class="dropdown-divider"></div>
-			<a class="dropdown-item" href="#">Status ändern</a>
-			<a class="dropdown-item" href="#">Datei hinzufügen</a>
+			<a class="dropdown-item" data-toggle="modal" data-target="#modal" data-url="{% url 'warranty:update-status' pk=reklaticket.id %}">Status Update hinzufügen</a>
+			<a class="dropdown-item" data-toggle="modal" data-target="#modal" data-url="{% url 'warranty:add-file' pk=reklaticket.id %}">Datei hinzufügen</a>
 		</div>
 	</div>
 {% endblock %}
 
 {% block content %}
 <div class="container-fluid">
-		<div class="row top-buffer">
-			<div class="col-xl-8">
-				<div class="card shadow mb-4 h-100">
-					<a href="#collapseBasicInfo" class="d-block card-header py-3" data-toggle="collapse" role="button" 
-						aria-expanded="true" aria-controls="collaseBasicInfo">
-						<h6 class="m-0 font-weight-bold text-primary">
-							Aktuelle Stand:
-						</h6>
-						{% comment %}
-						<div class="dropdown no-arrow">
-							<a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                    		</a>
-                    		<div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-                    			<a class="dropdown-item" href="{% url 'warranty:update-ticket' pk=reklaticket.id %}">Infos bearbeiten</a>
-                    		</div>
-                    	</div>
-                    	{% endcomment %}
+	<div class="row top-buffer">
+		<div class="col-xl-6">
+			<div class="card shadow mb-4">
+				<a href="#collapseBasicInfo" class="d-block card-header py-3" data-toggle="collapse" role="button" 
+					aria-expanded="true" aria-controls="collaseBasicInfo">
+					<h6 class="m-0 font-weight-bold text-primary">
+						Aktuelle Stand: {{ current_status.get_status_display }}
+					</h6>
+				</a>
+				<div class="collapse card-body" id="collapseBasicInfo">
+					<a href="{% url 'warranty:update-ticket' pk=reklaticket.id %}" class="d-none d-sm-inline-block btn btn-primary shadow-sm btn-block">
+					<i class="fas fa-download fa-sm text-white-50"></i> 
+						Ticket bearbeiten
 					</a>
-					<div class="collapse card-body" id="collapseBasicInfo">
-						<a href="{% url 'warranty:update-ticket' pk=reklaticket.id %}" class="d-none d-sm-inline-block btn btn-primary shadow-sm btn-block">
-						<i class="fas fa-download fa-sm text-white-50"></i> 
-							Ticket bearbeiten
-						</a>
-						<table class='table table-striped top-buffer'>
-							<tr>
-								<th scope='row'>Kunde:</th>
-								<td>{{ reklaticket.kunde }}</td>
-							</tr>
-							<tr>
-								<th scope='row'>Status:</th>
-								<td>{{ current_status.get_status_display }}</td>
-							</tr>
-							<tr>
-								<th scope='row'>Sachbearbeiter: </th>
-								<td>{{ reklaticket.get_sachbearbeiter_display }}</td>
-							</tr>
-							<tr>
-								<th scope='row'>Angenommen: </th>
-								<td>{{ reklaticket.angenommen }}</td>
-							</tr>
-							<tr>
-								<th scope='row'>Hersteller: </th>
-								<td>{{ reklaticket.get_hersteller_display }}</td>
-							</tr>
-							<tr>
-								<th scope='row'>Artikelnummer: </th>
-								<td>{{ reklaticket.artikelnr }}</td>
-							</tr>
-							<tr>
-								<th scope='row'>Bezeichnung: </th>
-								<td>{{ reklaticket.bezeichnung }}</td>
-							</tr>
-							<tr>
-								<th scope='row'>Menge: </th>
-								<td>{{ reklaticket.menge }}</td>
-							</tr>
-							<tr>
-								<th scope='row'>Auftragsnr: </th>
-								<td>{{ reklaticket.auftragsnr }}</td>
-							</tr>
-							<tr>
-								<th scope='row'>Fehlerbeschreibung: </th>
-								<td>{{ reklaticket.fehlerbeschreibung }}</td>
-							</tr>
-						</table>
-					</div>
-				</div>
-			</div>
-			<div class="col-xl-4">
-				<div class="card shadow mb-4 h-100">
-					<a href="#collapseFiles" class="d-block card-header py-3" data-toggle="collapse" role="button" 
-						aria-expanded="true" aria-controls="collaseFiles">
-						<h6 class="m-0 font-weight-bold text-primary">
-							Datein:
-						</h6>
-					</a>
-					<div class="collapse card-body" id="collapseFiles">
-						{% if files %}
-							<table>
-								<tr>
-									<th>Datei:</th>
-									<th>Beschreibung</th>
-								</tr>
-								{% for file in files %}
-								<tr>
-									<a href="#">{{ file.file }}</a>
-									{{ file.beschreibung }}
-								</tr>
-								{% endfor %}
-							</table>
-						{% endif %}
-					</div>
+					<table class='table table-striped top-buffer'>
+						<tr>
+							<th scope='row'>Kunde:</th>
+							<td>{{ reklaticket.kunde }}</td>
+						</tr>
+						<tr>
+							<th scope='row'>Status:</th>
+							<td>{{ current_status.get_status_display }}</td>
+						</tr>
+						<tr>
+							<th scope='row'>Sachbearbeiter: </th>
+							<td>{{ reklaticket.get_sachbearbeiter_display }}</td>
+						</tr>
+						<tr>
+							<th scope='row'>Angenommen: </th>
+							<td>{{ reklaticket.angenommen }}</td>
+						</tr>
+						<tr>
+							<th scope='row'>Hersteller: </th>
+							<td>{{ reklaticket.get_hersteller_display }}</td>
+						</tr>
+						<tr>
+							<th scope='row'>Artikelnummer: </th>
+							<td>{{ reklaticket.artikelnr }}</td>
+						</tr>
+						<tr>
+							<th scope='row'>Bezeichnung: </th>
+							<td>{{ reklaticket.bezeichnung }}</td>
+						</tr>
+						<tr>
+							<th scope='row'>Menge: </th>
+							<td>{{ reklaticket.menge }}</td>
+						</tr>
+						<tr>
+							<th scope='row'>Auftragsnr: </th>
+							<td>{{ reklaticket.auftragsnr }}</td>
+						</tr>
+						<tr>
+							<th scope='row'>Fehlerbeschreibung: </th>
+							<td>{{ reklaticket.fehlerbeschreibung }}</td>
+						</tr>
+					</table>
 				</div>
 			</div>
 		</div>
-		<div class="row top-buffer">
-			<div class="col-xl-8">
-				<div class="card shadow mb-4 h-100">
-					<a href="#collapseStatus" class="d-block card-header py-3" data-toggle="collapse" role="button"
-						aria-expanded="true" aria-controls="collapseStatus">
-						<h6 class="m-0 font-weight-bold text-primary">
-							Status Updates:
-						</h6>
-					</a>
-					<div class="collapse card-body" id="collapseStatus">
-						<table class="table">
+		<div class="col-xl-6">
+			<div class="card shadow mb-4">
+				<a href="#collapseFiles" class="d-block card-header py-3" data-toggle="collapse" role="button" 
+					aria-expanded="true" aria-controls="collaseFiles">
+					<h6 class="m-0 font-weight-bold text-primary">
+						Datein:
+					</h6>
+				</a>
+				<div class="collapse card-body" id="collapseFiles">
+					<button type="button" class="d-none d-sm-inline-block btn btn-primary shadow-sm btn-block" 
+						data-toggle="modal" data-target="#modal" data-url="{% url 'warranty:add-file' pk=reklaticket.id %}">
+						<i class="fas fa-download fa-sm text-white-50"></i> 
+						Datei hinzufügen
+					</button>
+
+					{% if files %}
+						<table class="table table-hover top-buffer">
 							<thead class="thead-dark">
 								<tr scope="row">
-									<th>Datum</th>
-									<th>Status</th>
-									<th>Anmerkungen</th>
+									<th></th>
+									<th>Datum:</th>
+									<th>Beschreibung</th>
 								</tr>
 							</thead>
 							<tbody class="table-striped">
-							{% for status in status_updates %}
-								<tr scope="row">
-									<th>{{ status.date }}</th>
-									<td>{{ status.status }}</td>
-									<td>{{ status.anmerkung }}</td>
+								{% for file in files %}
+								<tr>
+									<td><button type="button" class="btn btn-primary btn-circle btn-sm"
+											data-toggle="modal" data-target="#modal" 
+											data-url="{% url 'warranty:display-file' pk=reklaticket.id sk=file.id %}">
+											<i class="fas fa-binoculars"></i>
+										</button></td>
+									<td>{{ file.date}}</td>
+									<td>{{ file.beschreibung }}</td>
 								</tr>
 							{% endfor %}
 							</tbody>
 						</table>
-					</div>
+					{% else %}
+						<div class="text-gray-400 top-buffer">Keine Datein vorhanden</div>
+					{% endif %}
 				</div>
 			</div>
 		</div>
 	</div>
-	
-{% endblock %}
+	<div class="row">
+		<div class="col-xl-12">
+			<div class="card shadow mb-4 h-100">
+				<a href="#collapseStatus" class="d-block card-header py-3" data-toggle="collapse" role="button"
+					aria-expanded="true" aria-controls="collapseStatus">
+					<h6 class="m-0 font-weight-bold text-primary">
+						Status Updates:
+					</h6>
+				</a>
+				<div class="collapse card-body" id="collapseStatus">
 
+					<button type="button" class="d-none d-sm-inline-block btn btn-primary shadow-sm btn-block" 
+						data-toggle="modal" data-target="#modal" data-url="{% url 'warranty:update-status' pk=reklaticket.id %}">
+						<i class="fas fa-download fa-sm text-white-50"></i> 
+						Status Update hinzufügen
+					</button>
+
+					<table class="table top-buffer">
+						<thead class="thead-dark">
+							<tr scope="row">
+								<th>Datum</th>
+								<th>Mitarbeiter</th>
+								<th>Status</th>
+								<th>Anmerkungen</th>
+							</tr>
+						</thead>
+						<tbody class="table-striped">
+						{% for status in status_updates %}
+							<tr scope="row">
+								<th>{{ status.date }}</th>
+								<th>{{ status.mitarbeiter }}</th>
+								<td>{{ status.get_status_display }}</td>
+								<td>{{ status.anmerkung }}</td>
+							</tr>
+						{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal" id="modal" tabindex="-1" role="dialog"></div>
+{% endblock %}
 
 {% block javascript %}
 	{{ block.super }}
+
+	<!-- ajax form submission -->
+	<script src="http://malsup.github.com/jquery.form.js"></script>
+
+	<!-- load response from desired form url -->
+	<script>
+		$('#modal').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget)
+		    var form_url = button.data('url')
+
+		    var modal = $(this)
+		    
+		    $.ajax({
+		        url: form_url,
+		        context: document.body,
+		    }).done(function(response) {
+		        modal.html(response);
+		    });
+		})
+	</script>
 {% endblock %}

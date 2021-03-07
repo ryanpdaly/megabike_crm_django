@@ -15,13 +15,13 @@ def count_insured(kdnr):
 
 @register.filter(name='count_open_tickets')
 def count_open_tickets(kdnr):
-	open_tickets = []
-	tickets = warranty_models.ReklaTicket.objects.filter(kunde=kdnr)
-
-	for ticket in tickets:
-		current_status = warranty_models.ReklaStatusUpdate.objects.filter(rekla_ticket=ticket.id).order_by('-id')[0]
-
-		if current_status != 'Erledigt':
-			open_tickets.append(tickets)
+	open = 0
 	
-	return len(open_tickets)
+	tickets = warranty_models.ReklaTicket.objects.filter(kunde=kdnr)
+	for ticket in tickets:
+		current_status = warranty_models.ReklaStatusUpdate.objects.filter(rekla_ticket=ticket.id).order_by('-id')[0].status
+
+		if current_status != 'erledigt':
+			open += 1
+	
+	return open

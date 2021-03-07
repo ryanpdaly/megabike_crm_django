@@ -38,7 +38,7 @@ class AssonaInfo(models.Model):
 		)
 
 	def __str__(self):
-		return 'Assona'
+		return f'{self.rahmennummer} Assona'
 
 	def get_fields(self):
 		return [(field.name, field.value_to_string(self)) for field in AssonaInfo._meta.fields]

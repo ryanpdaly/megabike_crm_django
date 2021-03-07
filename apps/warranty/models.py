@@ -1,6 +1,7 @@
 import datetime
 
 from django.db import models
+from django.urls import reverse, reverse_lazy
 
 from ..customers import models as customers
 
@@ -108,7 +109,10 @@ class ReklaStatusUpdate(models.Model):
 	anmerkung = models.TextField()
 
 	def __str__(self):
-		return f'Ticket #{self.rekla_ticket.id} Update {self.id} vom {self.date}'
+		return f'Ticket #{self.rekla_ticket.id} - {self.status} am {self.date}'
+
+	def get_absolute_url(self):
+		return reverse('warranty:display-ticket', args=(self.rekla_ticket.id,))
 
 	def save(self):
 		if not self.id:
@@ -121,10 +125,13 @@ class ReklaFile(models.Model):
 
 	beschreibung = models.CharField(max_length=30)
 	file = models.FileField()
-	anmerkung = models.TextField()
+	anmerkung = models.TextField(blank=True)
 
 	def __str__(self):
-		return f'Ticket #{self.rekla_ticket.id} Datei {self.id} vom {self.date}'
+		return f'Ticket #{self.rekla_ticket.id}: {self.beschreibung}'
+
+	def get_absolute_url(self):
+		return reverse('warranty:display-ticket', args=(self.rekla_ticket.id,))
 
 	def save(self):
 		if not self.id:

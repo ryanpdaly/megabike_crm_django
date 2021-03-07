@@ -53,7 +53,7 @@
   				    {% endif %}
   				</th>
       			<th scope="row"><a href="{% url 'warranty:display-ticket' pk=ticket.id %}">{{ ticket.id }}</a></th>
-      			<td><a href="#">{{ ticket.id|get_current_status }}</a></td>
+      			<td><a href="{% url 'warranty:display-ticket' pk=ticket.id %}">{{ ticket.id|get_current_status }}</a></td>
       			<td>vor <b>{{ ticket.id|get_last_update }}</b> Tage</td>
       			<td>{{ ticket.kunde.kundennummer }}</td>      				
       			<td>{{ ticket.kunde.nachname }}</td>

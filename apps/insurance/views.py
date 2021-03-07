@@ -20,15 +20,15 @@ def input_insurance(request, rn, insurance):
 	# This will scale horribly, there absolutely has to be a better way to do this. Maybe a dictionary with {ins_code:InsForm()}?
 	if request.method == "POST":
 		if insurance == 'as':
-			ins_form = forms.AssonaForm(request.POST)
+			ins_form = forms.AssonaForm(request.POST, request.FILES)
 		elif insurance == 'bl':
-			ins_form = forms.BikeleasingForm(request.POST)
+			ins_form = forms.BikeleasingForm(request.POST, request.FILES)
 		elif insurance == 'bu':
-			ins_form = forms.BusinessbikeForm(request.POST)
+			ins_form = forms.BusinessbikeForm(request.POST, request.FILES)
 		elif insurance == 'en':
-			ins_form = forms.EnraForm(request.POST)
+			ins_form = forms.EnraForm(request.POST, request.FILES)
 		elif insurance == 'eu':
-			ins_form = forms.EuroradForm(request.POST)
+			ins_form = forms.EuroradForm(request.POST, request.FILES)
 
 		update_bike = forms.UpdateBikeForm(request.POST, instance=bike_instance)
 

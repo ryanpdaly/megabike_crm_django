@@ -18,7 +18,8 @@
 		<div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
 			<a class="dropdown-item" href="{% url 'customers:customer-update' pk=customer.kundennummer %}">Kundendaten bearbeiten</a>
 			<div class="dropdown-divider"></div>
-			<a class="dropdown-item" href="{% url 'customers:bike-input' pk=customer.kundennummer %}">Fahrzeug hinzufügen</a>
+			{% comment %}<a class="dropdown-item" href="{% url 'customers:bike-input' pk=customer.kundennummer %}">Fahrzeug hinzufügen</a>{% endcomment %}
+			<a class="dropdown-item" data-toggle="modal" data-target="#modal" data-url="{% url 'customers:bike-input' pk=customer.kundennummer %}">Fahrzeug hinzufügen</a>
 			<a class="dropdown-item" href="{% url 'warranty:new-ticket' %}">Rekla erstellen</a>
 		</div>
 	</div>
@@ -35,6 +36,7 @@
 						<h6 class="m-0 font-weight-bold text-primary">Fahrzeuge ({{ customer.kundennummer|count_bikes }} stk):</h6>
 					</a>
 					<div class="collapse card-body" id="collapseFahrzeuge">
+
 						{% if bikes %}
 							<div class="table-responsive">
 							  <table id="dataTable" class="table table-striped">
@@ -96,11 +98,37 @@
 								<tbody>
 									{% for rekla in reklas %}
 										<tr scope="row">
-											<td></td>
-											<td>{{ rekla.id }}</td>
-											<td>{{ rekla.id|get_current_status }}
+											<td>
+											{% comment %}
+												1) Need to uniform terminology. In some places I use rekla, in some tickets
+												2) This is a lot of repeated code from warranty/list_all.html
+											{% endcomment %}
+												{% if rekla.id|get_current_status == 'Erledigt' %}
+							      				  	<a href="{% url 'warranty:display-ticket' pk=rekla.id %}" 
+							      				  		class="btn btn-secondary btn-circle btn-sm">
+							      						<i class="fas fa-check"></i>
+							      				  	</a>
+							      				{% elif rekla.id|get_last_update >= 9 %}
+							      				  	<a href="{% url 'warranty:display-ticket' pk=rekla.id %}" 
+							      				  		class="btn btn-danger btn-circle btn-sm">
+							      				  		<i class="fas fa-exclamation-triangle"></i>
+							      				  	</a>
+							      				{% elif rekla.id|get_last_update >= 5 %}
+							    				  	<a href="{% url 'warranty:display-ticket' pk=rekla.id %}" 
+							    				  		class="btn btn-warning btn-circle btn-sm">
+							      				    	<i class="fas fa-exclamation-triangle"></i>
+							      				  	</a>
+							      				{% else %}
+							      				  <a href="{% url 'warranty:display-ticket' pk=rekla.id %}" 
+							      				  	class="btn btn-success btn-circle btn-sm">
+							      				  	<i class="fas fa-info-circle"></i>
+							      				  </a>
+							  				    {% endif %}
+							  				</td>
+											<td><a href="{% url 'warranty:display-ticket' pk=rekla.id %}">{{ rekla.id }}</a></td>
+											<td><a href="{% url 'warranty:display-ticket' pk=rekla.id %}">{{ rekla.id|get_current_status }}</a></td>
 											<td>vor <b>{{ rekla.id|get_last_update }}</b> Tage</td>
-											<td>{{ rekla.hersteller }}
+											<td>{{ rekla.get_hersteller_display }}
 										</tr>
 									{% endfor %}
 								</tbody>
@@ -117,6 +145,7 @@
 		</div>
 	</div>
 
+<div class="modal" id="modal" tabindex="-1" role="dialog"></div>
 {% endblock %}
 
 {% block javascript %}
@@ -125,4 +154,26 @@
     <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
     <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
     <script src="{% static 'js/datatables.js' %}"></script>
+
+	<!-- ajax form submission -->
+	<script src="http://malsup.github.com/jquery.form.js"></script>
+
+	<!-- load response from desired form url -->
+	<script>
+		$('#modal').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget)
+		    var form_url = button.data('url')
+
+		    var modal = $(this)
+		    
+		    $.ajax({
+		        url: form_url,
+		        context: document.body,
+		        async: true,
+
+		    }).done(function(response) {
+		        modal.html(response);
+		    });
+		})
+	</script>
 {% endblock %}
