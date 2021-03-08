@@ -26,7 +26,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('common/', include('apps.common.urls')),
-        
+    path('contact/', include('apps.contact.urls')),
     path('customers/', include('apps.customers.urls')),
     path('insurance/', include('apps.insurance.urls')),
     path('leasing/', include('apps.leasing.urls')),

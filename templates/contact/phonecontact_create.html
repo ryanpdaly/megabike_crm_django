@@ -1,0 +1,27 @@
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="staticBackdropLabel">Neue telefonische Kontaktanfrage</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <form method='POST' enctype="multipart/form-data" action="{% url 'contact:create-call' %}">
+      {% csrf_token %}
+      <div class="modal-body">
+          <table>
+            {{ form.as_table }}
+          </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <input type="submit" value="Save" class="btn btn-primary">
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+    var form_options = { target: '#modal', success: function(response) {} };
+    $('#news-create').ajaxForm(form_options);
+</script>
