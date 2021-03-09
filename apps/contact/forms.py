@@ -12,4 +12,4 @@ class NewPhoneContact(forms.ModelForm):
 class UpdatePhoneContactStatus(forms.ModelForm):
 	class Meta:
 		model = models.PhoneContact
-		fields = ('status',)
+		fields = ('status', 'anmerkungen',)
