@@ -1,8 +1,9 @@
 from datetime import datetime
 
 from django import forms
+from django.core.exceptions import ValidationError
 from django.forms import SelectDateWidget
-from django.forms.models import inlineformset_factory
+from django.forms.models import BaseInlineFormSet, inlineformset_factory
 
 from . import models
 
@@ -27,16 +28,27 @@ class AddReklaFile(forms.ModelForm):
 		fields = ('beschreibung', 'file', 'anmerkung')
 
 
+class CustomStatusFormset(BaseInlineFormSet):
+	def clean(self):
+		for form in self.forms:
+			status = form.cleaned_data.get('status')
+			if not status:
+				raise ValidationError('Keinen Status', 'error')
+
 StatusFormset = inlineformset_factory(
 		models.ReklaTicket, models.ReklaStatusUpdate,
 		exclude = ('created', 'updated', 'date'),
-		extra = 1,
-		can_delete = False
+		min_num = 1,
+		extra = 0,
+		can_delete = False,
+		formset = CustomStatusFormset,
 	)
+
 
 FileFormset = inlineformset_factory(
 		models.ReklaTicket, models.ReklaFile,
 		exclude = ('created', 'updated', 'date'),
-		extra = 1,
+		min_num = 1,
+		extra=0,
 		can_delete = True
 	)

@@ -20,37 +20,66 @@ class TicketList(LoginRequiredMixin, generic.ListView):
 
 class CreateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView):
 	model = models.ReklaTicket
-	permission_required = ('can_add',)
+	permission_required = ('warranty.add_reklaticket',)
 
 	template_name = 'warranty/new_kundenrekla.html'
 	success_url = reverse_lazy('warranty:main')
 
 	form_class = forms.NewTicketForm
+	
+	def get(self, request, *args, **kwargs):
+		# Handles GET requests, instantiates blank form and formsets
+		self.object = None
+		form_class = self.get_form_class()
+		form = self.get_form(form_class)
+		status_form = forms.StatusFormset()
+		files_form = forms.FileFormset()
+		return render(request, self.template_name,
+			self.get_context_data(form = form,
+									status_form = status_form,
+									files_form = files_form
+									)
+								)
 
-	def get_context_data(self, **kwargs):
-		data = super().get_context_data(**kwargs)
-		if self.request.POST:
-			data['update'] = forms.StatusFormset(self.request.POST)
-			data['files'] = forms.FileFormset(self.request.POST, self.request.FILES)
+	def post(self, request, *args, **kwargs):
+		# Handles POST requests, instatiates form instance and formsets with POST variables and checks validity
+		self.object = None
+		form_class = self.get_form_class()
+		form = self.get_form(form_class)
+		status_form = forms.StatusFormset(self.request.POST, instance=form.instance)
+		files_form = forms.FileFormset(self.request.POST, self.request.FILES, instance=form.instance)
+		if form.is_valid() and status_form.is_valid():
+			return self.form_valid(request, form, status_form, files_form)
 		else:
-			data['update'] = forms.StatusFormset()
-			data['files'] = forms.FileFormset()
-		return data
+			return self.form_invalid(request, form, status_form, files_form)
 
-	def form_valid(self, form):
-		context = self.get_context_data()
-		status = context['update']
-		files = context['files']
-		
-		self.object = form.save()
+	def form_valid(self, request, form, status_form, files_form):
+		# Called if all forms valid. Creates ReklaTicket and ReklaTicketStatus instances, redirects to success url
+		self.object = form.save(commit=False)
+		# pre-processing for ReklaTicket goes here
+		self.object.save()
 
-		if status.is_valid():
-			status.instance = self.object
+		status_form = status_form.save(commit=False)
+		for status in status_form:
+			# pre-processing for StatusUpdate goes here
 			status.save()
-		if files.is_valid():
-			files.instance = self.object
-			files.save()
-		return super().form_valid(form)
+
+		if files_form.is_valid():
+			files_form = files_form.save(commit=False)
+			for file in files_form:
+				# pre-processing for ReklaFiles goes here
+				file.save()
+
+		return HttpResponseRedirect(self.get_success_url())
+
+	def form_invalid(self, request, form, status_form, files_form):
+		# Called if form invalid, re-renders context data with data-filled forms and errors
+
+		return render(request, self.template_name, self.get_context_data(form=form,
+																status_form=status_form,
+																files_form=files_form,
+																)
+		)
 
 class DisplayTicket(LoginRequiredMixin, generic.DetailView):
 	model = models.ReklaTicket
@@ -66,15 +95,17 @@ class DisplayTicket(LoginRequiredMixin, generic.DetailView):
 
 		return data
 
-class UpdateTicket(LoginRequiredMixin, generic.UpdateView):
+class UpdateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.UpdateView):
 	model = models.ReklaTicket
+	permission_required = ('warranty.add_reklaticket',)
 	template_name_suffix = '_update'
 	success_url = reverse_lazy('warranty:main')
 
 	form_class = forms.NewTicketForm
 
-class AddFile(LoginRequiredMixin, generic.CreateView):
+class AddFile(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView):
 	model = models.ReklaFile
+	permission_required = ('warranty.add_reklaticket',)
 	fields = ('beschreibung', 'file', 'anmerkung',)
 
 	template_name = 'warranty/add_file.html'
@@ -90,8 +121,9 @@ class AddFile(LoginRequiredMixin, generic.CreateView):
 
 		return super().form_valid(form)
 
-class UpdateStatus(LoginRequiredMixin, generic.CreateView):
+class UpdateStatus(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView):
 	model = models.ReklaStatusUpdate
+	permission_required = ('warranty.add_reklaticket',)
 	fields = ('status', 'anmerkung')
 
 	template_name = 'warranty/update_status.html'

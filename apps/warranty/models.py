@@ -94,7 +94,6 @@ class ReklaTicket(models.Model):
 
 	class Meta:
 		permissions = (
-			('can_update_status', 'Can update ReklaTicket status'),
 		)
 
 class ReklaStatusUpdate(models.Model):
@@ -113,8 +112,8 @@ class ReklaStatusUpdate(models.Model):
 		('erledigt', 'Erledigt'),
 	)
 
-	status = models.CharField(max_length = 20, choices = STATUS_LIST)
-	anmerkung = models.TextField()
+	status = models.CharField(max_length = 20, choices = STATUS_LIST,)
+	anmerkung = models.TextField(blank=True)
 
 	def __str__(self):
 		return f'Ticket #{self.rekla_ticket.id} - {self.status} am {self.date}'
