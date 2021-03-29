@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 from django.forms import SelectDateWidget
 from django.forms.models import BaseInlineFormSet, inlineformset_factory
 
-from . import models
+from apps.warranty import models
 
 # TODO: I don't like that this is hard coded
 valid_years = [2020, 2021]

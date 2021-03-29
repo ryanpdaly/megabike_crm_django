@@ -3,7 +3,7 @@ from uuid import uuid4
 
 from django.db import models
 
-from ..customers import models as customer_models
+from apps.customers import models as customer_models
 
 def set_upload_path(bike, filename):
 	#TODO: can't delete this because it's used in a migrate. Fix that.

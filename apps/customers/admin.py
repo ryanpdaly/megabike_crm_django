@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Customer, Bike
+from apps.customers.models import Customer, Bike
 
 # Register your models here.
 

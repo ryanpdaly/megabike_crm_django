@@ -2,14 +2,14 @@ from datetime import datetime
 
 from django import forms
 
-from . import models
+from apps.contact import models
 
 class NewPhoneContact(forms.ModelForm):
 	class Meta:
 		model = models.PhoneContact
-		fields = ('status', 'kundenname', 'telefonnr', 'anmerkungen',)
+		fields = ('status', 'abteilung', 'kundenname', 'telefonnr', 'anmerkungen', 'gesprochen_mit',)
 
 class UpdatePhoneContactStatus(forms.ModelForm):
 	class Meta:
 		model = models.PhoneContact
-		fields = ('status', 'anmerkungen',)
+		fields = ('status', 'abteilung', 'anmerkungen',)

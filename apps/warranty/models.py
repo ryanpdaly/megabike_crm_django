@@ -5,7 +5,7 @@ from uuid import uuid4
 from django.db import models
 from django.urls import reverse, reverse_lazy
 
-from ..customers import models as customers
+from apps.customers import models as customers
 
 def set_path_and_rename(instance, filename):
 	ext = filename.split('.')[-1]

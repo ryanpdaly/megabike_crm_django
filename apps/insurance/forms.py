@@ -3,12 +3,9 @@ from datetime import datetime
 from django import forms
 from django.forms import SelectDateWidget
 
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, Row, Column, MultiWidgetField
+from apps.customers.models import Customer, Bike
+from apps.insurance.models import InsuranceCompanies, AssonaInfo, BikeleasingInfo, BusinessbikeInfo, EnraInfo, EuroradInfo
 
-from .models import InsuranceCompanies, AssonaInfo, BikeleasingInfo, BusinessbikeInfo, EnraInfo, EuroradInfo
-
-from ..customers.models import Customer, Bike
 
 # TODO: I don't like that this is hard coded
 valid_years = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025,]

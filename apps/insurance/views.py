@@ -5,11 +5,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import generic
 from django.urls import reverse, reverse_lazy
 
-from . import models
-# TODO: This seems wrong, find out the right way to do this.
-from ..customers import models as customer_models
+from apps.customers import models as customer_models
+from apps.insurance import forms
+from apps.insurance import models
 
-from . import forms
 
 @login_required
 def input_insurance(request, rn, insurance):

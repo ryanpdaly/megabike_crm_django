@@ -3,7 +3,7 @@ import datetime
 from django import forms
 from django.forms.models import inlineformset_factory
 
-from . import models
+from apps.customers import models
 
 class CustomerForm(forms.ModelForm):
 	class Meta:

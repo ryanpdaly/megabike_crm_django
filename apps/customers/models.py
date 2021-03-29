@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse, reverse_lazy
 
+
 class Customer(models.Model):
 	# Does our customer need contact info? It would save us having to look it up elsewhere
 
@@ -46,4 +47,4 @@ class Bike(models.Model):
 		return self.rahmennummer
 
 	def get_absolute_url(self):
-		return reverse_lazy('customers:bike-detail', kwargs={'pk':self.kunde.kundennummer, 'rn':self.rahmennummer})
+		return reverse_lazy('customers:customer-detail', kwargs={'pk':self.kunde.kundennummer})

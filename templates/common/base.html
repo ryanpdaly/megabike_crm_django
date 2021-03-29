@@ -19,7 +19,7 @@
 
     <!-- Custom styles for this template-->
     <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
-    <link href="{% static 'css/megabike-crm.css' %}" rel="stylesheet">
+    <!--<link href="{% static 'css/megabike-crm.css' %}" rel="stylesheet">-->
 
 </head>
 
@@ -52,7 +52,7 @@
             <hr class="sidebar-divider my-0">
 
             <li class="nav-item inactive">
-                <a class="nav-link" href="{% url 'contact:call-list' %}">
+                <a class="nav-link" href="{% url 'contact:call-list' abteilung='all' filter='all' %}">
                     <i class="fas fa-users"></i>
                     <span>Kontaktanfragen</span>
                 </a>

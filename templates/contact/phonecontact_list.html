@@ -8,13 +8,75 @@
 {% block header %}
 	<h1 class="h2 mb-0 text-gray-800">Kunden Kontaktanfragen</h1>
 	<a  class="d-none d-sm-inline-block btn btn-primary shadow-sm" data-toggle="modal" data-target="#modal" 
-		data-url="{% url 'contact:create-call' %}">
+		data-url="{% url 'contact:call-create' %}">
 		<i class="fas fa-download fa-sm text-white-50"></i> 
 		Kundenkontakt erstellen
 	</a>
 {% endblock %}
 
 {% block content %}
+	<div>
+		<a {% if view.kwargs.abteilung == 'all' %}
+			class="btn btn-outline-success shadow-sm active" aria-pressed="true"
+		{% else %}
+			class="btn btn-secondary shadow-sm"
+		{% endif %}
+			href="{% url 'contact:call-list' filter=view.kwargs.filter abteilung='all' %}">
+			Alle
+		</a>
+		<a {% if view.kwargs.abteilung == 'werkstatt' %}
+			class="btn btn-outline-success shadow-sm active" aria-pressed="true"
+		{% else %}
+			class="btn btn-secondary shadow-sm"
+		{% endif %}
+			href="{% url 'contact:call-list' filter=view.kwargs.filter abteilung='werkstatt' %}">
+			Werkstatt
+		</a>
+		<a {% if view.kwargs.abteilung == 'verkauf' %}
+			class="btn btn-outline-success shadow-sm active" aria-pressed="true"
+		{% else %}
+			class="btn btn-secondary shadow-sm"
+		{% endif %}
+			href="{% url 'contact:call-list' filter=view.kwargs.filter abteilung='verkauf' %}">
+			Verkauf
+		</a>
+		<a {% if view.kwargs.abteilung == 'buero' %}
+			class="btn btn-outline-success shadow-sm active" aria-pressed="true"
+		{% else %}
+			class="btn btn-secondary shadow-sm"
+		{% endif %}
+			href="{% url 'contact:call-list' filter=view.kwargs.filter abteilung='buero' %}">
+			Büro
+		</a>
+	</div>
+	<br/>
+	<div>
+		<a {% if view.kwargs.filter == 'all' %}
+			class="btn btn-outline-success btn-sm shadow-sm active" aria-pressed="true"
+		{% else %}
+			class="btn btn-secondary btn-sm shadow-sm button-sm"
+		{% endif %}
+			href="{% url 'contact:call-list' filter='all' abteilung=view.kwargs.abteilung %} ">
+			Alle Tickets
+		</a>
+		<a {% if view.kwargs.filter == 'open' %}
+			class="btn btn-outline-success btn-sm shadow-sm active" aria-pressed="true"
+		{% else %}
+			class="btn btn-secondary btn-sm shadow-sm"
+		{% endif %}
+			href="{% url 'contact:call-list' filter='open' abteilung=view.kwargs.abteilung %}">
+			Nur Offene Tickets
+		</a>
+	{% comment %}
+		<a class="d-none d-sm-inline-block btn btn-secondary shadow-sm" data-url="">
+			Verkauf
+		</a>
+		<a class="d-none d-sm-inline-block btn btn-secondary shadow-sm" data-url="">
+			Werkstatt
+		</a>
+	{% endcomment %}
+	</div>
+	<br/> <!-- This is downright hackish. Fix the damned CSS. -->
 {% if phonecontact_list %}
 	<div class='table-responsive'>
 	    <table id="dataTable" class="table table-striped table-hover">
@@ -32,34 +94,27 @@
 	      	{% for contact in phonecontact_list %}
 	      		<tr>
 	      			<th scope="row">      				
-	      				{% if contact.status == 'offen' %}
+	      				
 	      				  	<a data-toggle="modal" data-target='#modal' 
-	      				  		data-url="{% url 'contact:call-status-update' pk=contact.id %}" 
-	      				  		class="btn btn-danger btn-circle btn-sm">
-	      						<i class="fas fa-exclamation-triangle"></i>
-	      				  	</a>
-	      				{% elif contact.status == 'bearbeitung' %}
-	      				  	<a data-toggle="modal" data-target='#modal' 
-	      				  		data-url="{% url 'contact:call-status-update' pk=contact.id %}" 
-	      				  		class="btn btn-warning btn-circle btn-sm">
-	      				  		<i class="fas fa-exclamation-triangle"></i>
-	      				  	</a>
-	      				{% elif contact.status == 'erledigt' %}
-	    				  	<a data-toggle="modal" data-target='#modal' 
-	    				  		data-url="{% url 'contact:call-status-update' pk=contact.id %}" 
-	    				  		class="btn btn-success btn-circle btn-sm">
-	      				    	<i class="fas fa-check"></i>
-	      				  	</a>
-	      				{% else %}
-	      				  <a href="#" 
-	      				  	class="btn btn-info btn-circle btn-sm">
-	      				  	<i class="fas fa-question"></i>
-	      				  </a>
-	  				    {% endif %}
+	      				  		data-url="{% url 'contact:call-update-status' pk=contact.id %}" 
+      				  			{% if contact.status == 'offen' %}
+	      				  			class="btn btn-danger btn-circle btn-sm">
+	      							<i class="fas fa-exclamation-triangle"></i>
+	      						{% elif contact.status == 'bearbeitung' %}
+		      				  		class="btn btn-warning btn-circle btn-sm">
+	      				  			<i class="fas fa-exclamation-triangle"></i>
+			      				{% elif contact.status == 'erledigt' %}
+		    				  		class="btn btn-success btn-circle btn-sm">
+		      				    	<i class="fas fa-check"></i>			      					
+	      						{% else %} 
+	      				  			class="btn btn-info btn-circle btn-sm">
+	      				  			<i class="fas fa-question"></i>
+	      				  		{% endif %}
+      				  		</a>
 	  				</th>
 	      			<th>{{ contact.date }}</th>
 	      			<td><a data-toggle="modal" data-target='#modal' 
-	      					data-url="{% url 'contact:call-status-update' pk=contact.id %}">
+	      					data-url="{% url 'contact:call-update-status' pk=contact.id %}">
 	      					{{ contact.get_status_display }}
 	      				</a></td>
 	      			<td>{{ contact.kundenname }}</td>

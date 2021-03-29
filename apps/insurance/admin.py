@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from . import models
+from apps.insurance import models
 
 admin.site.register(models.AssonaInfo)
 admin.site.register(models.BikeleasingInfo)

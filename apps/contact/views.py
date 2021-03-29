@@ -6,19 +6,31 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import generic
 from django.urls import reverse, reverse_lazy
 
-from . import models, forms
+from apps.contact import models, forms
 
-# Create your views here.
 
 class CallList(LoginRequiredMixin, generic.ListView):
 	model = models.PhoneContact
 	template_name = 'contact/phonecontact_list.html'
 
+	def get_queryset(self):
+		data = super(CallList, self).get_queryset()
+		if self.kwargs.get('abteilung') == 'werkstatt':
+			data = data.filter(abteilung='werkstatt')
+		elif self.kwargs.get('abteilung') == 'verkauf':
+			data = data.filter(abteilung='verkauf')
+		elif self.kwargs.get('abteilung') == 'buero':
+			data = data.filter(abteilung='buero')
+
+		if self.kwargs.get('filter') == 'open':
+			data = data.exclude(status='erledigt')
+		return data
+
 class CreatePhoneContact(LoginRequiredMixin, generic.CreateView):
 	model = models.PhoneContact
 
 	template_name = 'contact/phonecontact_create.html'
-	success_url = reverse_lazy('contact:call-list')
+	success_url = reverse_lazy('contact:call-list', kwargs={'abteilung':"all", 'filter':"all"})
 
 	form_class = forms.NewPhoneContact
 

@@ -8,11 +8,11 @@ from django import forms as django_forms
 from django.urls import reverse, reverse_lazy
 from django.http import HttpResponseRedirect
 
-from . import models
-from . import forms
-from ..insurance import forms as insurance_forms
-from ..insurance import models as insurance_models
-from ..warranty import models as warranty_models
+from apps.customers import models
+from apps.customers import forms
+from apps.insurance import forms as insurance_forms
+from apps.insurance import models as insurance_models
+from apps.warranty import models as warranty_models
 
 # Create your views here.
 
