@@ -37,7 +37,7 @@ class CreatePhoneContact(LoginRequiredMixin, generic.CreateView):
 class UpdatePhoneContactStatus(LoginRequiredMixin, generic.UpdateView):
 	model = models.PhoneContact
 	template_name_suffix = '_update_status'
-	success_url = reverse_lazy('contact:call-list')
+	success_url = reverse_lazy('contact:call-list', kwargs={'abteilung':'all', 'filter':'all'})
 
 	form_class = forms.UpdatePhoneContactStatus
 

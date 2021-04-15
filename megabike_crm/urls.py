@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import RedirectView
 from django.conf.urls.static import static
+from django.urls import reverse, reverse_lazy
 
 from . import settings
 
@@ -27,6 +28,7 @@ urlpatterns = [
 
     path('common/', include('apps.common.urls')),
     path('contact/', include('apps.contact.urls')),
+    #path('contact/', RedirectView.as_view(url=reverse_lazy('call-list', kwargs={'abteilung':'all', 'filter':'all'}), permanent=False)),
     path('customers/', include('apps.customers.urls')),
     path('insurance/', include('apps.insurance.urls')),
     path('leasing/', include('apps.leasing.urls')),
