@@ -1,8 +1,15 @@
+from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 
 # Create your tests here.
 class TestViewBasics(object):
+
+	@classmethod
+	def setUpTestData(self):
+		self.username = 'testuser1'
+		self.password = 'TestPassword'
+		test_user = User.objects.create_user(username=self.username, password=self.password)
 
 	def test_redirect_if_not_logged_in(self):
 		response = self.client.get(reverse(self.url_name, kwargs=self.url_kwargs))

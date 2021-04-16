@@ -5,7 +5,6 @@ from apps.customers import views
 
 app_name='customers'
 urlpatterns = [
-	#path('', MainView.as_view(), name='main'),
 	path('kd<int:pk>/detail/', views.customer_detail_view, name='customer-detail'),	
 	path('new/', views.CustomerInputView.as_view(), name='customer-input'),	
 	path('', views.CustomerListView.as_view(), name='customer-list'),
