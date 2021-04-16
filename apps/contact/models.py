@@ -34,6 +34,7 @@ class PhoneContact(models.Model):
 	telefonnr = models.CharField(max_length=20,)
 	anmerkungen = models.TextField()
 
+	# Make this integer field, change keys to integers?
 	gesprochen_mit = models.CharField(max_length=32,
 		choices = common_models.MITARBEITER_ALL,
 	)

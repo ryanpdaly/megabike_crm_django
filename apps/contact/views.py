@@ -30,14 +30,14 @@ class CreatePhoneContact(LoginRequiredMixin, generic.CreateView):
 	model = models.PhoneContact
 
 	template_name = 'contact/phonecontact_create.html'
-	success_url = reverse_lazy('contact:call-list', kwargs={'abteilung':"all", 'filter':"all"})
+	success_url = reverse_lazy('contact:call-list', kwargs={'abteilung':"all", 'filter':"open"})
 
 	form_class = forms.NewPhoneContact
 
 class UpdatePhoneContactStatus(LoginRequiredMixin, generic.UpdateView):
 	model = models.PhoneContact
 	template_name_suffix = '_update_status'
-	success_url = reverse_lazy('contact:call-list', kwargs={'abteilung':'all', 'filter':'all'})
+	success_url = reverse_lazy('contact:call-list', kwargs={'abteilung':'all', 'filter':'open'})
 
 	form_class = forms.UpdatePhoneContactStatus
 

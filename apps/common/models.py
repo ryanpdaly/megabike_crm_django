@@ -2,6 +2,7 @@ from django.db import models
 
 # Create your models here.
 
+# Why aren't the keys for these just integers?
 MITARBEITER_WS = (
 	('12', '12: T. Beskowski'),
 	('14', '14: T. Koesling'),

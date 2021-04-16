@@ -1,5 +1,6 @@
 {% extends 'common/base.html' %}
 {% load static %}
+{% load contact_filters %}
 
 {% block title %}
 	MegabikeCRM: Create Kontakt Ticket
@@ -67,14 +68,6 @@
 			href="{% url 'contact:call-list' filter='open' abteilung=view.kwargs.abteilung %}">
 			Nur Offene Tickets
 		</a>
-	{% comment %}
-		<a class="d-none d-sm-inline-block btn btn-secondary shadow-sm" data-url="">
-			Verkauf
-		</a>
-		<a class="d-none d-sm-inline-block btn btn-secondary shadow-sm" data-url="">
-			Werkstatt
-		</a>
-	{% endcomment %}
 	</div>
 	<br/> <!-- This is downright hackish. Fix the damned CSS. -->
 {% if phonecontact_list %}
@@ -84,10 +77,10 @@
 	      	<tr>
 	      	  <th scope="col"></th>
 	      	  <th scope="col">Datum</th>
-	      	  <th scope="col">Status</th>
 	      	  <th scope="col">Kundenname</th>
 	      	  <th scope="col">Telefonnummer</th>
 	      	  <th scope="col">Anmerkungen</th>
+	      	  <th scope="col">Gesprochen<br/> mit:</th>
 	      	</tr>
 	      </thead>
 	      <tbody>
@@ -112,14 +105,11 @@
 	      				  		{% endif %}
       				  		</a>
 	  				</th>
-	      			<th>{{ contact.date }}</th>
-	      			<td><a data-toggle="modal" data-target='#modal' 
-	      					data-url="{% url 'contact:call-update-status' pk=contact.id %}">
-	      					{{ contact.get_status_display }}
-	      				</a></td>
-	      			<td>{{ contact.kundenname }}</td>
+	      			<td>{{ contact.date }}</td>
+	      			<th>{{ contact.kundenname }}</th>
 	      			<td>{{ contact.telefonnr }}</td>
 	      			<td>{{ contact.anmerkungen }}</td>
+	      			<td>{{ contact.get_gesprochen_mit_display|print_last_name }}</td>
 	      		</tr>
 	      	{% endfor %}
 	      </tbody>
