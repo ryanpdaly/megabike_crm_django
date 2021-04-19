@@ -86,24 +86,23 @@
 	      <tbody>
 	      	{% for contact in phonecontact_list %}
 	      		<tr>
-	      			<th scope="row">      				
-	      				
-	      				  	<a data-toggle="modal" data-target='#modal' 
-	      				  		data-url="{% url 'contact:call-update-status' pk=contact.id %}" 
-      				  			{% if contact.status == 'offen' %}
-	      				  			class="btn btn-danger btn-circle btn-sm">
-	      							<i class="fas fa-exclamation-triangle"></i>
-	      						{% elif contact.status == 'bearbeitung' %}
-		      				  		class="btn btn-warning btn-circle btn-sm">
-	      				  			<i class="fas fa-exclamation-triangle"></i>
-			      				{% elif contact.status == 'erledigt' %}
-		    				  		class="btn btn-success btn-circle btn-sm">
-		      				    	<i class="fas fa-check"></i>			      					
-	      						{% else %} 
-	      				  			class="btn btn-info btn-circle btn-sm">
-	      				  			<i class="fas fa-question"></i>
-	      				  		{% endif %}
-      				  		</a>
+	      			<th scope="row">
+      				  	<a data-toggle="modal" data-target='#modal' 
+      				  		data-url="{% url 'contact:call-update-status' pk=contact.id %}" 
+  				  			{% if contact.status == 'offen' %}
+      				  			class="btn btn-danger btn-circle btn-sm">
+      							<i class="fas fa-exclamation-triangle"></i>
+      						{% elif contact.status == 'bearbeitung' %}
+	      				  		class="btn btn-warning btn-circle btn-sm">
+      				  			<i class="fas fa-exclamation-triangle"></i>
+		      				{% elif contact.status == 'erledigt' %}
+	    				  		class="btn btn-success btn-circle btn-sm">
+	      				    	<i class="fas fa-check"></i>			      					
+      						{% else %} 
+      				  			class="btn btn-info btn-circle btn-sm">
+      				  			<i class="fas fa-question"></i>
+      				  		{% endif %}
+  				  		</a>
 	  				</th>
 	      			<td>{{ contact.date }}</td>
 	      			<th>{{ contact.kundenname }}</th>

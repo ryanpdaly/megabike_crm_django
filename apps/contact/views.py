@@ -45,3 +45,27 @@ class UpdatePhoneContactStatus(LoginRequiredMixin, generic.UpdateView):
 		data = super().get_context_data(**kwargs)
 		data['ticket_id'] = self.kwargs['pk']
 		return data
+
+class OutgoingCallList(LoginRequiredMixin, generic.ListView):
+	model = models.OutgoingCall
+	template_name = 'contact/outgoingcall_list.html'
+
+class OutgoingCallCreate(LoginRequiredMixin, generic.CreateView):
+	model = models.OutgoingCall
+
+	template_name = 'contact/outgoingcall_create.html'
+	success_url = reverse_lazy('contact:outgoing-list',)
+
+	form_class = forms.NewOutgoingCall
+
+class OutgoingCallUpdate(LoginRequiredMixin, generic.UpdateView):
+	model = models.OutgoingCall
+	template_name_suffix = '_update'
+	success_url = reverse_lazy('contact:outgoing-list')
+
+	form_class = forms.OutgoingCallUpdate
+
+	def get_context_data(self, **kwargs):
+		data = super().get_context_data(**kwargs)
+		data['call_id'] = self.kwargs['pk']
+		return data

@@ -36,7 +36,7 @@ class PhoneContact(models.Model):
 
 	# Make this integer field, change keys to integers?
 	gesprochen_mit = models.CharField(max_length=32,
-		choices = common_models.MITARBEITER_ALL,
+		choices=common_models.MITARBEITER_ALL,
 	)
 
 	def __str__(self):
@@ -46,3 +46,18 @@ class PhoneContact(models.Model):
 		if not self.id:
 			self.date = datetime.date.today()
 		super(PhoneContact, self).save()
+
+class OutgoingCall(models.Model):
+	called_on = models.DateTimeField(auto_now_add=True)
+
+	auftragsnr = models.CharField(max_length=16,)
+	kundenname = models.CharField(max_length=32,)
+	telefonnr = models.CharField(max_length=20,)
+
+	anruf_von = models.CharField(max_length=32,
+		choices=common_models.MITARBEITER_ALL,)
+
+	anmerkungen = models.TextField()
+
+	def __str__(self):
+		return f'{self.kundenname} am {self.called_on}'

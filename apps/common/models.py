@@ -61,3 +61,10 @@ MITARBEITER_ALL = (
 	('72', '72: R. Korpilla'),
 	('73', '73: F. Stresemann'),
 )
+
+ABTEILUNG_OPTIONS = (
+	('werkstatt', 'Werkstatt'),
+	('verkauf', 'Verkauf'),
+	('buero', 'Büro'),
+)
+
