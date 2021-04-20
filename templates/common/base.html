@@ -53,8 +53,14 @@
 
             <li class="nav-item inactive">
                 <a class="nav-link" href="{% url 'contact:call-list' abteilung='all' filter='all' %}">
-                    <i class="fas fa-users"></i>
+                    <i class="fas fa-phone"></i>
                     <span>Kontaktanfragen</span>
+                </a>
+            </li>
+            <li class="nav-item inactive">
+                <a class="nav-link" href="{% url 'contact:outgoing-list' %}">
+                    <i class="fas fa-phone-volume"></i>
+                    <span>Ausgehende Anrufe</span>
                 </a>
             </li>
 

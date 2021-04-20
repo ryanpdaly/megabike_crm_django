@@ -17,8 +17,8 @@ class TestCallList(TestViewBasics, TestCase):
 		self.password = 'TestPassword'
 
 		self.url_name = 'contact:call-list'
-		self.url_kwargs = {}
-		self.url_path = 'contact/'
+		self.url_kwargs = {'abteilung':'all', 'filter':'all'}
+		self.url_path = 'contact/all/all'
 		self.template_path = 'contact/phonecontact_list.html'
 
 		calls = baker.make(models.PhoneContact, _quantity=15)
@@ -52,3 +52,37 @@ class TestUpdatePhoneContactStatus(TestViewBasics, TestCase):
 		baker.make(models.PhoneContact, id=1)
 
 		test_user1 = User.objects.create_user(username='testuser1', password='TestPassword')
+
+class TestOutgoingCallList(TestViewBasics, TestCase):
+	@classmethod
+	def setUpTestData(self):
+		super().setUpTestData()
+
+		self.url_name = 'contact:outgoing-list'
+		self.url_kwargs = {}
+		self.url_path = 'contact/ausgehend/'
+		self.template_path = 'contact/outgoingcall_list.html'
+
+		baker.make(models.OutgoingCall)
+
+class TestOutgoingCallCreate(TestViewBasics, TestCase):
+	@classmethod
+	def setUpTestData(self):
+		super().setUpTestData()
+
+		self.url_name = 'contact:outgoing-create'
+		self.url_kwargs = {}
+		self.url_path = 'contact/ausgehend/new/'
+		self.template_path = 'contact/outgoingcall_create.html'
+
+class TestOutgoingCallUpdate(TestViewBasics, TestCase):
+	@classmethod
+	def setUpTestData(self):
+		super().setUpTestData()
+
+		self.url_name = 'contact:outgoing-update'
+		self.url_kwargs = {'pk':1}
+		self.url_path = 'contact/ausgehend/update/1/'
+		self.template_path = 'contact/outgoingcall_update.html'
+
+		baker.make(models.OutgoingCall, id=1)

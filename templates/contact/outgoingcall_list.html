@@ -23,8 +23,7 @@
 	      	<tr>
 	      	  <th scope="col">Anruf von</th>
 	      	  <th scope="col">Datum</th>
-	      	  <th scope="col">Kundenname</th>
-	      	  <th scope="col">Telefonnummer</th>
+	      	  <th scope="col">Kunde</th>
 	      	  <th scope="col">Auftrag</th>
 	      	  <th scope="col">Anmerkungen</th>
 	      	</tr>
@@ -40,8 +39,7 @@
   				  		</a>
 	  				</th>
 
-	      			<td>{{ call.kundenname }}</td>
-	      			<td>{{ call.telefonnr }}</td>
+	      			<td>{{ call.kundenname }}<br/>{{ call.telefonnr }}</td>
 	  				<td>{{ call.auftragsnr }}</td>
 	      			<td>{{ call.anmerkungen }}</td>
 	      		</tr>
