@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.shortcuts import render
@@ -15,14 +17,9 @@ class CallList(LoginRequiredMixin, generic.ListView):
 
 	def get_queryset(self):
 		data = super(CallList, self).get_queryset()
-		if self.kwargs.get('abteilung') == 'werkstatt':
-			data = data.filter(abteilung='werkstatt')
-		elif self.kwargs.get('abteilung') == 'verkauf':
-			data = data.filter(abteilung='verkauf')
-		elif self.kwargs.get('abteilung') == 'buero':
-			data = data.filter(abteilung='buero')
-		elif self.kwargs.get('abteilung') =='neurad':
-			data = data.filter(abteilung='neurad')
+
+		if self.kwargs.get('abteilung') != 'all':
+			data = data.filter(abteilung = self.kwargs.get('abteilung'))
 
 		if self.kwargs.get('filter') == 'open':
 			data = data.exclude(status='erledigt')
@@ -51,6 +48,13 @@ class UpdatePhoneContactStatus(LoginRequiredMixin, generic.UpdateView):
 class OutgoingCallList(LoginRequiredMixin, generic.ListView):
 	model = models.OutgoingCall
 	template_name = 'contact/outgoingcall_list.html'
+
+	def get_queryset(self):
+		data = super(OutgoingCallList, self).get_queryset()
+		date_threshold = datetime.today() - timedelta(days=14)
+		data = data.filter(called_on__gt=date_threshold)
+
+		return data
 
 class OutgoingCallCreate(LoginRequiredMixin, generic.CreateView):
 	model = models.OutgoingCall

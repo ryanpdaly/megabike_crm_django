@@ -132,7 +132,16 @@
 	<link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
     <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
     <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
-    <script src="{% static 'js/datatables.js' %}"></script>
+
+    <!-- Intialize datatable -->
+    <script>
+    	$(document).ready(function() {
+		  var myTable = $('#dataTable').DataTable({
+		  	"order": [[2, 'asc']]
+		  	
+		  });
+		});
+    </script>
 
     <!-- ajax form submission -->
 	<script src="http://malsup.github.com/jquery.form.js"></script>

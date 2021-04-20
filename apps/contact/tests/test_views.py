@@ -13,8 +13,7 @@ from apps.common.tests import TestViewBasics
 class TestCallList(TestViewBasics, TestCase):
 	@classmethod
 	def setUpTestData(self):
-		self.username = 'testuser1'
-		self.password = 'TestPassword'
+		super().setUpTestData()
 
 		self.url_name = 'contact:call-list'
 		self.url_kwargs = {'abteilung':'all', 'filter':'all'}
@@ -23,26 +22,22 @@ class TestCallList(TestViewBasics, TestCase):
 
 		calls = baker.make(models.PhoneContact, _quantity=15)
 
-		test_user1 = User.objects.create_user(username='testuser1', password='TestPassword')
+	# Need to test our custom get_queryset
 
 class TestCreatePhoneContact(TestViewBasics, TestCase):
 	@classmethod
 	def setUpTestData(self):
-		self.username = 'testuser1'
-		self.password = 'TestPassword'
+		super().setUpTestData()
 
 		self.url_name = 'contact:call-create'
 		self.url_kwargs = {}
 		self.url_path = 'contact/new/'
 		self.template_path = 'contact/phonecontact_create.html'
 
-		test_user1 = User.objects.create_user(username='testuser1', password='TestPassword')
-
 class TestUpdatePhoneContactStatus(TestViewBasics, TestCase):
 	@classmethod
 	def setUpTestData(self):
-		self.username = 'testuser1'
-		self.password = 'TestPassword'
+		super().setUpTestData()
 
 		self.url_name = 'contact:call-update-status'
 		self.url_kwargs = {'pk':1}
@@ -51,7 +46,7 @@ class TestUpdatePhoneContactStatus(TestViewBasics, TestCase):
 
 		baker.make(models.PhoneContact, id=1)
 
-		test_user1 = User.objects.create_user(username='testuser1', password='TestPassword')
+	# Need to test our customer get_context_data
 
 class TestOutgoingCallList(TestViewBasics, TestCase):
 	@classmethod
@@ -64,6 +59,8 @@ class TestOutgoingCallList(TestViewBasics, TestCase):
 		self.template_path = 'contact/outgoingcall_list.html'
 
 		baker.make(models.OutgoingCall)
+
+	# Need to test our custom get_queryset
 
 class TestOutgoingCallCreate(TestViewBasics, TestCase):
 	@classmethod
@@ -86,3 +83,4 @@ class TestOutgoingCallUpdate(TestViewBasics, TestCase):
 		self.template_path = 'contact/outgoingcall_update.html'
 
 		baker.make(models.OutgoingCall, id=1)
+	# Need to test custom get_context_data
