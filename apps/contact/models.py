@@ -13,6 +13,7 @@ class PhoneContact(models.Model):
 		('werkstatt', 'Werkstatt'),
 		('verkauf', 'Verkauf'),
 		('buero', 'Büro'),
+		('neurad', 'Neuräder'),
 	)
 
 	abteilung = models.CharField(max_length=15,

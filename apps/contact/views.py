@@ -21,6 +21,8 @@ class CallList(LoginRequiredMixin, generic.ListView):
 			data = data.filter(abteilung='verkauf')
 		elif self.kwargs.get('abteilung') == 'buero':
 			data = data.filter(abteilung='buero')
+		elif self.kwargs.get('abteilung'=='neurad'):
+			data = data.filter(abteilung='neurad')
 
 		if self.kwargs.get('filter') == 'open':
 			data = data.exclude(status='erledigt')
