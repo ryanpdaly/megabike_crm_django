@@ -2,7 +2,7 @@ import datetime
 
 from django import template
 
-from .. import models
+from apps.warranty import models
 
 register = template.Library()
 

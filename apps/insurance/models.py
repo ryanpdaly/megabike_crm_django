@@ -1,3 +1,4 @@
+import datetime
 import os
 from uuid import uuid4
 
@@ -132,3 +133,62 @@ class EuroradInfo(models.Model):
 
 	def get_fields(self):
 		return [(field.name, field.value_to_string(self)) for field in EuroradInfo._meta.fields]
+
+class Schadensmeldung(models.Model):
+	COMPANIES = (
+		('as', 'Assona'),
+		('eu', 'Eurorad'),
+		)
+
+	unternehmen = models.CharField(max_length=3,
+									choices = COMPANIES
+								)
+	
+	schadensnummer = models.CharField(max_length = 30)
+
+	kundennummer = models.IntegerField()
+	kundenname = models.CharField(max_length = 30)
+
+	vorgangsnummer = models.CharField(max_length = 10)
+	reparatur_datum = models.DateField(blank=True, null=True)
+
+	created = models.DateField()
+	updated = models.DateField()
+
+	def __str__(self):
+		return f'{self.kundenname}: {self.vorgangsnummer} - Schaden {self.schadensnummer}'
+
+	def save(self):
+		if not self.id:
+			self.created = datetime.date.today()
+		self.updated = datetime.datetime.today()
+		super(Schadensmeldung, self).save()
+
+
+# Rename to SchadensmeldungStatus?
+class SchadensmeldungStatus(models.Model):
+	schadensmeldung = models.ForeignKey(Schadensmeldung, on_delete=models.CASCADE)
+
+	date = models.DateField()
+
+	STATUS_LIST = (
+		('kv', 'KV eingereicht'),
+		('kvf', 'KV freigegeben'),
+		('re', 'Rechnung eingereicht'),
+		('be', 'Bezahlt'),
+		('ab', 'Abgelehnt'),
+		)
+
+	status = models.CharField(max_length=3, 
+								choices = STATUS_LIST
+							)
+
+	anmerkung = models.TextField(blank=True)
+
+	def __str__(self):
+		return f'Update am {self.date} zur {self.schadensmeldung.vorgangsnummer} ({self.schadensmeldung.unternehmen} #{self.schadensmeldung.schadensnummer})'
+
+	def save(self):
+		if not self.id:
+			self.date = datetime.date.today()
+		super(SchadensmeldungStatus, self).save()

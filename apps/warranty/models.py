@@ -39,7 +39,6 @@ class ReklaTicket(models.Model):
 	created = models.DateField()
 	updated = models.DateField()
 
-	# This needs to have a list of choices
 	HERSTELLER_CHOICES = (
 		('absolut', 'Absolut'),
 		('abus', 'Abus'),
