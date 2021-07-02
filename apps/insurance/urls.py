@@ -3,7 +3,7 @@ from django.urls import path
 
 from apps.insurance import views
 
-app_name = 'insurance'
+app_name = 'orders'
 urlpatterns = [
 	path('input_<str:insurance>/<str:rn>/', views.input_insurance, name='input-insurance'),
 	path('view/all/', views.list_all, name='list-all'),

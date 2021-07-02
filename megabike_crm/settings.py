@@ -55,8 +55,9 @@ LOCAL_APPS =[
     'apps.common',
     'apps.customers',
     'apps.insurance',
-    'apps.warranty',
     'apps.leasing',
+    'apps.orders',
+    'apps.warranty',
 ]
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
