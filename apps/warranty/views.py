@@ -7,6 +7,7 @@ from django.views import generic
 from django.urls import reverse, reverse_lazy
 
 from apps.warranty import models, forms
+from apps.customers import models as customer_models
 
 # Create your views here.
 
@@ -25,8 +26,24 @@ class CreateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateVi
 	template_name = 'warranty/new_kundenrekla.html'
 	success_url = reverse_lazy('warranty:main')
 
+	# Split this into multiple forms/formset. 1: Customer Form, 2: Warranty form, 3: Status form
 	form_class = forms.NewTicketForm
+
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+
+		url_param = self.request.GET.get("q")
+
+		if url_param:
+			customer_options = customer_models.Customer.objects.filter(kundennummer__icontains=url_param)
+		else:
+			customer_options = customer_models.Customer.objects.all()
+
+		context['customer_options'] = customer_options
+
+		return context
 	
+
 	def get(self, request, *args, **kwargs):
 		# Handles GET requests, instantiates blank form and formsets
 		self.object = None
