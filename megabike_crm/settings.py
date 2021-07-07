@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
+import logging
 import os
 from pathlib import Path
 
@@ -138,3 +139,9 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+logging.basicConfig(
+    level = logging.DEBUG,
+    format = '[%(asctime)s] %(levelname)s %(message)s',
+    datefmt = '%Y-%m-%d %H:%M:%S',
+    )

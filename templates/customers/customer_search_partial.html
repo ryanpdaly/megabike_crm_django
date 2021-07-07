@@ -1,13 +1,52 @@
 {# customer_search_partial.html #}
-{% if customer_options %}
-	<ul>
-		{% for customer in customer options %}
-			<li>{{customer.__str__ }}</li>
+{% load static %}
+<div class="d-flex justify-content-center">
+	{{ customer_search.non_field_errors }}
+	<div class="fieldWrapper">
+		{{ customer_search.kundennummer.errors }}
+		<i id="search-icon" class="fas fa-search"></i>
+		{{ customer_search.kundennummer }} <br/>
+	</div>
+</div>
+
+<div class="customer-search-list border rounded top-buffer">
+{% if customer_options.count %}
+		<div class="form-check">
+		{% for customer in customer_options %}
+			<div class="ml-2">
+				<input class="form-check-input" type="radio" name="customerRadios" id="kd{{customer.kundennummer}}Radio" value="{{customer.kundennummer}}" {% if kdnr_checked == customer.kundennummer%} checked {% endif %}>
+				<label class="form-check-label" for="kd{{customer.kundennummer}}Radio">{{customer.kundennummer}}: {{customer.nachname}}
+				</label><br/>
+			</div>
 		{% endfor %}
-	</ul>
+		</div>
 {% else %}
-	<a class="btn btn-primary btn-icon-split" data-toggle="modal" data-target="#modal" data-url="#">
-		<span class="icon text-white-50"></span>
-		<span class="text">Kunde anlegen</span>
-	</a>
+	<div class="d-flex justify-content-center top-buffer">
+		{% comment 'This modal doesn't respond. Not entirely sure why.%}		
+		<a class="btn btn-primary btn-lg btn-icon-split" data-toggle="modal" data-target="#modal" data-url="{% url 'customers:customer-input-modal' %}">
+		{% endcomment %}
+		<a href="{% url 'customers:customer-list' %}" class="btn btn-primary btn-xl btn-icon-split">
+			<span class="icon text-white-50"><i class="fas fa-plus-square"></i></span>
+			<span class="text">Kunde anlegen?</span>
+		</a>
+	</div>
 {% endif %}
+</div>
+
+
+<script src="{% static 'js/jquery-3.6.0.js' %}"></script>
+<script>
+	$('#modal').on('show.bs.modal', function (event) {
+		var button = $(event.relatedTarget)
+	    var form_url = button.data('url')
+
+	    var modal = $(this)
+	    
+	    $.ajax({
+	        url: form_url,
+	        context: document.body,
+	    }).done(function(response) {
+	        modal.html(response);
+	    });
+	})
+</script>

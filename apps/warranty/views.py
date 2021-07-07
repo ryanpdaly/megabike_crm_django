@@ -1,13 +1,16 @@
+import logging
+
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import generic
+from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
 
 from apps.warranty import models, forms
 from apps.customers import models as customer_models
+from apps.customers import forms as customer_forms
 
 # Create your views here.
 
@@ -26,13 +29,13 @@ class CreateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateVi
 	template_name = 'warranty/new_kundenrekla.html'
 	success_url = reverse_lazy('warranty:main')
 
-	# Split this into multiple forms/formset. 1: Customer Form, 2: Warranty form, 3: Status form
 	form_class = forms.NewTicketForm
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
 
-		url_param = self.request.GET.get("q")
+		url_param = self.request.GET.get("kdnr_input")
+		logging.debug("Got context data with url_param:")
 
 		if url_param:
 			customer_options = customer_models.Customer.objects.filter(kundennummer__icontains=url_param)
@@ -42,19 +45,49 @@ class CreateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateVi
 		context['customer_options'] = customer_options
 
 		return context
-	
 
 	def get(self, request, *args, **kwargs):
 		# Handles GET requests, instantiates blank form and formsets
 		self.object = None
 		form_class = self.get_form_class()
 		form = self.get_form(form_class)
+		customer_search = customer_forms.CustomerSearchForm()
 		status_form = forms.StatusFormset()
 		files_form = forms.FileFormset()
+
+		if self.request.is_ajax():
+			url_param = self.request.GET.get('kdnr_input')
+			self.kwargs['kdnr_input'] = url_param
+			customer_options = customer_models.Customer.objects.filter(kundennummer__icontains=url_param)
+
+			kdnr_checked = None
+			if self.request.GET.get('kdnr_checked'):
+				kdnr_checked = int(self.request.GET.get('kdnr_checked'))
+				self.kwargs['kdnr_checked'] = kdnr_checked
+				customer_search = customer_forms.CustomerSearchForm(initial={'kundennummer':kdnr_checked})
+			else:
+				customer_search = customer_forms.CustomerSearchForm(initial={'kundennummer':url_param})
+			logging.debug(f'Kwargs: {self.kwargs}')
+
+			query_length = len(customer_options)
+
+			html = render_to_string(
+				template_name="customers/customer_search_partial.html",
+				context={"customer_options": customer_options,
+							"kdnr_checked": kdnr_checked,
+							"customer_search": customer_search,
+						}
+			)
+
+			data_dict = {"html_from_view": html}
+
+			return JsonResponse(data=data_dict, safe=False)	
+
 		return render(request, self.template_name,
 			self.get_context_data(form = form,
 									status_form = status_form,
-									files_form = files_form
+									files_form = files_form,
+									customer_search = customer_search,
 									)
 								)
 
@@ -63,17 +96,25 @@ class CreateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateVi
 		self.object = None
 		form_class = self.get_form_class()
 		form = self.get_form(form_class)
+		
+		customer_search = customer_forms.CustomerSearchForm(self.request.POST, instance=form.instance)
 		status_form = forms.StatusFormset(self.request.POST, instance=form.instance)
 		files_form = forms.FileFormset(self.request.POST, self.request.FILES, instance=form.instance)
-		if form.is_valid() and status_form.is_valid():
-			return self.form_valid(request, form, status_form, files_form)
-		else:
-			return self.form_invalid(request, form, status_form, files_form)
+		
 
-	def form_valid(self, request, form, status_form, files_form):
+		# This does not check if the kdnr entered is valid
+		if form.is_valid() and status_form.is_valid() and customer_search.is_valid():
+			return self.form_valid(request, form, status_form, files_form, customer_search)
+		else:
+			return self.form_invalid(request, form, status_form, files_form, customer_search)
+
+	def form_valid(self, request, form, status_form, files_form, customer_search):
 		# Called if all forms valid. Creates ReklaTicket and ReklaTicketStatus instances, redirects to success url
 		self.object = form.save(commit=False)
+		
 		# pre-processing for ReklaTicket goes here
+		self.object.kunde_id = customer_search.cleaned_data['kundennummer']
+		
 		self.object.save()
 
 		status_form = status_form.save(commit=False)
@@ -115,7 +156,7 @@ class DisplayTicket(LoginRequiredMixin, generic.DetailView):
 class UpdateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.UpdateView):
 	model = models.ReklaTicket
 	permission_required = ('warranty.add_reklaticket',)
-	template_name_suffix = '_update'
+	template_name_suffix = '_update_modal'
 	success_url = reverse_lazy('warranty:main')
 
 	form_class = forms.NewTicketForm
