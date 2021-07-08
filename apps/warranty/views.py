@@ -34,8 +34,8 @@ class CreateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateVi
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
 
+		#Rename this variable to kndr_input?
 		url_param = self.request.GET.get("kdnr_input")
-		logging.debug("Got context data with url_param:")
 
 		if url_param:
 			customer_options = customer_models.Customer.objects.filter(kundennummer__icontains=url_param)

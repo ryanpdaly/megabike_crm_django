@@ -61,7 +61,7 @@ class EuroradForm(forms.ModelForm):
 class SchadensmeldungForm(forms.ModelForm):
 	class Meta:
 		model = models.Schadensmeldung
-		fields = ('vorgangsnummer', 'kundennummer', 'kundenname', 'unternehmen', 'schadensnummer', 'reparatur_datum',)
+		fields = ('unternehmen', 'schadensnummer', 'auftragsnr', 'rechnungsnr', 'reparatur_datum',)
 		widgets = {'reparatur_datum': SelectDateWidget(years = valid_years)}
 
 class SchadensmeldungStatusForm(forms.ModelForm):

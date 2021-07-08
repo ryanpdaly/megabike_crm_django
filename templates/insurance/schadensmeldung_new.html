@@ -16,6 +16,9 @@
 							<h6 class="m-0 font-weight-bold text-primary">Ticket Infos:</h6>
 						</div>
 						<div class="card-body">
+							<div id="replaceable-content">
+								{% include 'customers/customer_search_partial.html' %}
+							</div>
 							<table>
 								{{ form.as_table }}
 							</table>
@@ -48,4 +51,6 @@
 
 {% block javascript %}
 	{{ block.super }}
+	<script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/jquery.form.js' %}"></script>
 {% endblock %}

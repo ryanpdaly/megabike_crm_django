@@ -1,11 +1,15 @@
+import logging
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import generic
+from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
 
 from apps.customers import models as customer_models
+from apps.customers import forms as customer_forms
 from apps.insurance import forms
 from apps.insurance import models
 
@@ -132,16 +136,60 @@ class SchadenCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateV
 
 	form_class = forms.SchadensmeldungForm
 
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+
+		kdnr_input = self.request.GET.get("kdnr_input")
+
+		if kdnr_input:
+			customer_options = customer_models.Customer.objects.filter(kundennummer__icontains=kdnr_input)
+		else:
+			customer_options = customer_models.Customer.objects.all()
+
+		context['customer_options'] = customer_options
+
+		return context
+
 	def get(self, request, *args, **kwargs):
 		# Handles GET requests, instantiates blank form and formsets
 		self.object = None
 		form_class = self.get_form_class()
 		form = self.get_form(form_class)
+		customer_search = customer_forms.CustomerSearchForm()
 		status_form = forms.StatusFormset()
-		#files_form = forms.FileFormset()
+
+		if self.request.is_ajax():
+			kdnr_input = self.request.GET.get('kdnr_input')
+			self.kwargs['kdnr_input'] = kdnr_input
+			customer_options = customer_models.Customer.objects.filter(kundennummer__icontains=kdnr_input)
+
+			kdnr_checked = None
+			if self.request.GET.get('kdnr_checked'):
+				kdnr_checked = int(self.request.GET.get('kdnr_checked'))
+				self.kwargs['kdnr_checked'] = kdnr_checked
+				customer_search = customer_forms.CustomerSearchForm(initial={'kundennummer':kdnr_checked})
+			else:
+				customer_search = customer_forms.CustomerSearchForm(initial={'kundennummer':kdnr_input})
+			logging.debug(f'Kwargs: {self.kwargs}')
+
+			query_length = len(customer_options)
+
+			html = render_to_string(
+				template_name="customers/customer_search_partial.html",
+				context={"customer_options": customer_options,
+							"kdnr_checked": kdnr_checked,
+							"customer_search": customer_search,
+						}
+			)
+
+			data_dict = {"html_from_view": html}
+
+			return JsonResponse(data=data_dict, safe=False)
+
 		return render(request, self.template_name,
 			self.get_context_data(form = form,
 									status_form = status_form,
+									customer_search = customer_search
 									#files_form = files_form
 									)
 								)
@@ -151,16 +199,22 @@ class SchadenCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateV
 		self.object = None
 		form_class = self.get_form_class()
 		form = self.get_form(form_class)
+		
+		customer_search = customer_forms.CustomerSearchForm(self.request.POST, instance=form.instance)
 		status_form = forms.StatusFormset(self.request.POST, instance=form.instance)
-		if form.is_valid() and status_form.is_valid():
-			return self.form_valid(request, form, status_form)
+		
+		if form.is_valid() and status_form.is_valid() and customer_search.is_valid():
+			return self.form_valid(request, form, status_form, customer_search)
 		else:
-			return self.form_invalid(request, form, status_form)
+			return self.form_invalid(request, form, status_form, customer_search)
 
 	def form_valid(self, request, form, status_form):
 		# Called if all forms valid. Creates ReklaTicket and ReklaTicketStatus instances, redirects to success url
 		self.object = form.save(commit=False)
+		
 		# pre-processing for ReklaTicket goes here
+		self.object.kunde_id = customer_search.cleaned_data['kundennummer']
+		
 		self.object.save()
 
 		status_form = status_form.save(commit=False)
