@@ -55,6 +55,7 @@ class CreateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateVi
 		status_form = forms.StatusFormset()
 		files_form = forms.FileFormset()
 
+		# Set und call order for kdnr_input + kdnr_checked is wrong. Weird behavior when checking new kdnr with old still in search box
 		if self.request.is_ajax():
 			url_param = self.request.GET.get('kdnr_input')
 			self.kwargs['kdnr_input'] = url_param
@@ -67,7 +68,6 @@ class CreateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateVi
 				customer_search = customer_forms.CustomerSearchForm(initial={'kundennummer':kdnr_checked})
 			else:
 				customer_search = customer_forms.CustomerSearchForm(initial={'kundennummer':url_param})
-			logging.debug(f'Kwargs: {self.kwargs}')
 
 			query_length = len(customer_options)
 

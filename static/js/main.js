@@ -1,7 +1,7 @@
 const user_input = $("#user-input")
 const search_icon = $("#search-icon")
 const customers_div = $("#replaceble-content")
-const endpoint = 'warranty/new/'
+const endpoint = 'new'
 const delay_by_in_ms = 700
 let scheduled_function = false
 
@@ -23,9 +23,10 @@ let ajax_call = function (endpoint, request_parameters) {
 	})
 };
 
-$("#user-input").keyup(function() {
+//$("#user-input").keyup(function() {
+$("#replaceable-content").on("keyup", "#user-input", function(event){
 	const request_parameters = {
-		kdnr_input: $(this).val(), // value of user_input: HTML element with ID user-input
+		kdnr_input: $("#user-input").val(), // value of user_input: HTML element with ID user-input
 		kdnr_checked: $("input[name='customerRadios']:checked").val()
 	}
 
