@@ -4,8 +4,15 @@
 	{{ customer_search.non_field_errors }}
 	<div class="fieldWrapper">
 		{{ customer_search.kundennummer.errors }}
+
+		{{ customer_search.kundennummer.as_hidden }} <br/>
+	</div>
+	<div>
 		<i id="search-icon" class="fas fa-search"></i>
-		{{ customer_search.kundennummer }} <br/>
+		<input id="user-input" 
+			{% if not kdnr_input %} placeholder="Kundennummer">
+			{% else %} value={{kdnr_input}}>
+			{% endif %}
 	</div>
 </div>
 

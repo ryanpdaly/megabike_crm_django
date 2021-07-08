@@ -135,9 +135,10 @@ class EuroradInfo(models.Model):
 		return [(field.name, field.value_to_string(self)) for field in EuroradInfo._meta.fields]
 
 class Schadensmeldung(models.Model):
+	kunde = models.ForeignKey(customer_models.Customer, on_delete=models.CASCADE)
+
 	COMPANIES = (
 		('as', 'Assona'),
-		('eu', 'Eurorad'),
 		)
 
 	unternehmen = models.CharField(max_length=3,
@@ -146,17 +147,15 @@ class Schadensmeldung(models.Model):
 	
 	schadensnummer = models.CharField(max_length = 30)
 
-	kundennummer = models.IntegerField()
-	kundenname = models.CharField(max_length = 30)
-
-	vorgangsnummer = models.CharField(max_length = 10)
+	auftragsnr = models.CharField(max_length = 10)
+	rechnungsnr = models.CharField(max_length = 10, blank=True, null=True)
 	reparatur_datum = models.DateField(blank=True, null=True)
 
 	created = models.DateField()
 	updated = models.DateField()
 
 	def __str__(self):
-		return f'{self.kundenname}: {self.vorgangsnummer} - Schaden {self.schadensnummer}'
+		return f'{self.kunde.kundennummer}: {self.kunde.nachname} - {self.unternehmen} {self.schadensnummer}'
 
 	def save(self):
 		if not self.id:
@@ -186,7 +185,7 @@ class SchadensmeldungStatus(models.Model):
 	anmerkung = models.TextField(blank=True)
 
 	def __str__(self):
-		return f'Update am {self.date} zur {self.schadensmeldung.vorgangsnummer} ({self.schadensmeldung.unternehmen} #{self.schadensmeldung.schadensnummer})'
+		return f'Update am {self.date} zur {self.schadensmeldung.unternehmen} {self.schadensmeldung.schadensnummer}'
 
 	def save(self):
 		if not self.id:

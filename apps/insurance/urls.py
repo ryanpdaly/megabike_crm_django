@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path
 
 from apps.insurance import views
 
@@ -11,9 +11,12 @@ urlpatterns = [
 	path('police/<str:rn>/', views.display_policy, name='display-policy'),	
 	path('info/<str:insurance>/', views.info_page, name='info-page'),
 
-	path('schaden/all/', views.schaden_list, name='schaden-list'),
+	#path('schaden/all/', views.schaden_list, name='schaden-list'),
+	re_path(r'^schaden/list=(?P<filter>\w+)$', views.schaden_list, name='schaden-list'),
 	path('schaden/<str:pk>/', views.SchadenDetail.as_view(), name='schaden-detail'),
-	path('schaden/new/', views.SchadenCreate.as_view(), name='schaden-new'),
+	# Can't add trailing / to this without getting an error
+	path('schaden/new', views.SchadenCreate.as_view(), name='schaden-new'),
+	re_path(r'^schaden/new(?P<kdnr_input>[0_9]?)(?P<kdnr_checked>[0-9]?)', views.SchadenCreate.as_view(), name='schaden-new'),
 	path('schaden/<int:pk>/edit/', views.SchadenEdit.as_view(), name='schaden-edit'),
 	path('schaden/<int:pk>/status/', views.SchadenStatusUpdate.as_view(), name='schaden-status'),
 ]

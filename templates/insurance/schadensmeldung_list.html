@@ -12,6 +12,26 @@
 {% endblock %}
 
 {% block content %}
+  <div>
+    <a {% if filter == 'all' %}
+      class="btn btn-outline-success btn-sm shadow-sm active" aria-pressed="true"
+    {% else %}
+      class="btn btn-secondary btn-sm shadow-sm button-sm"
+    {% endif %}
+      href="{% url 'insurance:schaden-list' filter='all' %}">
+      Alle Tickets
+    </a>
+    <a {% if filter == 'open' %}
+      class="btn btn-outline-success btn-sm shadow-sm active" aria-pressed="true"
+    {% else %}
+      class="btn btn-secondary btn-sm shadow-sm"
+    {% endif %}
+      href="{% url 'insurance:schaden-list' filter='open' %}">
+      Nur Offene Tickets
+    </a>
+  </div>
+  <br/> <!-- This is downright hackish. Fix the damned CSS. -->
+
     <div class='table-responsive'>
       <table id="dataTable" class="table table-striped table-hover">
         <thead>
@@ -26,9 +46,10 @@
         </thead>
         <tbody>
           {% for schaden in schaden_list %}
+            {% if filter == 'all' or schaden|get_current_status not in erledigt %}
             <tr>
               <td>
-                  {% if schaden|get_current_status == 'Erledigt' %}
+                  {% if schaden|get_current_status in erledigt %}
                   <a href="#" 
                     class="btn btn-secondary btn-circle btn-sm">
                   <i class="fas fa-check"></i>
@@ -50,11 +71,12 @@
                     </a>
                   {% endif %}</td>              
               <td>{{ schaden|get_current_status }}</td>              
-              <th scope="row"><a href="{% url 'insurance:schaden-detail' pk=schaden.id%}">{{ schaden.vorgangsnummer }}</a></th>
+              <th scope="row"><a href="{% url 'insurance:schaden-detail' pk=schaden.id%}">{{ schaden.auftragsnr }}</a></th>
               <td>{{ schaden.get_unternehmen_display }} <br\> {{ schaden.schadensnummer }}</td>
-              <td>{{ schaden.kundennummer }}: {{ schaden.kundenname }}</td>
+              <td>{{ schaden.kunde.kundennummer }}: {{ schaden.kunde.nachname }}</td>
               <td>vor <b>{{ schaden|get_last_update }}</b> Tage</td>
             </tr>
+          {% endif %}
           {% endfor %}
         </tbody>
       </table>

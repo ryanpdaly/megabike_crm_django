@@ -27,4 +27,4 @@ class CustomerSearchForm(forms.ModelForm):
 	class Meta:
 		model = models.Customer
 		fields = ['kundennummer']
-		widgets = {'kundennummer':forms.NumberInput(attrs={'placeholder':'Kundennummer', 'id':'user-input'})}
+		widgets = {'kundennummer':forms.NumberInput(attrs={'placeholder':'Kundennummer', 'id':'kdnr_checked'})}
