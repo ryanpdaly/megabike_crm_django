@@ -1,24 +1,17 @@
-{% load static %}
-
-<div class="modal-dialog" role="document">
+<div class="modal-dialog modal-lg" role="document">
   <div class="modal-content">
     <div class="modal-header">
-      <h5 class="modal-title" id="staticBackdropLabel">Kundenprofil erstellen</h5>
+      <h5 class="modal-title" id="staticBackdropLabel">Rekla Ticket bearbeiten</h5>
       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
-    <form method='POST' enctype="multipart/form-data" action="{% url 'customers:customer-input' %}">
+    <form method='POST' enctype="multipart/form-data" action="{% url 'warranty:update-ticket' pk=reklaticket.id %}">
       {% csrf_token %}
       <div class="modal-body">
-      	<table>
-			{{ form.as_table }}
-		</table>
-		<br/>
-		<h4 class="mb-0 text-gray-800">Fahrzeug hinzufügen</h4>
-		<table>
-			{{ bikes.as_table }}
-		</table>
+          <table>
+            {{ form.as_table }}
+          </table>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -28,8 +21,6 @@
   </div>
 </div>
 
-<script src="{% static 'js/jquery-3.6.0.js' %}"></script>
-<script src="{% static 'js/jquery.form.js' %}"></script>
 <script>
     var form_options = { target: '#modal', success: function(response) {} };
     $('#news-create').ajaxForm(form_options);

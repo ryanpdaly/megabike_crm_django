@@ -8,7 +8,7 @@ from apps.customers import models
 class CustomerForm(forms.ModelForm):
 	class Meta:
 		model = models.Customer
-		fields = '__all__'
+		fields = ['kundennummer', 'nachname']
 
 # TODO: Both form and formset allow us to set insurance without actually creating an insurance policy. Need to fix this
 class BikeForm(forms.ModelForm):
@@ -22,3 +22,9 @@ BikeFormset = inlineformset_factory(
 		extra = 1,
 		can_delete = False,
 	)
+
+class CustomerSearchForm(forms.ModelForm):
+	class Meta:
+		model = models.Customer
+		fields = ['kundennummer']
+		widgets = {'kundennummer':forms.NumberInput(attrs={'placeholder':'Kundennummer', 'id':'user-input'})}
