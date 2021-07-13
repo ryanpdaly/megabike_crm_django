@@ -34,11 +34,10 @@ class CreateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateVi
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
 
-		#Rename this variable to kndr_input?
-		url_param = self.request.GET.get("kdnr_input")
+		kdnr_input = self.request.GET.get("kdnr_input")
 
-		if url_param:
-			customer_options = customer_models.Customer.objects.filter(kundennummer__icontains=url_param)
+		if kdnr_input:
+			customer_options = customer_models.Customer.objects.filter(kundennummer__icontains=kdnr_input)
 		else:
 			customer_options = customer_models.Customer.objects.all()
 
@@ -49,32 +48,44 @@ class CreateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateVi
 	def get(self, request, *args, **kwargs):
 		# Handles GET requests, instantiates blank form and formsets
 		self.object = None
+
 		form_class = self.get_form_class()
 		form = self.get_form(form_class)
+
+		# Inconsistency: rename customer_search to customer_form?
 		customer_search = customer_forms.CustomerSearchForm()
 		status_form = forms.StatusFormset()
 		files_form = forms.FileFormset()
 
 		# Set und call order for kdnr_input + kdnr_checked is wrong. Weird behavior when checking new kdnr with old still in search box
 		if self.request.is_ajax():
-			url_param = self.request.GET.get('kdnr_input')
-			self.kwargs['kdnr_input'] = url_param
-			customer_options = customer_models.Customer.objects.filter(kundennummer__icontains=url_param)
+			kdnr_input = request.GET.get('kdnr_input')
+			self.kwargs['kdnr_input'] = kdnr_input
 
-			kdnr_checked = None
-			if self.request.GET.get('kdnr_checked'):
-				kdnr_checked = int(self.request.GET.get('kdnr_checked'))
-				self.kwargs['kdnr_checked'] = kdnr_checked
+			customer_options = customer_models.Customer.objects.filter(kundennummer__icontains=kdnr_input)
+			
+			kdnr_checked = self.request.GET.get('kdnr_checked')
+
+			if kdnr_checked:
+				kdnr_checked = int(kdnr_checked)
 				customer_search = customer_forms.CustomerSearchForm(initial={'kundennummer':kdnr_checked})
-			else:
-				customer_search = customer_forms.CustomerSearchForm(initial={'kundennummer':url_param})
 
-			query_length = len(customer_options)
+				if customer_models.Customer.objects.filter(kundennummer__in=customer_options).exists():
+					logging.debug("Selected customer in customer options list")
+					self.kwargs['kdnr_checked'] = int(kdnr_checked)
+				else:
+					logging.debug("Selected customer NOT in customer options list")
+					self.kwargs['kdnr_checked'] = None
+					kdnr_checked=None
+
+			else:
+				customer_search = customer_forms.CustomerSearchForm(initial={'kundennummer':kdnr_input})
 
 			html = render_to_string(
 				template_name="customers/customer_search_partial.html",
 				context={"customer_options": customer_options,
 							"kdnr_checked": kdnr_checked,
+							"kdnr_input": kdnr_input,
 							"customer_search": customer_search,
 						}
 			)
