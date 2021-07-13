@@ -153,31 +153,41 @@ class SchadenCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateV
 	def get(self, request, *args, **kwargs):
 		# Handles GET requests, instantiates blank form and formsets
 		self.object = None
+
 		form_class = self.get_form_class()
 		form = self.get_form(form_class)
+
 		customer_search = customer_forms.CustomerSearchForm()
 		status_form = forms.StatusFormset()
 
 		if self.request.is_ajax():
 			kdnr_input = self.request.GET.get('kdnr_input')
 			self.kwargs['kdnr_input'] = kdnr_input
+
 			customer_options = customer_models.Customer.objects.filter(kundennummer__icontains=kdnr_input)
 
-			kdnr_checked = None
-			if self.request.GET.get('kdnr_checked'):
-				kdnr_checked = int(self.request.GET.get('kdnr_checked'))
-				self.kwargs['kdnr_checked'] = kdnr_checked
+			kdnr_checked = self.request.GET.get('kdnr_checked')
+
+			if kdnr_checked:
+				kdnr_checked = int(kdnr_checked)
 				customer_search = customer_forms.CustomerSearchForm(initial={'kundennummer':kdnr_checked})
+			
+				if customer_models.Customer.objects.filter(kundennummer__in=customer_options).exists():
+					logging.debug("Selected customer in customer options list")
+					self.kwargs['kdnr_checked'] = int(kdnr_checked)
+				else:
+					logging.debug("Selected customer NOT in customer options list")
+					self.kwargs['kdnr_checked'] = None
+					kdnr_checked=None
+
 			else:
 				customer_search = customer_forms.CustomerSearchForm(initial={'kundennummer':kdnr_input})
-			logging.debug(f'Kwargs: {self.kwargs}')
-
-			query_length = len(customer_options)
 
 			html = render_to_string(
 				template_name="customers/customer_search_partial.html",
 				context={"customer_options": customer_options,
 							"kdnr_checked": kdnr_checked,
+							"kdnr_input": kdnr_input,
 							"customer_search": customer_search,
 						}
 			)
@@ -208,7 +218,7 @@ class SchadenCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateV
 		else:
 			return self.form_invalid(request, form, status_form, customer_search)
 
-	def form_valid(self, request, form, status_form):
+	def form_valid(self, request, form, status_form, customer_search):
 		# Called if all forms valid. Creates ReklaTicket and ReklaTicketStatus instances, redirects to success url
 		self.object = form.save(commit=False)
 		
