@@ -11,7 +11,8 @@ urlpatterns = [
 	path('police/<str:rn>/', views.display_policy, name='display-policy'),	
 	path('info/<str:insurance>/', views.info_page, name='info-page'),
 
-	path('schaden/all/', views.schaden_list, name='schaden-list'),
+	#path('schaden/all/', views.schaden_list, name='schaden-list'),
+	re_path(r'^schaden/list=(?P<filter>\w+)$', views.schaden_list, name='schaden-list'),
 	path('schaden/<str:pk>/', views.SchadenDetail.as_view(), name='schaden-detail'),
 	# Can't add trailing / to this without getting an error
 	path('schaden/new', views.SchadenCreate.as_view(), name='schaden-new'),

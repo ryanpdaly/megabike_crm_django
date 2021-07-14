@@ -102,12 +102,13 @@ def display_policy(request, rn):
 	return render(request, f'insurance/display_{INSURANCE_URL[insurance]}.html', context=context)
 
 @login_required
-def schaden_list(request):
+def schaden_list(request, filter):
 
 	schaden_list = models.Schadensmeldung.objects.all()
 
 	context = {
 		'schaden_list': schaden_list,
+		'filter': filter
 	}
 
 	return render(request, f'insurance/schadensmeldung_list.html', context=context)
