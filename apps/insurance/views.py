@@ -8,10 +8,12 @@ from django.views import generic
 from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
 
+from apps.contact import models as contact_models
 from apps.customers import models as customer_models
 from apps.customers import forms as customer_forms
 from apps.insurance import forms
 from apps.insurance import models
+from apps.warranty import models as warranty_models
 
 
 @login_required
@@ -106,9 +108,19 @@ def schaden_list(request, filter):
 
 	schaden_list = models.Schadensmeldung.objects.all()
 
+	rekla_list = warranty_models.ReklaTicket.objects.all()
+	contact_open_list = contact_models.PhoneContact.objects.filter(status='offen')
+
+	erledigt = ['Bezahlt', 'Abgelehnt',]
+
 	context = {
 		'schaden_list': schaden_list,
-		'filter': filter
+		'filter': filter,
+		'erledigt': erledigt,
+
+		'contact_open': contact_open_list,
+		'rekla_list': rekla_list,
+
 	}
 
 	return render(request, f'insurance/schadensmeldung_list.html', context=context)
@@ -123,9 +135,6 @@ class SchadenDetail(LoginRequiredMixin, generic.DetailView):
 		data['status_updates'] = models.SchadensmeldungStatus.objects.filter(schadensmeldung=self.kwargs['pk']).order_by('-id')
 		data['current_status'] = data['status_updates'][0]
 
-		# Not currently planning on adding support for files
-		#data['files'] = models.ReklaFile.objects.filter(rekla_ticket=self.kwargs['pk'])
-
 		return data
 
 class SchadenCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView):
@@ -133,7 +142,7 @@ class SchadenCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateV
 	permission_required = ('insurance.edit_schaden')
 	
 	template_name = 'insurance/schadensmeldung_new.html'
-	success_url = reverse_lazy('insurance:schaden-list')
+	success_url = reverse_lazy('insurance:schaden-list', filter='open')
 
 	form_class = forms.SchadensmeldungForm
 
