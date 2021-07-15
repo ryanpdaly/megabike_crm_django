@@ -49,6 +49,7 @@ MITARBEITER_ALL = (
 	('38', '38: R. Weiler'),
 	('52', '52: S. Zietemann'),
 	('56', '56: J. Wiholt'),
+	('57', '57: F. Boll'),
 	('58', '58: V. Koncur'),
 	('59', '59: R. Daly'),
 	('60', '60: Hohendorf'),
@@ -60,6 +61,8 @@ MITARBEITER_ALL = (
 	('70', '70: F. Nolte'),
 	('72', '72: R. Korpilla'),
 	('73', '73: F. Stresemann'),
+	('74', '74: R. Ramming'),
+	('75', '75: C. Malzahn'),
 )
 
 ABTEILUNG_OPTIONS = (
@@ -67,4 +70,3 @@ ABTEILUNG_OPTIONS = (
 	('verkauf', 'Verkauf'),
 	('buero', 'Büro'),
 )
-
