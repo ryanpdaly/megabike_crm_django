@@ -83,12 +83,14 @@ class BikeUpdateView(LoginRequiredMixin, generic.UpdateView):
 @login_required
 def customer_detail_view(request, pk):
 	customer_instance = get_object_or_404(models.Customer, pk=pk)
-	bikes = models.Bike.objects.filter(kunde = pk)
-	reklas = warranty_models.ReklaTicket.objects.filter(kunde = pk)
+	bikes = models.Bike.objects.filter(kunde=pk)
+	insurance_tickets = insurance_models.Schadensmeldung.objects.filter(kunde=pk)
+	reklas = warranty_models.ReklaTicket.objects.filter(kunde=pk)
 
 	context = {
 		'customer': customer_instance,
 		'bikes': bikes,
+		'insurance_tickets':insurance_tickets,
 		'reklas': reklas,
 	}
 

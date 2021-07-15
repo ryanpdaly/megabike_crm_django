@@ -33,7 +33,7 @@
 	      			<th scope="row"><a href="{% url 'customers:customer-detail' pk=customer.kundennummer %}">{{ customer.kundennummer }}</a></th>
 	      			<td>{{ customer.nachname }}</td>
 	      			<td>{{ customer.kundennummer|count_insured}} / {{ customer.kundennummer|count_bikes }}</td>
-	      			<td>{{ customer.kundennummer|count_open_tickets }} <!-- TODO: Display number of open tickets (warranties + support) for this customer --></td>
+	      			<td>{{ customer.kundennummer|count_open_tickets_all }} <!-- TODO: Display number of open tickets (warranties + support) for this customer --></td>
 	      		</tr>
 	      		{% comment %} {% endfor %} {% endcomment %}
 	      	{% endfor %}

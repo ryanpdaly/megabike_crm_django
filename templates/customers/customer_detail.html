@@ -2,6 +2,7 @@
 {% load static %}
 {% load customer_filters %}
 {% load warranty_filters %}
+{% load insurance_filters %}
 
 {% block title %}
 	MegabikeCRM: Kd{{ customer.kundennummer }}
@@ -81,7 +82,7 @@
 				<div class="card shadow mb-4 h-100">
 					<a href="#collapseRekla" class="d-block card-header py-3" data-toggle="collapse" role="button" 
 						aria-expanded="true" aria-controls="collaseRekla">
-						<h6 class="m-0 font-weight-bold text-primary">Rekla Tickets ({{customer.kundennummer|count_open_tickets}} stk):</h6>
+						<h6 class="m-0 font-weight-bold text-primary">Rekla Tickets ({{customer.kundennummer|count_open_tickets_warranty}} in bearbeitung):</h6>
 					</a>
 					<div class="collapse card-body" id="collapseRekla">
 						{% if reklas %}
@@ -144,6 +145,88 @@
 				</div>
 			</div>
 		</div>
+		<div class="row top-buffer">
+			<div class="col-xl-12">
+				<div class="card shadow mb-4 h-100">
+					<a href="#collapseInsurance" class="d-block card-header py-3" data-toggle="collapse" role="button" 
+						aria-expanded="true" aria-controls="collaseInsurance">
+						<h6 class="m-0 font-weight-bold text-primary">Insurance Tickets ({{customer.kundennummer|count_open_tickets_insurance}} in bearbeitung):</h6>
+					</a>
+					<div class="collapse card-body" id="collapseInsurance">
+						{% if insurance_tickets %}
+							<div class="table-responsive">
+							  <table id="dataTable" class="table table-striped">
+								<thead class="thead-dark">
+								  <tr>
+								  	<th scope="col"></th>
+								    <th scope="col">Schadensnummer</th>								  	
+								  	<th scope="col">Status</th>
+								    <th scope="col">Vorgangsnummer</th>
+								    <th scope="col">Reparatur Datum</th>
+								    <th scope="col">Zuletzt bearbeitet</th>
+								  </tr>
+								</thead>
+								<tbody>
+									{% for ticket in insurance_tickets %}
+										<tr scope="row">
+											<td>
+												{% if ticket.id|get_current_status_insurance == 'Erledigt' %}
+							      				  	<a href="#" 
+							      				  		class="btn btn-secondary btn-circle btn-sm">
+							      						<i class="fas fa-check"></i>
+							      				  	</a>
+							      				{% elif ticket.id|get_last_update_insurance >= 9 %}
+							      				  	<a href="#" 
+							      				  		class="btn btn-danger btn-circle btn-sm">
+							      				  		<i class="fas fa-exclamation-triangle"></i>
+							      				  	</a>
+							      				{% elif ticket.id|get_last_update_insurance >= 5 %}
+							    				  	<a href="#" 
+							    				  		class="btn btn-warning btn-circle btn-sm">
+							      				    	<i class="fas fa-exclamation-triangle"></i>
+							      				  	</a>
+							      				{% else %}
+							      				  <a href="#" 
+							      				  	class="btn btn-success btn-circle btn-sm">
+							      				  	<i class="fas fa-info-circle"></i>
+							      				  </a>
+							  				    {% endif %}
+							  				</td>
+							  				
+							  				<td>{{ticket.get_unternehmen_display}}: {{ticket.schadensnummer}}</td>
+							  				<td>{{ticket|get_current_status_insurance}}</td>
+											<td>
+												<a href="#">
+													{{ticket.auftragsnr}}
+													{% if ticket.rechnungsnr %} / {{ticket.rechnungsnr}} {% endif %}
+												</a>
+											</td>
+											<td>
+												<a href="#"> 
+													{% if ticket.reparatur_datum %}
+														{{ticket.reparatur_datum}}
+													{% else %}
+														---- 
+													{% endif %}
+												</a>
+											</td>
+											<td>vor <b>{{ticket|get_last_update_insurance}}</b> Tage</td>
+										</tr>
+									{% endfor %}
+								</tbody>
+							  </table>
+							</div>
+						{% else %}
+							<li>
+								Keine Insurance Tickets vorhanden.
+							</li>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+
+
 	</div>
 
 <div class="modal" id="modal" tabindex="-1" role="dialog"></div>
