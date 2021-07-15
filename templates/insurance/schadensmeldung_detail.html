@@ -52,7 +52,10 @@
 						</tr>
 						<tr>
 							<th scope='row'>Rechnungsnummer:</th>
-							<td>{{ schadensmeldung.rechnungsnr }} vom {{ schadensmeldung.reparatur_datum }}</td>
+							<td> {% if schadensmeldung.rechnungsnr %}
+									{{ schadensmeldung.rechnungsnr }} vom {{ schadensmeldung.reparatur_datum }}
+								 {% endif %}
+							</td>
 						</tr>
 						<tr>
 							<th scope='row'>Schadensnummer:</th>

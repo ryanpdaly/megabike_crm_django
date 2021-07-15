@@ -106,9 +106,12 @@ def schaden_list(request, filter):
 
 	schaden_list = models.Schadensmeldung.objects.all()
 
+	erledigt = ['Bezahlt', 'Abgelehnt',]
+
 	context = {
 		'schaden_list': schaden_list,
-		'filter': filter
+		'filter': filter,
+		'erledigt': erledigt,
 	}
 
 	return render(request, f'insurance/schadensmeldung_list.html', context=context)
@@ -133,7 +136,7 @@ class SchadenCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateV
 	permission_required = ('insurance.edit_schaden')
 	
 	template_name = 'insurance/schadensmeldung_new.html'
-	success_url = reverse_lazy('insurance:schaden-list')
+	success_url = reverse_lazy('insurance:schaden-list', kwargs={'filter':'open'})
 
 	form_class = forms.SchadensmeldungForm
 

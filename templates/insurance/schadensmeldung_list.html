@@ -46,10 +46,10 @@
         </thead>
         <tbody>
           {% for schaden in schaden_list %}
-            {% if filter == 'all' or schaden|get_current_status != 'Bezahlt' %}
+            {% if filter == 'all' or schaden|get_current_status not in erledigt %}
             <tr>
               <td>
-                  {% if schaden|get_current_status == 'Erledigt' %}
+                  {% if schaden|get_current_status in erledigt %}
                   <a href="#" 
                     class="btn btn-secondary btn-circle btn-sm">
                   <i class="fas fa-check"></i>

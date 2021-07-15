@@ -155,7 +155,7 @@ class Schadensmeldung(models.Model):
 	updated = models.DateField()
 
 	def __str__(self):
-		return f'{self.kundenname}: {self.vorgangsnummer} - Schaden {self.schadensnummer}'
+		return f'{self.kunde.kundennummer}: {self.kunde.nachname} - {self.unternehmen} {self.schadensnummer}'
 
 	def save(self):
 		if not self.id:
@@ -185,7 +185,7 @@ class SchadensmeldungStatus(models.Model):
 	anmerkung = models.TextField(blank=True)
 
 	def __str__(self):
-		return f'Update am {self.date} zur {self.schadensmeldung.vorgangsnummer} ({self.schadensmeldung.unternehmen} #{self.schadensmeldung.schadensnummer})'
+		return f'Update am {self.date} zur {self.schadensmeldung.unternehmen} {self.schadensmeldung.schadensnummer}'
 
 	def save(self):
 		if not self.id:
