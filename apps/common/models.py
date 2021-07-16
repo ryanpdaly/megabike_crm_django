@@ -63,6 +63,7 @@ MITARBEITER_ALL = (
 	('73', '73: F. Stresemann'),
 	('74', '74: R. Ramming'),
 	('75', '75: C. Malzahn'),
+	('76', '76: M. Feige'),
 )
 
 ABTEILUNG_OPTIONS = (

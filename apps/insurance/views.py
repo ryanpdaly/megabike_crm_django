@@ -131,9 +131,9 @@ class SchadenDetail(LoginRequiredMixin, generic.DetailView):
 
 		return data
 
-class SchadenCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView):
+class SchadenCreate(LoginRequiredMixin,  generic.CreateView):
 	model = models.Schadensmeldung
-	permission_required = ('insurance.edit_schaden')
+	#permission_required = ('insurance.edit_schaden')
 	
 	template_name = 'insurance/schadensmeldung_new.html'
 	success_url = reverse_lazy('insurance:schaden-list', kwargs={'filter':'open'})
@@ -246,9 +246,9 @@ class SchadenCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateV
 																)
 		)
 
-class SchadenEdit(LoginRequiredMixin, PermissionRequiredMixin, generic.UpdateView):
+class SchadenEdit(LoginRequiredMixin, generic.UpdateView):
 	model = models.Schadensmeldung
-	permission_required = ('insurance.edit_schaden',)
+	#permission_required = ('insurance.edit_schaden',)
 	
 	template_name_suffix = '_edit'
 	
@@ -257,9 +257,9 @@ class SchadenEdit(LoginRequiredMixin, PermissionRequiredMixin, generic.UpdateVie
 	def get_success_url(self, **kwargs):
 		return reverse('insurance:schaden-detail', kwargs={'pk':self.kwargs['pk']})
 
-class SchadenStatusUpdate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView):
+class SchadenStatusUpdate(LoginRequiredMixin, generic.CreateView):
 	model = models.SchadensmeldungStatus
-	permission_required = ('insurance.edit_schaden')
+	#permission_required = ('insurance.edit_schaden')
 
 	template_name = 'insurance/schadensmeldung_status_update.html'
 

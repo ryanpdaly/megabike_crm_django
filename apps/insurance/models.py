@@ -139,6 +139,11 @@ class Schadensmeldung(models.Model):
 
 	COMPANIES = (
 		('as', 'Assona'),
+		('bi', 'Bikeleasing-Service'),
+		('bu', 'Businessbike'),
+		('en', 'ENRA'),
+		('jo', 'JobRad'),
+		('le', 'Lease-a-Bike'),
 		)
 
 	unternehmen = models.CharField(max_length=3,
