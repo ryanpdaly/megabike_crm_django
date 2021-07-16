@@ -13,5 +13,5 @@ urlpatterns = [
 	path('edit<int:pk>/', views.UpdateTicket.as_view(), name='update-ticket'),
 	path('addfile<int:pk>/', views.AddFile.as_view(), name='add-file'),
 	path('update<int:pk>/', views.UpdateStatus.as_view(), name='update-status'),
-	path('display<int:pk>/file<int:sk>', views.display_file, name='display-file')
+	path('display<int:pk>/viewfile<int:sk>', views.display_file, name='display-file')
 ]

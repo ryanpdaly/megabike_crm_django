@@ -69,6 +69,11 @@ class SchadensmeldungStatusForm(forms.ModelForm):
 		model = models.SchadensmeldungStatus
 		fields = ('status', 'anmerkung',)
 
+class SchadensmeldungFileForm(forms.ModelForm):
+	class Meta:
+		model = models.SchadensmeldungFile
+		fields = ('beschreibung', 'file', 'anmerkung',)
+
 class CustomStatusFormset(BaseInlineFormSet):
 	def clean(self):
 		for form in self.forms:
@@ -87,7 +92,7 @@ StatusFormset = inlineformset_factory(
 
 """
 FileFormset = inlineformset_factory(
-		models.ReklaTicket, models.ReklaFile,
+		models.Schadensmeldung, models.SchadensmeldungFile,
 		exclude = ('created', 'updated', 'date'),
 		min_num = 1,
 		extra=0,

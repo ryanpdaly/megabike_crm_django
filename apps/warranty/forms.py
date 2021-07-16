@@ -48,7 +48,7 @@ class StatusUpdateForm(forms.ModelForm):
 class AddReklaFile(forms.ModelForm):
 	class Meta:
 		model = models.ReklaFile
-		fields = ('beschreibung', 'file', 'anmerkung')
+		fields = ('beschreibung', 'file', 'anmerkung',)
 
 	# Enable bootstrap styling
 	"""

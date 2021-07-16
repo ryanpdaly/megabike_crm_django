@@ -126,8 +126,7 @@ class SchadenDetail(LoginRequiredMixin, generic.DetailView):
 		data['status_updates'] = models.SchadensmeldungStatus.objects.filter(schadensmeldung=self.kwargs['pk']).order_by('-id')
 		data['current_status'] = data['status_updates'][0]
 
-		# Not currently planning on adding support for files
-		#data['files'] = models.ReklaFile.objects.filter(rekla_ticket=self.kwargs['pk'])
+		data['files'] = models.SchadensmeldungFile.objects.filter(schadensmeldung=self.kwargs['pk'])
 
 		return data
 
@@ -277,3 +276,31 @@ class SchadenStatusUpdate(LoginRequiredMixin, generic.CreateView):
 		schaden = models.Schadensmeldung.objects.filter(id=self.kwargs['pk'])
 		form.instance.schadensmeldung = schaden[0]
 		return super().form_valid(form)
+
+# Create a custom.AddFile class?
+class SchadensmeldungAddFile(LoginRequiredMixin, generic.CreateView):
+	model = models.SchadensmeldungFile
+
+	fields = ('beschreibung', 'file', 'anmerkung')
+
+	template_name = 'insurance/schadensmeldung_file_add.html'
+
+	def get_context_data(self, **kwargs):
+		data = super().get_context_data(**kwargs)
+		data['schaden_id'] = self.kwargs['pk']
+		return data
+
+	def form_valid(self, form):
+		schadensmeldung = models.Schadensmeldung.objects.filter(id=self.kwargs['pk'])
+		form.instance.schadensmeldung = schadensmeldung[0]
+
+		return super().form_valid(form)
+
+def display_file(request, pk, sk):
+	file_object = get_object_or_404(models.SchadensmeldungFile, id=sk)
+
+	context={
+		'file_object': file_object,
+	}
+
+	return render(request, 'insurance/schadensmeldung_file_display.html', context=context)

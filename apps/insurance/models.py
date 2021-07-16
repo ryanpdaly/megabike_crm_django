@@ -3,16 +3,29 @@ import os
 from uuid import uuid4
 
 from django.db import models
+from django.urls import reverse, reverse_lazy
 
 from apps.customers import models as customer_models
 
 def set_upload_path(bike, filename):
-	#TODO: can't delete this because it's used in a migrate. Fix that.
+	#TODO: can't delete this because it's used in a migration. Fix that.
 	pass
 
 def set_path_and_rename(instance, filename):
 	ext = filename.split('.')[-1]
-	filename = f'kd{instance.rahmennummer.kunde.kundennummer}/{uuid4()}.{ext}'
+	filename = f'kd{instance.rahmennummer.kunde.kundennummer}/versicherungskarten/{uuid4()}.{ext}'
+
+	return filename
+
+# Rework, combine with other set_path_and_rename?
+def set_schadenfile_path_and_name(instance, filename):
+	ext = filename.split('.')[-1]
+	
+	kdnr = instance.schadensmeldung.kunde.kundennummer
+	unternehmen = instance.schadensmeldung.unternehmen
+	schadensnr = instance.schadensmeldung.schadensnummer
+
+	filename = f'kd{kdnr}/{unternehmen}{schadensnr}/{uuid4()}.{ext}'
 
 	return filename
 
@@ -144,12 +157,14 @@ class Schadensmeldung(models.Model):
 		('en', 'ENRA'),
 		('jo', 'JobRad'),
 		('le', 'Lease-a-Bike'),
+		('me', 'Mein-Dienstrad'),
+		('we', 'Wertgarantie'),
 		)
 
 	unternehmen = models.CharField(max_length=3,
 									choices = COMPANIES
 								)
-	
+	# Inconsistency: either all fields nr or all fields nummer
 	schadensnummer = models.CharField(max_length = 30)
 
 	auftragsnr = models.CharField(max_length = 10)
@@ -196,3 +211,22 @@ class SchadensmeldungStatus(models.Model):
 		if not self.id:
 			self.date = datetime.date.today()
 		super(SchadensmeldungStatus, self).save()
+
+class SchadensmeldungFile(models.Model):
+	schadensmeldung = models.ForeignKey(Schadensmeldung, on_delete=models.CASCADE)
+	date = models.DateField()
+
+	beschreibung = models.CharField(max_length=30)
+	file = models.FileField(upload_to=set_schadenfile_path_and_name)
+	anmerkung = models.TextField(blank=True)
+
+	def __str__(self):
+		return f'{self.schadensmeldung.unternehmen} {self.schadensmeldung.schadensnummer}: {self.beschreibung}'
+
+	def get_absolute_url(self):
+		return reverse('insurance:schaden-detail', args=(self.schadensmeldung.id,))
+
+	def save(self):
+		if not self.id:
+			self.date = datetime.date.today()
+		super(SchadensmeldungFile, self).save()
