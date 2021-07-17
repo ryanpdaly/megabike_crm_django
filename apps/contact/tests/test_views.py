@@ -22,7 +22,7 @@ class TestCallList(TestViewBasics, TestCase):
 
 		calls = baker.make(models.PhoneContact, _quantity=15)
 
-	# Need to test our custom get_queryset
+	# TODO: Test for custom get_query_set
 
 class TestCreatePhoneContact(TestViewBasics, TestCase):
 	@classmethod
@@ -46,7 +46,7 @@ class TestUpdatePhoneContactStatus(TestViewBasics, TestCase):
 
 		baker.make(models.PhoneContact, id=1)
 
-	# Need to test our customer get_context_data
+	# TODO: test for custom get_context_data
 
 class TestOutgoingCallList(TestViewBasics, TestCase):
 	@classmethod
@@ -60,7 +60,7 @@ class TestOutgoingCallList(TestViewBasics, TestCase):
 
 		baker.make(models.OutgoingCall)
 
-	# Need to test our custom get_queryset
+	# TODO: Test for custom get_queryset
 
 class TestOutgoingCallCreate(TestViewBasics, TestCase):
 	@classmethod
@@ -83,4 +83,5 @@ class TestOutgoingCallUpdate(TestViewBasics, TestCase):
 		self.template_path = 'contact/outgoingcall_update.html'
 
 		baker.make(models.OutgoingCall, id=1)
-	# Need to test custom get_context_data
+	
+	# TODO: test for custom get_context_data

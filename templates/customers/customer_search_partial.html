@@ -29,7 +29,7 @@
 		</div>
 {% else %}
 	<div class="d-flex justify-content-center top-buffer">
-		{% comment 'This modal doesn't respond. Not entirely sure why.%}		
+		{% comment 'This modal doesn't respond. Not entirely sure why. --> Need to set up event binding after dynamic loading%}		
 		<a class="btn btn-primary btn-lg btn-icon-split" data-toggle="modal" data-target="#modal" data-url="{% url 'customers:customer-input-modal' %}">
 		{% endcomment %}
 		<a href="{% url 'customers:customer-list' %}" class="btn btn-primary btn-xl btn-icon-split">

@@ -1,23 +1,19 @@
 import datetime
 
 from django.db import models
+from django.utils import timezone
 
 from apps.common import models as common_models
 
-# Create your models here.
 
 class PhoneContact(models.Model):
-	date = models.DateField()
-
+	
+	# Use list from common.models?
 	ABTEILUNG_OPTIONS = (
 		('werkstatt', 'Werkstatt'),
 		('verkauf', 'Verkauf'),
 		('buero', 'Büro'),
 		('neurad', 'Neuräder'),
-	)
-
-	abteilung = models.CharField(max_length=15,
-		choices = ABTEILUNG_OPTIONS,
 	)
 
 	STATUS_OPTIONS = (
@@ -26,10 +22,16 @@ class PhoneContact(models.Model):
 		('erledigt', 'Erledigt'),
 	)
 
+	date = models.DateField()
+
+	abteilung = models.CharField(max_length=15,
+		choices = ABTEILUNG_OPTIONS,
+		)
+
 	status = models.CharField(max_length=15,
 		choices=STATUS_OPTIONS,
 		default='offen',
-	)
+		)
 
 	kundenname = models.CharField(max_length=30,)
 	telefonnr = models.CharField(max_length=20,)

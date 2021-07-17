@@ -12,8 +12,5 @@ class CustomerAdmin(admin.ModelAdmin):
 	list_display = ('kundennummer', 'nachname')
 	inlines = [BikeInline]
 
-class BikeAdmin(admin.ModelAdmin):
-	pass
-
 admin.site.register(Customer, CustomerAdmin)
-admin.site.register(Bike, BikeAdmin)
+admin.site.register(Bike)

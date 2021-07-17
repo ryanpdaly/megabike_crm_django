@@ -10,7 +10,7 @@ class CustomerForm(forms.ModelForm):
 		model = models.Customer
 		fields = ['kundennummer', 'nachname']
 
-# TODO: Both form and formset allow us to set insurance without actually creating an insurance policy. Need to fix this
+# TODO: We should not be able to set insurance without simultaneously creating an insurance policy object from our insurance app
 class BikeForm(forms.ModelForm):
 	class Meta:
 		model = models.Bike

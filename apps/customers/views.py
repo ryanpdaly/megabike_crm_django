@@ -14,7 +14,6 @@ from apps.insurance import forms as insurance_forms
 from apps.insurance import models as insurance_models
 from apps.warranty import models as warranty_models
 
-# Create your views here.
 
 @login_required
 def bike_detail_view(request, pk, rn):
@@ -22,6 +21,7 @@ def bike_detail_view(request, pk, rn):
 	bike_instance = get_object_or_404(models.Bike, rahmennummer=rn)
 	insurance = bike_instance.insurance
 
+	# Why is this defined here instead of in insurance app?
 	INSURANCE_OPTIONS = {
 		'no': 'None',
 		'as': insurance_models.AssonaInfo,
@@ -84,18 +84,30 @@ class BikeUpdateView(LoginRequiredMixin, generic.UpdateView):
 def customer_detail_view(request, pk):
 	customer_instance = get_object_or_404(models.Customer, pk=pk)
 	bikes = models.Bike.objects.filter(kunde=pk)
+	
 	insurance_tickets = insurance_models.Schadensmeldung.objects.filter(kunde=pk)
-	reklas = warranty_models.ReklaTicket.objects.filter(kunde=pk)
+	# Define erledigt statuses in insurance.models?
+	schaden_erledigt = ['Bezahlt', 'Abgelehnt',]
+
+	warranty_tickets = warranty_models.ReklaTicket.objects.filter(kunde=pk)
+	# Define erledigt statuses in warranty.models?
+	warranty_erledigt = []
 
 	context = {
 		'customer': customer_instance,
 		'bikes': bikes,
-		'insurance_tickets':insurance_tickets,
-		'reklas': reklas,
+		
+		'insurance_tickets': insurance_tickets,
+		'schaden_erledigt': schaden_erledigt, 
+		
+		'warranty_tickets': warranty_tickets,
+		'warranty_erledigt': warranty_erledigt,
+
 	}
 
 	return render(request, 'customers/customer_detail.html', context=context)
 
+# TODO: This does not check if customer already exists.
 class CustomerInputView(LoginRequiredMixin, generic.CreateView):
 	model = models.Customer
 	template_name = 'customers/customer_input.html'
@@ -125,11 +137,6 @@ class CustomerListView(LoginRequiredMixin, generic.ListView):
 	template_name = 'customers/customer_list.html'
 
 	register = template.Library()
-
-	def get_context_data(self, **kwargs):
-		context = super(CustomerListView, self).get_context_data(**kwargs)
-
-		return context
 
 class CustomerUpdateView(LoginRequiredMixin, generic.UpdateView):
 	model = models.Customer
