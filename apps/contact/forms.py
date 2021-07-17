@@ -4,6 +4,7 @@ from django import forms
 
 from apps.contact import models
 
+
 class NewPhoneContact(forms.ModelForm):
 	class Meta:
 		model = models.PhoneContact

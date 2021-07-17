@@ -147,6 +147,7 @@ class EuroradInfo(models.Model):
 	def get_fields(self):
 		return [(field.name, field.value_to_string(self)) for field in EuroradInfo._meta.fields]
 
+# Rename to schaden? Name unneccesarily long
 class Schadensmeldung(models.Model):
 	kunde = models.ForeignKey(customer_models.Customer, on_delete=models.CASCADE)
 
@@ -184,7 +185,7 @@ class Schadensmeldung(models.Model):
 		super(Schadensmeldung, self).save()
 
 
-# Rename to SchadensmeldungStatus?
+# Rename to SchadensStatus, name unecessarily long.
 class SchadensmeldungStatus(models.Model):
 	schadensmeldung = models.ForeignKey(Schadensmeldung, on_delete=models.CASCADE)
 

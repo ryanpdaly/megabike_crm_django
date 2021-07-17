@@ -20,7 +20,7 @@ class NewTicketForm(forms.ModelForm):
 					'bezeichnung', 'menge', 'auftragsnr', 'fehlerbeschreibung',)
 		widgets = {'angenommen': SelectDateWidget(years = valid_years)}
 
-	# Enable bootstrap styling
+	# Enable bootstrap styling, need to find decent date picker compatible with bootstrap
 	"""
 	def __init__(self, *args, **kwargs):
 		super(NewTicketForm, self).__init__(*args, **kwargs)

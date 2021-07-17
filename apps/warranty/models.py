@@ -5,7 +5,9 @@ from uuid import uuid4
 from django.db import models
 from django.urls import reverse, reverse_lazy
 
+from apps.common import models as common_models
 from apps.customers import models as customers
+
 
 def set_path_and_rename(instance, filename):
 	ext = filename.split('.')[-1]
@@ -17,69 +19,20 @@ def set_path_and_rename(instance, filename):
 class ReklaTicket(models.Model):
 	kunde = models.ForeignKey(customers.Customer, on_delete=models.CASCADE)
 
-	#TODO: This needs to be set one time, not in each individual apps models
-	MITARBEITER_LIST = (
-		('12', 'Beskowski'),
-		('34', 'Wegener'),
-		('59', 'Daly'),
-		('61', 'Betke'),
-		('65', 'Bachmann'),
-		('68', 'Duhme'),
-		('70', 'Nolte'),
-		('72', 'Korpilla'),
-	)
-
 	sachbearbeiter = models.CharField(
 		max_length = 2,
-		choices = MITARBEITER_LIST,
+		choices = common_models.MITARBEITER_ALL,
 		blank = False,
 		)
 
 	angenommen = models.DateField()
 	created = models.DateField()
 	updated = models.DateField()
-
-	HERSTELLER_CHOICES = (
-		('absolut', 'Absolut'),
-		('abus', 'Abus'),
-		('alpina', 'Alpina'),
-		('asista', 'Asista'),
-		('bergamont', 'Bergamont'),
-		('bosch', 'Bosch'),
-		('cosmic', 'Cosmic'),
-		('cube', 'Cube'),
-		('ergotec', 'Ergotec'),
-		('grofa', 'Grofa'),
-		('hamax', 'Hamax'),
-		('hartje', 'Hartje'),
-		('magura', 'Magura'),
-		('mcg', 'MCG'),
-		('new wave', 'New Wave'),
-		('oneal', "O'neal"),
-		('ortlieb', 'Ortlieb'),
-		('lange', 'Paul Lange'),
-		('puky', 'Puky'),
-		('rm', 'R&M'),
-		('roeckl', 'Roeckl'),
-		('rti', 'RIT'),
-		('sks', 'SKS'),
-		('sonstige', 'Sonstige'),
-		('sqlab','SQ-Lab'),
-		('sram', 'SRAM DSD'),
-		('supernova', 'Supernova'),
-		('trek', 'Trek'),
-		('trelock', 'Trelock'),
-		('vaude', 'Vaude'),
-		('wiener', 'Wiender'),
-		('zeg', 'ZEG')
-	)
-
-	hersteller = models.CharField(max_length = 30, choices = HERSTELLER_CHOICES,)
+	hersteller = models.CharField(max_length = 30, choices = common_models.LIEFERANTEN,)
 	artikelnr = models.CharField(max_length = 30,)
 	bezeichnung = models.CharField(max_length = 50,)
 	menge = models.IntegerField()
 	auftragsnr = models.CharField(max_length = 10,)
-
 	fehlerbeschreibung = models.TextField()
 
 	def __str__(self):
@@ -96,9 +49,6 @@ class ReklaTicket(models.Model):
 		)
 
 class ReklaStatusUpdate(models.Model):
-	rekla_ticket = models.ForeignKey(ReklaTicket, on_delete = models.CASCADE)
-	date = models.DateField()
-
 	STATUS_LIST = (
 		('offen', 'Offen'),
 		('gemeldet', 'Beim Hersteller gemeldet'),
@@ -109,8 +59,10 @@ class ReklaStatusUpdate(models.Model):
 		('abholbereit', 'Abholbereit'),
 		('abgelehnt', 'vom Hersteller abgelehnt'),
 		('erledigt', 'Erledigt'),
-	)
+	)	
 
+	rekla_ticket = models.ForeignKey(ReklaTicket, on_delete = models.CASCADE)
+	date = models.DateField()
 	status = models.CharField(max_length = 20, choices = STATUS_LIST,)
 	anmerkung = models.TextField(blank=True)
 
@@ -128,7 +80,6 @@ class ReklaStatusUpdate(models.Model):
 class ReklaFile(models.Model):
 	rekla_ticket = models.ForeignKey(ReklaTicket, on_delete = models.CASCADE)
 	date = models.DateField()
-
 	beschreibung = models.CharField(max_length=30)
 	file = models.FileField(upload_to=set_path_and_rename)
 	anmerkung = models.TextField(blank=True)

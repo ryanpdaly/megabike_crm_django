@@ -3,14 +3,12 @@ from django.urls import reverse, reverse_lazy
 
 
 class Customer(models.Model):
-	# Does our customer need contact info? It would save us having to look it up elsewhere
-
 	kundennummer = models.IntegerField(unique=True, primary_key=True)
 	nachname = models.CharField(max_length=30)
 
 	class Meta:
-		verbose_name = "Customer"
-		verbose_name_plural = "Customers"
+		verbose_name = "Kunde"
+		verbose_name_plural = "Kunden"
 
 	def __str__(self):
 		return f'Kd{self.kundennummer}: {self.nachname}'
@@ -18,12 +16,9 @@ class Customer(models.Model):
 	def get_absolute_url(self):
 		return reverse('customers:customer-detail', args=[str(self.kundennummer)])
 
-class Bike(models.Model):
-	kunde = models.ForeignKey(Customer, on_delete=models.CASCADE)
-	
-	beschreibung = models.CharField(max_length=50)
-	rahmennummer = models.CharField(max_length=30, unique=True)
 
+# TODO: We should not be able to set insurance without simultaneously creating an insurance policy object from our insurance app
+class Bike(models.Model):
 	INSURANCE_OPTIONS = (
 		('no', 'None'),
 		('as', 'Assona'),
@@ -31,8 +26,11 @@ class Bike(models.Model):
 		('bu', 'Businessbike'),
 		('en', 'ENRA'),
 		('eu', 'Eurorad'),
-	)
+	)	
 
+	kunde = models.ForeignKey(Customer, on_delete=models.CASCADE)
+	beschreibung = models.CharField(max_length=50)
+	rahmennummer = models.CharField(max_length=30, unique=True)
 	insurance = models.CharField(
 		max_length = 2,
 		choices = INSURANCE_OPTIONS,
@@ -40,8 +38,8 @@ class Bike(models.Model):
 		default = 'no',)
 
 	class Meta:
-		verbose_name = "Bike"
-		verbose_name_plural = "Bikes"
+		verbose_name = "Fahrrad"
+		verbose_name_plural = "Fahrräder"
 
 	def __str__(self):
 		return self.rahmennummer

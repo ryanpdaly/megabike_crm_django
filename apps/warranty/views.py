@@ -52,12 +52,11 @@ class CreateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateVi
 		form_class = self.get_form_class()
 		form = self.get_form(form_class)
 
-		# Inconsistency: rename customer_search to customer_form?
+		# TODO: rename customer_search to customer_form?
 		customer_search = customer_forms.CustomerSearchForm()
 		status_form = forms.StatusFormset()
 		files_form = forms.FileFormset()
 
-		# Set und call order for kdnr_input + kdnr_checked is wrong. Weird behavior when checking new kdnr with old still in search box
 		if self.request.is_ajax():
 			kdnr_input = request.GET.get('kdnr_input')
 			self.kwargs['kdnr_input'] = kdnr_input

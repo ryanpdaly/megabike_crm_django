@@ -37,7 +37,6 @@
 						<h6 class="m-0 font-weight-bold text-primary">Fahrzeuge ({{ customer.kundennummer|count_bikes }} stk):</h6>
 					</a>
 					<div class="collapse card-body" id="collapseFahrzeuge">
-
 						{% if bikes %}
 							<div class="table-responsive">
 							  <table id="dataTable" class="table table-striped">
@@ -85,7 +84,7 @@
 						<h6 class="m-0 font-weight-bold text-primary">Rekla Tickets ({{customer.kundennummer|count_open_tickets_warranty}} in bearbeitung):</h6>
 					</a>
 					<div class="collapse card-body" id="collapseRekla">
-						{% if reklas %}
+						{% if warranty_tickets %}
 							<div class="table-responsive">
 							  <table id="dataTable" class="table table-striped">
 								<thead class="thead-dark">
@@ -98,39 +97,29 @@
 								  </tr>
 								</thead>
 								<tbody>
-									{% for rekla in reklas %}
+									{% for ticket in warranty_tickets %}
 										<tr scope="row">
 											<td>
-											{% comment %}
-												1) Need to uniform terminology. In some places I use rekla, in some tickets
-												2) This is a lot of repeated code from warranty/list_all.html
-											{% endcomment %}
-												{% if rekla.id|get_current_status == 'Erledigt' %}
-							      				  	<a href="{% url 'warranty:display-ticket' pk=rekla.id %}" 
+					      				  		<a href="{% url 'warranty:display-ticket' pk=ticket.id %}" 
+													{% if ticket.id|get_current_status == 'Erledigt' %}
 							      				  		class="btn btn-secondary btn-circle btn-sm">
 							      						<i class="fas fa-check"></i>
-							      				  	</a>
-							      				{% elif rekla.id|get_last_update >= 9 %}
-							      				  	<a href="{% url 'warranty:display-ticket' pk=rekla.id %}" 
+							      					{% elif ticket.id|get_last_update >= 9 %}
 							      				  		class="btn btn-danger btn-circle btn-sm">
 							      				  		<i class="fas fa-exclamation-triangle"></i>
-							      				  	</a>
-							      				{% elif rekla.id|get_last_update >= 5 %}
-							    				  	<a href="{% url 'warranty:display-ticket' pk=rekla.id %}" 
+								      				{% elif ticket.id|get_last_update >= 5 %} 
 							    				  		class="btn btn-warning btn-circle btn-sm">
 							      				    	<i class="fas fa-exclamation-triangle"></i>
-							      				  	</a>
-							      				{% else %}
-							      				  <a href="{% url 'warranty:display-ticket' pk=rekla.id %}" 
-							      				  	class="btn btn-success btn-circle btn-sm">
-							      				  	<i class="fas fa-info-circle"></i>
-							      				  </a>
-							  				    {% endif %}
+								      				{% else %}
+								      				  	class="btn btn-success btn-circle btn-sm">
+								      				  	<i class="fas fa-info-circle"></i>
+								  				    {% endif %}
+								  				</a>
 							  				</td>
-											<td><a href="{% url 'warranty:display-ticket' pk=rekla.id %}">{{ rekla.id }}</a></td>
-											<td><a href="{% url 'warranty:display-ticket' pk=rekla.id %}">{{ rekla.id|get_current_status }}</a></td>
-											<td>vor <b>{{ rekla.id|get_last_update }}</b> Tage</td>
-											<td>{{ rekla.get_hersteller_display }}
+											<td><a href="{% url 'warranty:display-ticket' pk=ticket.id %}">{{ ticket.id }}</a></td>
+											<td><a href="{% url 'warranty:display-ticket' pk=ticket.id %}">{{ ticket.id|get_current_status }}</a></td>
+											<td>vor <b>{{ ticket.id|get_last_update }}</b> Tage</td>
+											<td>{{ ticket.get_hersteller_display }}
 										</tr>
 									{% endfor %}
 								</tbody>
@@ -170,45 +159,34 @@
 									{% for ticket in insurance_tickets %}
 										<tr scope="row">
 											<td>
-												{% if ticket.id|get_current_status_insurance == 'Erledigt' %}
-							      				  	<a href="#" 
+												<a href="{% url 'insurance:schaden-detail' pk=ticket.id %}"
+													{% if ticket.id|get_current_status_insurance in schaden_erledigt %}
 							      				  		class="btn btn-secondary btn-circle btn-sm">
 							      						<i class="fas fa-check"></i>
-							      				  	</a>
-							      				{% elif ticket.id|get_last_update_insurance >= 9 %}
-							      				  	<a href="#" 
-							      				  		class="btn btn-danger btn-circle btn-sm">
-							      				  		<i class="fas fa-exclamation-triangle"></i>
-							      				  	</a>
-							      				{% elif ticket.id|get_last_update_insurance >= 5 %}
-							    				  	<a href="#" 
-							    				  		class="btn btn-warning btn-circle btn-sm">
-							      				    	<i class="fas fa-exclamation-triangle"></i>
-							      				  	</a>
-							      				{% else %}
-							      				  <a href="#" 
-							      				  	class="btn btn-success btn-circle btn-sm">
-							      				  	<i class="fas fa-info-circle"></i>
-							      				  </a>
-							  				    {% endif %}
+								      				{% elif ticket.id|get_last_update_insurance >= 9 %} 
+								      				  		class="btn btn-danger btn-circle btn-sm">
+								      				  		<i class="fas fa-exclamation-triangle"></i>
+								      				{% elif ticket.id|get_last_update_insurance >= 5 %} 
+								    				  		class="btn btn-warning btn-circle btn-sm">
+								      				    	<i class="fas fa-exclamation-triangle"></i>
+								      				{% else %}
+								      				  	class="btn btn-success btn-circle btn-sm">
+								      				  	<i class="fas fa-info-circle"></i>
+								  				    {% endif %}
+							  				    </a>
 							  				</td>
 							  				
-							  				<td>{{ticket.get_unternehmen_display}}: {{ticket.schadensnummer}}</td>
-							  				<td>{{ticket|get_current_status_insurance}}</td>
+							  				<td><a href="#" {# modal for complete basic info + files, button to edit #}>{{ticket.get_unternehmen_display}}: {{ticket.schadensnummer}}</a></td>
+							  				<td><a href="#" {# modal to view complete current status w/ file, button to edit status #}>{{ticket|get_current_status_insurance}}</td>
 											<td>
-												<a href="#">
-													{{ticket.auftragsnr}}
-													{% if ticket.rechnungsnr %} / {{ticket.rechnungsnr}} {% endif %}
-												</a>
+												{{ticket.auftragsnr}}
+												{% if ticket.rechnungsnr %} / {{ticket.rechnungsnr}} {% endif %}
 											</td>
-											<td>
-												<a href="#"> 
-													{% if ticket.reparatur_datum %}
-														{{ticket.reparatur_datum}}
-													{% else %}
+											<td>{% if ticket.reparatur_datum %}
+													{{ticket.reparatur_datum}}
+												{% else %}
 														---- 
-													{% endif %}
-												</a>
+												{% endif %}
 											</td>
 											<td>vor <b>{{ticket|get_last_update_insurance}}</b> Tage</td>
 										</tr>

@@ -21,6 +21,7 @@ class CallList(LoginRequiredMixin, generic.ListView):
 		if self.kwargs.get('abteilung') != 'all':
 			data = data.filter(abteilung = self.kwargs.get('abteilung'))
 
+		# Alternative approach: Button group with possible statuses, create list of checked buttons on page load. Check against list.
 		if self.kwargs.get('filter') == 'open':
 			data = data.exclude(status='erledigt')
 		return data
@@ -29,7 +30,7 @@ class CreatePhoneContact(LoginRequiredMixin, generic.CreateView):
 	model = models.PhoneContact
 
 	template_name = 'contact/phonecontact_create.html'
-	success_url = reverse_lazy('contact:call-list', kwargs={'abteilung':"all", 'filter':"open"})
+	success_url = reverse_lazy('contact:call-list', kwargs={'abteilung':'all', 'filter':'open'})
 
 	form_class = forms.NewPhoneContact
 

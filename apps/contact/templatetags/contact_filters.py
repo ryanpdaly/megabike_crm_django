@@ -1,5 +1,6 @@
 from django import template
 
+
 register = template.Library()
 
 @register.filter(name='print_last_name')
