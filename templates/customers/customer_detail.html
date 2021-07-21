@@ -100,24 +100,29 @@
 									{% for ticket in warranty_tickets %}
 										<tr scope="row">
 											<td>
-					      				  		<a href="{% url 'warranty:display-ticket' pk=ticket.id %}" 
-													{% if ticket.id|get_current_status == 'Erledigt' %}
+											{# This is a lot of repeated code from warranty/list_all.html #}
+												{% if ticket.id|warranty_current_status == 'Erledigt' %}
+							      				  	<a href="{% url 'warranty:display-ticket' pk=ticket.id %}" 
 							      				  		class="btn btn-secondary btn-circle btn-sm">
 							      						<i class="fas fa-check"></i>
-							      					{% elif ticket.id|get_last_update >= 9 %}
+							      				  	</a>
+							      				{% elif ticket.id|warranty_last_update >= 9 %}
+							      				  	<a href="{% url 'warranty:display-ticket' pk=ticket.id %}" 
 							      				  		class="btn btn-danger btn-circle btn-sm">
 							      				  		<i class="fas fa-exclamation-triangle"></i>
-								      				{% elif ticket.id|get_last_update >= 5 %} 
+							      				  	</a>
+							      				{% elif ticket.id|warranty_last_update >= 5 %}
+							    				  	<a href="{% url 'warranty:display-ticket' pk=ticket.id %}" 
 							    				  		class="btn btn-warning btn-circle btn-sm">
 							      				    	<i class="fas fa-exclamation-triangle"></i>
-								      				{% else %}
-								      				  	class="btn btn-success btn-circle btn-sm">
-								      				  	<i class="fas fa-info-circle"></i>
-								  				    {% endif %}
+							      				{% else %}
+							      				  	class="btn btn-success btn-circle btn-sm">
+							      				  	<i class="fas fa-info-circle"></i>
+							  				    {% endif %}
 								  				</a>
 							  				</td>
 											<td><a href="{% url 'warranty:display-ticket' pk=ticket.id %}">{{ ticket.id }}</a></td>
-											<td><a href="{% url 'warranty:display-ticket' pk=ticket.id %}">{{ ticket.id|get_current_status }}</a></td>
+											<td><a href="{% url 'warranty:display-ticket' pk=ticket.id %}">{{ ticket.id|warranty_current_status }}</a></td>
 											<td>vor <b>{{ ticket.id|get_last_update }}</b> Tage</td>
 											<td>{{ ticket.get_hersteller_display }}
 										</tr>

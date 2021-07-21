@@ -12,3 +12,5 @@ class MainView(TemplateView):
 
 def privacy_policy(request):
 	return render(request, 'common/privacy_policy.html')
+
+	

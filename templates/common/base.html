@@ -1,9 +1,11 @@
+{% load static %}
+{% load insurance_filters %}
+{% load warranty_filters %}
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    {% load static %}
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -167,6 +169,98 @@
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
+
+                        <!-- Nav Item - Phone Contacts-->
+                        <li class="nav-item dropdown no-arrow mx-1">
+                            <a class="nav-link dropdown-toggle" href="#" id="phoneDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-phone"></i>
+                                <span class="badge badge-danger badge-counter">
+                                    {{open_contact_tickets.count}}
+                                </span>
+                            </a>
+                            <!-- Dropdown - Phone Contacts -->
+                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="phoneDropdown">
+                                <h6 class="dropdown-header">
+                                    Offene Kontaktanfragen
+                                </h6>
+                                {% for contact in open_contact_tickets %}
+                                    <a class="dropdown-item d-flex align-items-center" href="#">
+                                        <div class="mr-3">
+                                            <div class="icon-circle bg-primary">
+                                                <i class="fas fa-file-alt text-white"></i>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="small text-gray-500">{{contact.date}} {{contact.get_abteilung_display}}</div>
+                                            <span class="font-weight-bold">{{contact.kundenname}} {{contact.telefonnr}}</span>
+                                        </div>
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        </li>
+
+                        <!-- Nav Item - Insurance Claims -->
+                        <li class="nav-item dropdown no-arrow mx-1">
+                            <a class="nav-link dropdown-toggle" href="#" id="insuranceDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-car-crash"></i>
+                                <!-- Counter - Insurance Claims -->
+                                <span class="badge badge-danger badge-counter">{{faellige_insurance_tickets.count}}</span>
+                            </a>
+                        <!-- Dropdown - Insurance Claims -->
+                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="insuranceDropdown">
+                                <h6 class="dropdown-header">
+                                    Fällige Schadensmeldungen
+                                </h6>
+                                
+                                {% for ticket in faellige_insurance_tickets %}
+                                    <a class="dropdown-item d-flex align-items-center" href="#">
+                                        <div class="mr-3">
+                                            <div class="icon-circle bg-primary">
+                                                <i class="fas fa-file-alt text-white"></i>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="small text-gray-500">{{ticket|insurance_last_update_date}} {{ticket|insurance_current_status}}</div>
+                                            <span class="font-weight-bold">{{ticket.auftragsnr}}: {{ticket.kunde.nachname}}</span>
+                                        </div>
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        </li>
+
+                         <!-- Nav Item - Warranty Tickets -->
+                        <li class="nav-item dropdown no-arrow mx-1">
+                            <a class="nav-link dropdown-toggle" href="#" id="warrrantyDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-wrench"></i>
+                                <!-- Counter - Warranty Tickets -->
+                                <span class="badge badge-danger badge-counter">{{faellige_warranty_tickets.count}}</span>
+                            </a>
+                        <!-- Dropdown - Insurance Claims -->
+                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="warrantyDropdown">
+                                <h6 class="dropdown-header">
+                                    Fällige Reklamation
+                                </h6>
+                                {% for ticket in faellige_warranty_tickets %}
+                                    <a class="dropdown-item d-flex align-items-center" href="#">
+                                        <div class="mr-3">
+                                            <div class="icon-circle bg-primary">
+                                                <i class="fas fa-file-alt text-white"></i>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="small text-gray-500">{{ticket|warranty_last_update_date}} {{ticket|warranty_current_status}}</div>
+                                            <span class="font-weight-bold">{{ticket.hersteller}}{{ticket.id}}</span>
+                                        </div>
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        </li>
 
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">

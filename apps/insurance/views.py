@@ -8,12 +8,16 @@ from django.views import generic
 from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
 
+from apps.common import mixins as common_mixins
+from apps.contact import models as contact_models
 from apps.customers import models as customer_models
 from apps.customers import forms as customer_forms
 from apps.insurance import forms
 from apps.insurance import models
+from apps.warranty import models as warranty_models
 
 
+# TODO: Rework as CBV
 @login_required
 def input_insurance(request, rn, insurance):
 	bike_instance = get_object_or_404(customer_models.Bike, rahmennummer=rn)
@@ -47,25 +51,43 @@ def input_insurance(request, rn, insurance):
 		'bike':bike_instance,
 		'ins_form':ins_form,
 		'update_bike':update_bike,
+
+		'open_contact_tickets': common_mixins.get_open_contact_tickets(),
+		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(),
+		'faellige_warranty_tickets': common_mixins.get_faellige_warranty_tickets(),
 	}
 
 	return render(request, 'insurance/input_insurance.html', context=context)
 
+# TODO: Rework as CBV
 @login_required
 def list_all(request):
 
 	policies = customer_models.Bike.objects.exclude(insurance='no')
 
 	context = {
-		'policies':policies
+		'policies':policies,
+
+		'open_contact_tickets': common_mixins.get_open_contact_tickets(),
+		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(),
+		'faellige_warranty_tickets': common_mixins.get_faellige_warranty_tickets(),
 	}
 
 	return render(request, 'insurance/list_all.html', context=context)
 
+# TODO: Rework as CBV
 @login_required
 def info_page(request, insurance):
-	return render(request, f'insurance/info_{insurance}.html')
 
+	context = {
+		'open_contact_tickets': common_mixins.get_open_contact_tickets(),
+		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(),
+		'faellige_warranty_tickets': common_mixins.get_faellige_warranty_tickets(),
+	}
+
+	return render(request, f'insurance/info_{insurance}.html', context=context)
+
+# TODO: Rework as CBV
 @login_required
 def display_policy(request, rn):
 	bike_instance = get_object_or_404(customer_models.Bike, rahmennummer=rn)
@@ -97,26 +119,48 @@ def display_policy(request, rn):
 	context = {
 		'rahmennummer': rn,
 		'insurance_info': insurance_info,
+
+		'open_contact_tickets': common_mixins.get_open_contact_tickets(),
+		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(),
+		'faellige_warranty_tickets': common_mixins.get_faellige_warranty_tickets(),
 	}
 
 	return render(request, f'insurance/display_{INSURANCE_URL[insurance]}.html', context=context)
 
+# TODO: Rework as CBV
 @login_required
 def schaden_list(request, filter):
 
 	schaden_list = models.Schadensmeldung.objects.all()
 
+
+	# Might be better to change insurance_current_status filter to use status instead of status display, then use our erledigt_status list from insurance.models
 	erledigt = ['Bezahlt', 'Abgelehnt',]
 
 	context = {
 		'schaden_list': schaden_list,
 		'filter': filter,
 		'erledigt': erledigt,
+
+		'open_contact_tickets': common_mixins.get_open_contact_tickets(),
+		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(),
+		'faellige_warranty_tickets': common_mixins.get_faellige_warranty_tickets(),
 	}
 
 	return render(request, f'insurance/schadensmeldung_list.html', context=context)
 
-class SchadenDetail(LoginRequiredMixin, generic.DetailView):
+"""
+class SchadenList(LoginRequiredMixin, generic.ListView, common_mixins.NotificationsMixin):
+	model = models.Schadensmeldung
+	template_name = 'schadensmeldung_list.html'
+
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+
+		return context
+"""
+
+class SchadenDetail(LoginRequiredMixin, generic.DetailView, common_mixins.NotificationsMixin):
 	model = models.Schadensmeldung
 	template_name_suffix = '_detail'
 
@@ -126,18 +170,15 @@ class SchadenDetail(LoginRequiredMixin, generic.DetailView):
 		data['status_updates'] = models.SchadensmeldungStatus.objects.filter(schadensmeldung=self.kwargs['pk']).order_by('-id')
 		data['current_status'] = data['status_updates'][0]
 
-		# Not currently planning on adding support for files
-		#data['files'] = models.ReklaFile.objects.filter(rekla_ticket=self.kwargs['pk'])
-
 		return data
 
-class SchadenCreate(LoginRequiredMixin,  generic.CreateView):
+
+class SchadenCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView, common_mixins.NotificationsMixin):
 	model = models.Schadensmeldung
 	#permission_required = ('insurance.edit_schaden')
 	
 	template_name = 'insurance/schadensmeldung_new.html'
 	success_url = reverse_lazy('insurance:schaden-list', kwargs={'filter':'open'})
-
 	form_class = forms.SchadensmeldungForm
 
 	def get_context_data(self, **kwargs):
@@ -246,7 +287,8 @@ class SchadenCreate(LoginRequiredMixin,  generic.CreateView):
 																)
 		)
 
-class SchadenEdit(LoginRequiredMixin, generic.UpdateView):
+
+class SchadenEdit(LoginRequiredMixin, PermissionRequiredMixin, generic.UpdateView, common_mixins.NotificationsMixin):
 	model = models.Schadensmeldung
 	#permission_required = ('insurance.edit_schaden',)
 	
@@ -257,7 +299,8 @@ class SchadenEdit(LoginRequiredMixin, generic.UpdateView):
 	def get_success_url(self, **kwargs):
 		return reverse('insurance:schaden-detail', kwargs={'pk':self.kwargs['pk']})
 
-class SchadenStatusUpdate(LoginRequiredMixin, generic.CreateView):
+
+class SchadenStatusUpdate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView, common_mixins.NotificationsMixin):
 	model = models.SchadensmeldungStatus
 	#permission_required = ('insurance.edit_schaden')
 
