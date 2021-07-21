@@ -13,7 +13,8 @@ def set_path_and_rename(instance, filename):
 
 	return filename
 
-# Create your models here.
+REKLA_STATUS_ERLEDIGT = ['erledigt']
+
 class ReklaTicket(models.Model):
 	kunde = models.ForeignKey(customers.Customer, on_delete=models.CASCADE)
 

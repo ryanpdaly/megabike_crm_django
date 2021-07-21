@@ -46,20 +46,20 @@
         </thead>
         <tbody>
           {% for schaden in schaden_list %}
-            {% if filter == 'all' or schaden|get_current_status not in erledigt %}
+            {% if filter == 'all' or schaden|insurance_current_status not in erledigt %}
             <tr>
               <td>
-                  {% if schaden|get_current_status in erledigt %}
+                  {% if schaden|insurance_current_status in erledigt %}
                   <a href="#" 
                     class="btn btn-secondary btn-circle btn-sm">
                   <i class="fas fa-check"></i>
                   </a>
-                  {% elif schaden|get_last_update >= 9 %}
+                  {% elif schaden|insurance_last_update >= 9 %}
                       <a href="#" 
                         class="btn btn-danger btn-circle btn-sm">
                         <i class="fas fa-exclamation-triangle"></i>
                       </a>
-                  {% elif schaden|get_last_update >= 5 %}
+                  {% elif schaden|insurance_last_update >= 5 %}
                     <a href="#" 
                       class="btn btn-warning btn-circle btn-sm">
                         <i class="fas fa-exclamation-triangle"></i>
@@ -70,11 +70,11 @@
                       <i class="fas fa-info-circle"></i>
                     </a>
                   {% endif %}</td>              
-              <td>{{ schaden|get_current_status }}</td>              
+              <td>{{ schaden|insurance_current_status }}</td>              
               <th scope="row"><a href="{% url 'insurance:schaden-detail' pk=schaden.id%}">{{ schaden.auftragsnr }}</a></th>
               <td>{{ schaden.get_unternehmen_display }} <br\> {{ schaden.schadensnummer }}</td>
               <td>{{ schaden.kunde.kundennummer }}: {{ schaden.kunde.nachname }}</td>
-              <td>vor <b>{{ schaden|get_last_update }}</b> Tage</td>
+              <td>vor <b>{{ schaden|insurance_last_update }}</b> Tage</td>
             </tr>
           {% endif %}
           {% endfor %}

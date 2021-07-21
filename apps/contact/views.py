@@ -8,10 +8,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import generic
 from django.urls import reverse, reverse_lazy
 
+from apps.common import mixins as common_mixins
 from apps.contact import models, forms
 
 
-class CallList(LoginRequiredMixin, generic.ListView):
+class CallList(LoginRequiredMixin, generic.ListView, common_mixins.NotificationsMixin):
 	model = models.PhoneContact
 	template_name = 'contact/phonecontact_list.html'
 

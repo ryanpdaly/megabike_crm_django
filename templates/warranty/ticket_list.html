@@ -76,17 +76,17 @@
 	      	{% for ticket in reklaticket_list %}
       		<tr>
       			<th>{% comment %}TODO: Set this whole thing in a filter? I'll almost certainly need it again somewhere else {% endcomment %}
-      				{% if ticket.id|get_current_status == 'Erledigt' %}
+      				{% if ticket.id|warranty_current_status == 'Erledigt' %}
       				  	<a href="{% url 'warranty:display-ticket' pk=ticket.id %}" 
       				  		class="btn btn-secondary btn-circle btn-sm">
       						<i class="fas fa-check"></i>
       				  	</a>
-      				{% elif ticket.id|get_last_update >= 9 %}
+      				{% elif ticket.id|warranty_last_update >= 9 %}
       				  	<a href="{% url 'warranty:display-ticket' pk=ticket.id %}" 
       				  		class="btn btn-danger btn-circle btn-sm">
       				  		<i class="fas fa-exclamation-triangle"></i>
       				  	</a>
-      				{% elif ticket.id|get_last_update >= 5 %}
+      				{% elif ticket.id|warranty_last_update >= 5 %}
     				  	<a href="{% url 'warranty:display-ticket' pk=ticket.id %}" 
     				  		class="btn btn-warning btn-circle btn-sm">
       				    	<i class="fas fa-exclamation-triangle"></i>
@@ -99,8 +99,8 @@
   				    {% endif %}
   				</th>
       			<th scope="row"><a href="{% url 'warranty:display-ticket' pk=ticket.id %}">{{ ticket.id }}</a></th>
-      			<td><a href="{% url 'warranty:display-ticket' pk=ticket.id %}">{{ ticket.id|get_current_status }}</a></td>
-      			<td>vor <b>{{ ticket.id|get_last_update }}</b> Tage</td>
+      			<td><a href="{% url 'warranty:display-ticket' pk=ticket.id %}">{{ ticket.id|warranty_current_status }}</a></td>
+      			<td>vor <b>{{ ticket.id|warranty_last_update }}</b> Tage</td>
       			<td>{{ ticket.kunde.kundennummer }}</td>      				
       			<td>{{ ticket.kunde.nachname }}</td>
       			<td>{{ ticket.get_hersteller_display }}</td>

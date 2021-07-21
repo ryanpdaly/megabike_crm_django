@@ -60,11 +60,11 @@
 						</tr>
 						<tr>
 							<th scope='row'>Status:</th>
-							<td>{{ schadensmeldung|get_current_status }}</td>
+							<td>{{ schadensmeldung|insurance_current_status }}</td>
 						</tr>
 						<tr>
 							<th scope='row'>Last Update: </th>
-							<td>vor <b>{{ schadensmeldung|get_last_update }}</b> Tage</td>
+							<td>vor <b>{{ schadensmeldung|insurance_last_update }}</b> Tage</td>
 						</tr>
 					</table>
 				</div>

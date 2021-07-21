@@ -134,6 +134,8 @@ class EuroradInfo(models.Model):
 	def get_fields(self):
 		return [(field.name, field.value_to_string(self)) for field in EuroradInfo._meta.fields]
 
+SCHADEN_STATUS_ERLEDIGT = ['be', 'ab',]
+
 class Schadensmeldung(models.Model):
 	kunde = models.ForeignKey(customer_models.Customer, on_delete=models.CASCADE)
 
@@ -155,7 +157,7 @@ class Schadensmeldung(models.Model):
 	updated = models.DateField()
 
 	def __str__(self):
-		return f'{self.kundenname}: {self.vorgangsnummer} - Schaden {self.schadensnummer}'
+		return f'{self.kunde.nachname}: {self.auftragsnr} - Schaden {self.schadensnummer}'
 
 	def save(self):
 		if not self.id:
