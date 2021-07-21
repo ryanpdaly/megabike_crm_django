@@ -51,6 +51,10 @@ def input_insurance(request, rn, insurance):
 		'bike':bike_instance,
 		'ins_form':ins_form,
 		'update_bike':update_bike,
+
+		'open_contact_tickets': common_mixins.get_open_contact_tickets(),
+		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(),
+		'faellige_warranty_tickets': common_mixins.get_faellige_warranty_tickets(),
 	}
 
 	return render(request, 'insurance/input_insurance.html', context=context)
@@ -62,7 +66,11 @@ def list_all(request):
 	policies = customer_models.Bike.objects.exclude(insurance='no')
 
 	context = {
-		'policies':policies
+		'policies':policies,
+
+		'open_contact_tickets': common_mixins.get_open_contact_tickets(),
+		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(),
+		'faellige_warranty_tickets': common_mixins.get_faellige_warranty_tickets(),
 	}
 
 	return render(request, 'insurance/list_all.html', context=context)
@@ -70,7 +78,14 @@ def list_all(request):
 # TODO: Rework as CBV
 @login_required
 def info_page(request, insurance):
-	return render(request, f'insurance/info_{insurance}.html')
+
+	context = {
+		'open_contact_tickets': common_mixins.get_open_contact_tickets(),
+		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(),
+		'faellige_warranty_tickets': common_mixins.get_faellige_warranty_tickets(),
+	}
+
+	return render(request, f'insurance/info_{insurance}.html', context=context)
 
 # TODO: Rework as CBV
 @login_required
@@ -104,6 +119,10 @@ def display_policy(request, rn):
 	context = {
 		'rahmennummer': rn,
 		'insurance_info': insurance_info,
+
+		'open_contact_tickets': common_mixins.get_open_contact_tickets(),
+		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(),
+		'faellige_warranty_tickets': common_mixins.get_faellige_warranty_tickets(),
 	}
 
 	return render(request, f'insurance/display_{INSURANCE_URL[insurance]}.html', context=context)
@@ -114,9 +133,7 @@ def schaden_list(request, filter):
 
 	schaden_list = models.Schadensmeldung.objects.all()
 
-	rekla_list = warranty_models.ReklaTicket.objects.all()
-	contact_open_list = contact_models.PhoneContact.objects.filter(status='offen')
-
+	# Might be better to change insurance_current_status filter to use status instead of status display, then use our erledigt_status list from insurance.models
 	erledigt = ['Bezahlt', 'Abgelehnt',]
 
 	context = {
@@ -124,14 +141,24 @@ def schaden_list(request, filter):
 		'filter': filter,
 		'erledigt': erledigt,
 
-		'contact_open': contact_open_list,
-		'rekla_list': rekla_list,
+		'open_contact_tickets': common_mixins.get_open_contact_tickets(),
+		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(),
+		'faellige_warranty_tickets': common_mixins.get_faellige_warranty_tickets(),
 
 	}
 
 	return render(request, f'insurance/schadensmeldung_list.html', context=context)
+"""
+class SchadenList(LoginRequiredMixin, generic.ListView, common_mixins.NotificationsMixin):
+	model = models.Schadensmeldung
+	template_name = 'schadensmeldung_list.html'
 
-# TODO: Rework as CBV
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+
+		return context
+"""
+
 class SchadenDetail(LoginRequiredMixin, generic.DetailView, common_mixins.NotificationsMixin):
 	model = models.Schadensmeldung
 	template_name_suffix = '_detail'

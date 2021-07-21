@@ -42,7 +42,11 @@ def bike_detail_view(request, pk, rn):
 		'customer':customer_instance,
 		'bike':bike_instance,
 		'company_form':company_form,
-		'insurance_info':insurance_info
+		'insurance_info':insurance_info,
+
+		'open_contact_tickets': common_mixins.get_open_contact_tickets(),
+		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(),
+		'faellige_warranty_tickets': common_mixins.get_faellige_warranty_tickets(),
 	}
 
 	return render(request, 'customers/bike_detail.html', context=context)
@@ -69,6 +73,10 @@ def bike_input_view(request, pk):
 	context = {
 		'bike_form': bike_form,
 		'customer': customer_instance,
+
+		'open_contact_tickets': common_mixins.get_open_contact_tickets(),
+		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(),
+		'faellige_warranty_tickets': common_mixins.get_faellige_warranty_tickets(),
 	}
 
 	return render(request, 'customers/bike_input.html', context=context)
@@ -92,6 +100,10 @@ def customer_detail_view(request, pk):
 		'customer': customer_instance,
 		'bikes': bikes,
 		'reklas': reklas,
+
+		'open_contact_tickets': common_mixins.get_open_contact_tickets(),
+		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(),
+		'faellige_warranty_tickets': common_mixins.get_faellige_warranty_tickets(),
 	}
 
 	return render(request, 'customers/customer_detail.html', context=context)
