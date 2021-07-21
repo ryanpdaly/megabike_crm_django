@@ -65,7 +65,11 @@
                   {% endif %}
                 </a>
               </th>
-              <td><a href="#" {# modal for complete basic info + files, button to edit #}>{{ schaden.get_unternehmen_display }}: {{ schaden.schadensnummer }}</a></td>
+              <td>
+                  <a href="#" data-toggle="modal" data-target="#modal" data-url="{% url 'insurance:schaden-detail-modal' pk=schaden.id %}"> 
+                    {# modal for complete basic info + files, button to edit #}{{ schaden.get_unternehmen_display }}: {{ schaden.schadensnummer }}
+                  </a>
+              </td>
               <td><a href="#" {# modal for complete status + file, button to update #}>{{ schaden|get_current_status_insurance }}</a></td>              
               <td>{{ schaden.auftragsnr }}{% if schaden.rechnungsnr %} / {{schaden.rechnungsnr}} {% endif %}</td>
               <td>{{ schaden.kunde.kundennummer }}: {{ schaden.kunde.nachname }}</td>
@@ -76,6 +80,8 @@
         </tbody>
       </table>
     </div>
+
+  <div class="modal" id="modal" tabindex="-1" role="dialog"></div>
 {% endblock %}
 
 {% block javascript %}
@@ -84,4 +90,22 @@
     <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
     <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
     <script src="{% static 'js/datatables.js' %}"></script>
+
+  <script>
+    $('#modal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget)
+        var form_url = button.data('url')
+
+        var modal = $(this)
+        
+        $.ajax({
+            url: form_url,
+            context: document.body,
+            async: true,
+
+        }).done(function(response) {
+            modal.html(response);
+        });
+    })
+  </script>
 {% endblock %}

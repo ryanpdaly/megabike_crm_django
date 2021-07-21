@@ -18,7 +18,10 @@ urlpatterns = [
 	re_path(r'^schaden/new(?P<kdnr_input>[0_9]?)(?P<kdnr_checked>[0-9]?)', views.SchadenCreate.as_view(), name='schaden-new'),
 	
 	path('schaden<str:pk>/details', views.SchadenDetail.as_view(), name='schaden-detail'),
+	path('schaden<str:pk>/details/modal', views.SchadenDetailModal.as_view(), name='schaden-detail-modal'),
+	
 	path('schaden<int:pk>/edit/', views.SchadenEdit.as_view(), name='schaden-edit'),
+	#path('schaden<int:pk>/edit/', views.SchadenEditModal.as_view(), name='schaden-edit-modal'),
 	path('schaden<int:pk>/status/', views.SchadenStatusUpdate.as_view(), name='schaden-status'),
 	path('schaden<int:pk>/addfile/', views.SchadensmeldungAddFile.as_view(), name='schaden-file-add'),
 	path('schaden<int:pk>/viewfile<int:sk>', views.display_file, name='schaden-file-display'),

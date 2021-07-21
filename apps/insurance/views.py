@@ -5,6 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import generic
+from django.views.generic.base import ContextMixin
 from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
 
@@ -116,19 +117,29 @@ def schaden_list(request, filter):
 
 	return render(request, f'insurance/schadensmeldung_list.html', context=context)
 
-class SchadenDetail(LoginRequiredMixin, generic.DetailView):
-	model = models.Schadensmeldung
-	template_name_suffix = '_detail'
-
+class SchadenDetailMixin(ContextMixin):
+	
 	def get_context_data(self, **kwargs):
-		data = super().get_context_data(**kwargs)
-		
+		data = super(SchadenDetailMixin, self).get_context_data(**kwargs)
+
 		data['status_updates'] = models.SchadensmeldungStatus.objects.filter(schadensmeldung=self.kwargs['pk']).order_by('-id')
 		data['current_status'] = data['status_updates'][0]
 
 		data['files'] = models.SchadensmeldungFile.objects.filter(schadensmeldung=self.kwargs['pk'])
 
 		return data
+
+
+class SchadenDetail(LoginRequiredMixin, generic.DetailView, SchadenDetailMixin):
+	model = models.Schadensmeldung
+	template_name_suffix = '_detail'
+
+# TODO: This view doesn't open the modal, seems to redirect to normal SchadenDetail
+class SchadenDetailModal(LoginRequiredMixin, generic.DetailView, SchadenDetailMixin):
+	model = models.Schadensmeldung
+	#template_name_suffix = '_detail_modal'
+	template = 'schadensmeldung_detail_modal.html'
+
 
 class SchadenCreate(LoginRequiredMixin,  generic.CreateView):
 	model = models.Schadensmeldung
