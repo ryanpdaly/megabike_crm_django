@@ -8,14 +8,14 @@ from django import forms as django_forms
 from django.urls import reverse, reverse_lazy
 from django.http import HttpResponseRedirect
 
+from apps.common import mixins as common_mixins
 from apps.customers import models
 from apps.customers import forms
 from apps.insurance import forms as insurance_forms
 from apps.insurance import models as insurance_models
 from apps.warranty import models as warranty_models
 
-# Create your views here.
-
+# TODO: Rework this as CBV?
 @login_required
 def bike_detail_view(request, pk, rn):
 	customer_instance = get_object_or_404(models.Customer, pk=pk)
@@ -47,6 +47,7 @@ def bike_detail_view(request, pk, rn):
 
 	return render(request, 'customers/bike_detail.html', context=context)
 
+# TODO: Rework this as CBV?
 @login_required
 def bike_input_view(request, pk):
 	customer_instance = get_object_or_404(models.Customer, pk=pk)
@@ -72,7 +73,7 @@ def bike_input_view(request, pk):
 
 	return render(request, 'customers/bike_input.html', context=context)
 
-class BikeUpdateView(LoginRequiredMixin, generic.UpdateView):
+class BikeUpdateView(LoginRequiredMixin, generic.UpdateView, common_mixins.NotificationsMixin):
 	model = models.Bike
 	fields = '__all__'
 
@@ -80,6 +81,7 @@ class BikeUpdateView(LoginRequiredMixin, generic.UpdateView):
 
 	slug_url_kwarg = 'rn'
 
+# TODO: Rework as CBV?
 @login_required
 def customer_detail_view(request, pk):
 	customer_instance = get_object_or_404(models.Customer, pk=pk)
@@ -94,7 +96,7 @@ def customer_detail_view(request, pk):
 
 	return render(request, 'customers/customer_detail.html', context=context)
 
-class CustomerInputView(LoginRequiredMixin, generic.CreateView):
+class CustomerInputView(LoginRequiredMixin, generic.CreateView, common_mixins.NotificationsMixin):
 	model = models.Customer
 	template_name = 'customers/customer_input.html'
 	success_url = reverse_lazy('customers:customer-list')
@@ -118,7 +120,7 @@ class CustomerInputView(LoginRequiredMixin, generic.CreateView):
 			bikes.save()
 		return super().form_valid(form)
 
-class CustomerListView(LoginRequiredMixin, generic.ListView):
+class CustomerListView(LoginRequiredMixin, generic.ListView, common_mixins.NotificationsMixin):
 	model = models.Customer
 	template_name = 'customers/customer_list.html'
 
@@ -129,7 +131,7 @@ class CustomerListView(LoginRequiredMixin, generic.ListView):
 
 		return context
 
-class CustomerUpdateView(LoginRequiredMixin, generic.UpdateView):
+class CustomerUpdateView(LoginRequiredMixin, generic.UpdateView, common_mixins.NotificationsMixin):
 	model = models.Customer
 
 	template_name_suffix = '_update'

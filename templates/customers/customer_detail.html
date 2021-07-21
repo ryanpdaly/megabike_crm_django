@@ -104,17 +104,17 @@
 												1) Need to uniform terminology. In some places I use rekla, in some tickets
 												2) This is a lot of repeated code from warranty/list_all.html
 											{% endcomment %}
-												{% if rekla.id|get_current_status == 'Erledigt' %}
+												{% if rekla.id|warranty_current_status == 'Erledigt' %}
 							      				  	<a href="{% url 'warranty:display-ticket' pk=rekla.id %}" 
 							      				  		class="btn btn-secondary btn-circle btn-sm">
 							      						<i class="fas fa-check"></i>
 							      				  	</a>
-							      				{% elif rekla.id|get_last_update >= 9 %}
+							      				{% elif rekla.id|warranty_last_update >= 9 %}
 							      				  	<a href="{% url 'warranty:display-ticket' pk=rekla.id %}" 
 							      				  		class="btn btn-danger btn-circle btn-sm">
 							      				  		<i class="fas fa-exclamation-triangle"></i>
 							      				  	</a>
-							      				{% elif rekla.id|get_last_update >= 5 %}
+							      				{% elif rekla.id|warranty_last_update >= 5 %}
 							    				  	<a href="{% url 'warranty:display-ticket' pk=rekla.id %}" 
 							    				  		class="btn btn-warning btn-circle btn-sm">
 							      				    	<i class="fas fa-exclamation-triangle"></i>
@@ -127,9 +127,9 @@
 							  				    {% endif %}
 							  				</td>
 											<td><a href="{% url 'warranty:display-ticket' pk=rekla.id %}">{{ rekla.id }}</a></td>
-											<td><a href="{% url 'warranty:display-ticket' pk=rekla.id %}">{{ rekla.id|get_current_status }}</a></td>
-											<td>vor <b>{{ rekla.id|get_last_update }}</b> Tage</td>
-											<td>{{ rekla.get_hersteller_display }}
+											<td><a href="{% url 'warranty:display-ticket' pk=rekla.id %}">{{ rekla.id|warranty_current_status }}</a></td>
+											<td>vor <b>{{ rekla.id|warranty_last_update }}</b> Tage</td>
+											<td>{{ rekla.warranty_hersteller_display }}
 										</tr>
 									{% endfor %}
 								</tbody>

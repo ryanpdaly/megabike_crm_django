@@ -8,6 +8,7 @@ from django.views import generic
 from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
 
+from apps.common import mixins as common_mixins
 from apps.contact import models as contact_models
 from apps.customers import models as customer_models
 from apps.customers import forms as customer_forms
@@ -16,6 +17,7 @@ from apps.insurance import models
 from apps.warranty import models as warranty_models
 
 
+# TODO: Rework as CBV
 @login_required
 def input_insurance(request, rn, insurance):
 	bike_instance = get_object_or_404(customer_models.Bike, rahmennummer=rn)
@@ -53,6 +55,7 @@ def input_insurance(request, rn, insurance):
 
 	return render(request, 'insurance/input_insurance.html', context=context)
 
+# TODO: Rework as CBV
 @login_required
 def list_all(request):
 
@@ -64,10 +67,12 @@ def list_all(request):
 
 	return render(request, 'insurance/list_all.html', context=context)
 
+# TODO: Rework as CBV
 @login_required
 def info_page(request, insurance):
 	return render(request, f'insurance/info_{insurance}.html')
 
+# TODO: Rework as CBV
 @login_required
 def display_policy(request, rn):
 	bike_instance = get_object_or_404(customer_models.Bike, rahmennummer=rn)
@@ -103,6 +108,7 @@ def display_policy(request, rn):
 
 	return render(request, f'insurance/display_{INSURANCE_URL[insurance]}.html', context=context)
 
+# TODO: Rework as CBV
 @login_required
 def schaden_list(request, filter):
 
@@ -125,7 +131,8 @@ def schaden_list(request, filter):
 
 	return render(request, f'insurance/schadensmeldung_list.html', context=context)
 
-class SchadenDetail(LoginRequiredMixin, generic.DetailView):
+# TODO: Rework as CBV
+class SchadenDetail(LoginRequiredMixin, generic.DetailView, common_mixins.NotificationsMixin):
 	model = models.Schadensmeldung
 	template_name_suffix = '_detail'
 
@@ -137,7 +144,7 @@ class SchadenDetail(LoginRequiredMixin, generic.DetailView):
 
 		return data
 
-class SchadenCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView):
+class SchadenCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView, common_mixins.NotificationsMixin):
 	model = models.Schadensmeldung
 	permission_required = ('insurance.edit_schaden')
 	
@@ -252,7 +259,7 @@ class SchadenCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateV
 																)
 		)
 
-class SchadenEdit(LoginRequiredMixin, PermissionRequiredMixin, generic.UpdateView):
+class SchadenEdit(LoginRequiredMixin, PermissionRequiredMixin, generic.UpdateView, common_mixins.NotificationsMixin):
 	model = models.Schadensmeldung
 	permission_required = ('insurance.edit_schaden',)
 	
@@ -263,7 +270,7 @@ class SchadenEdit(LoginRequiredMixin, PermissionRequiredMixin, generic.UpdateVie
 	def get_success_url(self, **kwargs):
 		return reverse('insurance:schaden-detail', kwargs={'pk':self.kwargs['pk']})
 
-class SchadenStatusUpdate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView):
+class SchadenStatusUpdate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView, common_mixins.NotificationsMixin):
 	model = models.SchadensmeldungStatus
 	permission_required = ('insurance.edit_schaden')
 
