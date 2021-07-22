@@ -9,7 +9,7 @@ from apps.warranty import models as warranty_models
 
 
 def get_open_contact_tickets():
-	return contact_models.PhoneContact.objects.filter(status='offen')
+	return contact_models.PhoneContact.objects.filter(status='offen').exclude(abteilung='neurad')
 
 def get_faellige_insurance_tickets():
 	insurance_tickets = insurance_models.Schadensmeldung.objects.all()
@@ -51,7 +51,7 @@ class NotificationsMixin(ContextMixin):
 	def get_context_data(self, *args, **kwargs):
 		data = super().get_context_data(*args, **kwargs)
 
-		data['open_contact_tickets'] = contact_models.PhoneContact.objects.filter(status='offen')
+		data['open_contact_tickets'] = contact_models.PhoneContact.objects.filter(status='offen').exclude(abteilung='neurad')
  
 		data['faellige_insurance_tickets'] = self.get_faellige_insurance_tickets()
 
