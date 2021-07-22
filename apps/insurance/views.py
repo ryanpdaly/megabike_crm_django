@@ -166,7 +166,7 @@ class SchadenDetail(LoginRequiredMixin, generic.DetailView, common_mixins.Notifi
 	template_name_suffix = '_detail'
 
 	def get_context_data(self, **kwargs):
-		data = super(SchadenDetailMixin, self).get_context_data(**kwargs)
+		data = super().get_context_data(**kwargs)
 
 		data['status_updates'] = models.SchadensmeldungStatus.objects.filter(schadensmeldung=self.kwargs['pk']).order_by('-id')
 		data['current_status'] = data['status_updates'][0]
@@ -177,14 +177,14 @@ class SchadenDetail(LoginRequiredMixin, generic.DetailView, common_mixins.Notifi
 
 
 # TODO: This view doesn't open the modal, seems to redirect to normal SchadenDetail
-class SchadenDetailModal(LoginRequiredMixin, generic.DetailView, SchadenDetailMixin):
+class SchadenDetailModal(LoginRequiredMixin, generic.DetailView):
 	model = models.Schadensmeldung
 	#template_name_suffix = '_detail_modal'
 	template = 'schadensmeldung_detail_modal.html'
 
 	# TODO: This get_context_data is exactly the same as in SchadenDetail, create ContextMixin?
 	def get_context_data(self, **kwargs):
-		data = super(SchadenDetailMixin, self).get_context_data(**kwargs)
+		data = super().get_context_data(**kwargs)
 
 		data['status_updates'] = models.SchadensmeldungStatus.objects.filter(schadensmeldung=self.kwargs['pk']).order_by('-id')
 		data['current_status'] = data['status_updates'][0]
@@ -311,7 +311,7 @@ class SchadenCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateV
 
 class SchadenEdit(LoginRequiredMixin, PermissionRequiredMixin, generic.UpdateView, common_mixins.NotificationsMixin):
 	model = models.Schadensmeldung
-	#permission_required = ('insurance.edit_schaden',)
+	permission_required = ()
 	
 	template_name_suffix = '_edit'
 	
@@ -323,7 +323,7 @@ class SchadenEdit(LoginRequiredMixin, PermissionRequiredMixin, generic.UpdateVie
 
 class SchadenStatusUpdate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView, common_mixins.NotificationsMixin):
 	model = models.SchadensmeldungStatus
-	#permission_required = ('insurance.edit_schaden')
+	permission_required = ()
 
 	template_name = 'insurance/schadensmeldung_status_update.html'
 

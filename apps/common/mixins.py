@@ -22,7 +22,7 @@ def get_faellige_insurance_tickets():
 		current_status = newest_status.status
 		days_since_last_update = (date.today() - newest_status.date).days
 
-		if (current_status in insurance_models.SCHADEN_STATUS_ERLEDIGT) or (days_since_last_update < 6):
+		if (current_status in insurance_models.SCHADEN_STATUS_ERLEDIGT) or (days_since_last_update < 7):
 			insurance_tickets_excluded.append(ticket.pk)			
 
 	tickets_out = insurance_tickets.exclude(pk__in=insurance_tickets_excluded)
@@ -39,7 +39,7 @@ def get_faellige_warranty_tickets():
 		current_status = newest_status.status
 		days_since_last_update = (date.today() - newest_status.date).days
 
-		if (current_status in warranty_models.REKLA_STATUS_ERLEDIGT) or (days_since_last_update < 6):
+		if (current_status in warranty_models.REKLA_STATUS_ERLEDIGT) or (days_since_last_update < 7):
 			tickets_excluded.append(ticket.pk)
 
 	tickets_out = warranty_tickets.exclude(pk__in=tickets_excluded)
