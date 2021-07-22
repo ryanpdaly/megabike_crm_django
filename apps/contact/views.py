@@ -8,10 +8,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import generic
 from django.urls import reverse, reverse_lazy
 
+from apps.common import mixins as common_mixins
 from apps.contact import models, forms
 
 
-class CallList(LoginRequiredMixin, generic.ListView):
+class CallList(LoginRequiredMixin, generic.ListView, common_mixins.NotificationsMixin):
 	model = models.PhoneContact
 	template_name = 'contact/phonecontact_list.html'
 
@@ -26,7 +27,7 @@ class CallList(LoginRequiredMixin, generic.ListView):
 			data = data.exclude(status='erledigt')
 		return data
 
-class CreatePhoneContact(LoginRequiredMixin, generic.CreateView):
+class CreatePhoneContact(LoginRequiredMixin, generic.CreateView, common_mixins.NotificationsMixin):
 	model = models.PhoneContact
 
 	template_name = 'contact/phonecontact_create.html'
@@ -34,7 +35,7 @@ class CreatePhoneContact(LoginRequiredMixin, generic.CreateView):
 
 	form_class = forms.NewPhoneContact
 
-class UpdatePhoneContactStatus(LoginRequiredMixin, generic.UpdateView):
+class UpdatePhoneContactStatus(LoginRequiredMixin, generic.UpdateView, common_mixins.NotificationsMixin):
 	model = models.PhoneContact
 	template_name_suffix = '_update_status'
 	success_url = reverse_lazy('contact:call-list', kwargs={'abteilung':'all', 'filter':'open'})
@@ -46,7 +47,7 @@ class UpdatePhoneContactStatus(LoginRequiredMixin, generic.UpdateView):
 		data['ticket_id'] = self.kwargs['pk']
 		return data
 
-class OutgoingCallList(LoginRequiredMixin, generic.ListView):
+class OutgoingCallList(LoginRequiredMixin, generic.ListView, common_mixins.NotificationsMixin):
 	model = models.OutgoingCall
 	template_name = 'contact/outgoingcall_list.html'
 
@@ -57,7 +58,7 @@ class OutgoingCallList(LoginRequiredMixin, generic.ListView):
 
 		return data
 
-class OutgoingCallCreate(LoginRequiredMixin, generic.CreateView):
+class OutgoingCallCreate(LoginRequiredMixin, generic.CreateView, common_mixins.NotificationsMixin):
 	model = models.OutgoingCall
 
 	template_name = 'contact/outgoingcall_create.html'
@@ -65,7 +66,7 @@ class OutgoingCallCreate(LoginRequiredMixin, generic.CreateView):
 
 	form_class = forms.NewOutgoingCall
 
-class OutgoingCallUpdate(LoginRequiredMixin, generic.UpdateView):
+class OutgoingCallUpdate(LoginRequiredMixin, generic.UpdateView, common_mixins.NotificationsMixin):
 	model = models.OutgoingCall
 	template_name_suffix = '_update'
 	success_url = reverse_lazy('contact:outgoing-list')

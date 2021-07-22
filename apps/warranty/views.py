@@ -8,13 +8,13 @@ from django.views import generic
 from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
 
+from apps.common import mixins as common_mixins
 from apps.warranty import models, forms
 from apps.customers import models as customer_models
 from apps.customers import forms as customer_forms
 
-# Create your views here.
 
-class TicketList(LoginRequiredMixin, generic.ListView):
+class TicketList(LoginRequiredMixin, generic.ListView, common_mixins.NotificationsMixin):
 	model = models.ReklaTicket
 	template_name = 'warranty/list_all.html'
 
@@ -22,7 +22,7 @@ class TicketList(LoginRequiredMixin, generic.ListView):
 		data = super().get_context_data(**kwargs)
 		return data
 
-class CreateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView):
+class CreateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView, common_mixins.NotificationsMixin):
 	model = models.ReklaTicket
 	permission_required = ('warranty.add_reklaticket',)
 
@@ -149,7 +149,7 @@ class CreateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateVi
 																)
 		)
 
-class DisplayTicket(LoginRequiredMixin, generic.DetailView):
+class DisplayTicket(LoginRequiredMixin, generic.DetailView, common_mixins.NotificationsMixin):
 	model = models.ReklaTicket
 	template_name_suffix = '_detail'
 
@@ -163,7 +163,7 @@ class DisplayTicket(LoginRequiredMixin, generic.DetailView):
 
 		return data
 
-class UpdateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.UpdateView):
+class UpdateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.UpdateView, common_mixins.NotificationsMixin):
 	model = models.ReklaTicket
 	permission_required = ('warranty.add_reklaticket',)
 	template_name_suffix = '_update_modal'
@@ -171,7 +171,7 @@ class UpdateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.UpdateVi
 
 	form_class = forms.NewTicketForm
 
-class AddFile(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView):
+class AddFile(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView, common_mixins.NotificationsMixin):
 	model = models.ReklaFile
 	permission_required = ('warranty.add_reklaticket',)
 	fields = ('beschreibung', 'file', 'anmerkung',)
@@ -189,7 +189,7 @@ class AddFile(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView):
 
 		return super().form_valid(form)
 
-class UpdateStatus(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView):
+class UpdateStatus(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView, common_mixins.NotificationsMixin):
 	model = models.ReklaStatusUpdate
 	permission_required = ('warranty.add_reklaticket',)
 	fields = ('status', 'anmerkung')
@@ -212,6 +212,10 @@ def display_file(request, pk, sk):
 
 	context={
 		'file_object':file_object,
+
+		'open_contact_tickets': common_mixins.get_open_contact_tickets(),
+		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(),
+		'faellige_warranty_tickets': common_mixins.get_faellige_warranty_tickets(),
 	}
 
 	return render(request, 'warranty/display_file.html', context=context)

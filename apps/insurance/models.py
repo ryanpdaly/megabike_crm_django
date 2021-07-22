@@ -110,7 +110,6 @@ class BusinessbikeInfo(models.Model):
 
 	def __str__(self):
 		return f'Businessbike {self.get_paket_display()}'
-		#{self.get_paket_display}
 
 	def get_fields(self):
 		return [(field.name, field.value_to_string(self)) for field in BusinessbikeInfo._meta.fields]
@@ -146,6 +145,9 @@ class EuroradInfo(models.Model):
 
 	def get_fields(self):
 		return [(field.name, field.value_to_string(self)) for field in EuroradInfo._meta.fields]
+
+
+SCHADEN_STATUS_ERLEDIGT = ['be', 'ab',]
 
 # Rename to schaden? Name unneccesarily long
 class Schadensmeldung(models.Model):

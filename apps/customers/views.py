@@ -8,6 +8,7 @@ from django import forms as django_forms
 from django.urls import reverse, reverse_lazy
 from django.http import HttpResponseRedirect
 
+from apps.common import mixins as common_mixins
 from apps.customers import models
 from apps.customers import forms
 from apps.insurance import forms as insurance_forms
@@ -15,6 +16,7 @@ from apps.insurance import models as insurance_models
 from apps.warranty import models as warranty_models
 
 
+# TODO: Rework this as CBV?
 @login_required
 def bike_detail_view(request, pk, rn):
 	customer_instance = get_object_or_404(models.Customer, pk=pk)
@@ -42,11 +44,16 @@ def bike_detail_view(request, pk, rn):
 		'customer':customer_instance,
 		'bike':bike_instance,
 		'company_form':company_form,
-		'insurance_info':insurance_info
+		'insurance_info':insurance_info,
+
+		'open_contact_tickets': common_mixins.get_open_contact_tickets(),
+		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(),
+		'faellige_warranty_tickets': common_mixins.get_faellige_warranty_tickets(),
 	}
 
 	return render(request, 'customers/bike_detail.html', context=context)
 
+# TODO: Rework this as CBV?
 @login_required
 def bike_input_view(request, pk):
 	customer_instance = get_object_or_404(models.Customer, pk=pk)
@@ -68,11 +75,15 @@ def bike_input_view(request, pk):
 	context = {
 		'bike_form': bike_form,
 		'customer': customer_instance,
+
+		'open_contact_tickets': common_mixins.get_open_contact_tickets(),
+		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(),
+		'faellige_warranty_tickets': common_mixins.get_faellige_warranty_tickets(),
 	}
 
 	return render(request, 'customers/bike_input.html', context=context)
 
-class BikeUpdateView(LoginRequiredMixin, generic.UpdateView):
+class BikeUpdateView(LoginRequiredMixin, generic.UpdateView, common_mixins.NotificationsMixin):
 	model = models.Bike
 	fields = '__all__'
 
@@ -80,6 +91,7 @@ class BikeUpdateView(LoginRequiredMixin, generic.UpdateView):
 
 	slug_url_kwarg = 'rn'
 
+# TODO: Rework as CBV?
 @login_required
 def customer_detail_view(request, pk):
 	customer_instance = get_object_or_404(models.Customer, pk=pk)
@@ -103,12 +115,15 @@ def customer_detail_view(request, pk):
 		'warranty_tickets': warranty_tickets,
 		'warranty_erledigt': warranty_erledigt,
 
+		'open_contact_tickets': common_mixins.get_open_contact_tickets(),
+		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(),
+		'faellige_warranty_tickets': common_mixins.get_faellige_warranty_tickets(),
 	}
 
 	return render(request, 'customers/customer_detail.html', context=context)
 
-# TODO: This does not check if customer already exists.
-class CustomerInputView(LoginRequiredMixin, generic.CreateView):
+# TODO: This does not check if customer already exists, does not handle error elequently.
+class CustomerInputView(LoginRequiredMixin, generic.CreateView, common_mixins.NotificationsMixin):
 	model = models.Customer
 	template_name = 'customers/customer_input.html'
 	success_url = reverse_lazy('customers:customer-list')
@@ -132,13 +147,13 @@ class CustomerInputView(LoginRequiredMixin, generic.CreateView):
 			bikes.save()
 		return super().form_valid(form)
 
-class CustomerListView(LoginRequiredMixin, generic.ListView):
+class CustomerListView(LoginRequiredMixin, generic.ListView, common_mixins.NotificationsMixin):
 	model = models.Customer
 	template_name = 'customers/customer_list.html'
 
 	register = template.Library()
 
-class CustomerUpdateView(LoginRequiredMixin, generic.UpdateView):
+class CustomerUpdateView(LoginRequiredMixin, generic.UpdateView, common_mixins.NotificationsMixin):
 	model = models.Customer
 
 	template_name_suffix = '_update'

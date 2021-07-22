@@ -46,17 +46,17 @@
         </thead>
         <tbody>
           {% for schaden in schaden_list %}
-            {% if filter == 'all' or schaden|get_current_status_insurance not in erledigt %}
+            {% if filter == 'all' or schaden|insurance_current_status not in erledigt %}
             <tr>
               <th scope="row">
                 <a href="{% url 'insurance:schaden-detail' pk=schaden.id%}"
                   {% if schaden|get_current_status_insurance in erledigt %}
                     class="btn btn-secondary btn-circle btn-sm">
                   <i class="fas fa-check"></i>
-                  {% elif schaden|get_last_update_insurance >= 9 %}
+                  {% elif schaden|last_insurance_update >= 9 %}
                         class="btn btn-danger btn-circle btn-sm">
                         <i class="fas fa-exclamation-triangle"></i>
-                  {% elif schaden|get_last_update_insurance >= 5 %}
+                  {% elif schaden|last_insurance_update >= 5 %}
                       class="btn btn-warning btn-circle btn-sm">
                         <i class="fas fa-exclamation-triangle"></i>
                   {% else %}
@@ -65,15 +65,11 @@
                   {% endif %}
                 </a>
               </th>
-              <td>
-                  <a href="#" data-toggle="modal" data-target="#modal" data-url="{% url 'insurance:schaden-detail-modal' pk=schaden.id %}"> 
-                    {# modal for complete basic info + files, button to edit #}{{ schaden.get_unternehmen_display }}: {{ schaden.schadensnummer }}
-                  </a>
-              </td>
-              <td><a href="#" {# modal for complete status + file, button to update #}>{{ schaden|get_current_status_insurance }}</a></td>              
+              <td><a href="#" {# modal for complete basic info + files, button to edit #}>{{ schaden.get_unternehmen_display }}: {{ schaden.schadensnummer }}</a></td>
+              <td><a href="#" {# modal for complete status + file, button to update #}>{{ schaden|insurance_current_status }}</a></td>
               <td>{{ schaden.auftragsnr }}{% if schaden.rechnungsnr %} / {{schaden.rechnungsnr}} {% endif %}</td>
               <td>{{ schaden.kunde.kundennummer }}: {{ schaden.kunde.nachname }}</td>
-              <td>vor <b>{{ schaden|get_last_update_insurance }}</b> Tage</td>
+              <td>vor <b>{{ schaden|insurance_last_update }}</b> Tage</td>
             </tr>
           {% endif %}
           {% endfor %}
