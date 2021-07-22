@@ -196,7 +196,7 @@ class SchadenDetailModal(LoginRequiredMixin, generic.DetailView):
 
 class SchadenCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView, common_mixins.NotificationsMixin):
 	model = models.Schadensmeldung
-	#permission_required = ('insurance.edit_schaden')
+	permission_required = ()
 	
 	template_name = 'insurance/schadensmeldung_new.html'
 	success_url = reverse_lazy('insurance:schaden-list', kwargs={'filter':'open'})
