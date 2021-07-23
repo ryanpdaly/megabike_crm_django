@@ -123,7 +123,7 @@
 							  				</td>
 											<td><a href="{% url 'warranty:display-ticket' pk=ticket.id %}">{{ ticket.id }}</a></td>
 											<td><a href="{% url 'warranty:display-ticket' pk=ticket.id %}">{{ ticket.id|warranty_current_status }}</a></td>
-											<td>vor <b>{{ ticket.id|get_last_update }}</b> Tage</td>
+											<td>vor <b>{{ ticket.id|warranty_last_update }}</b> Tage</td>
 											<td>{{ ticket.get_hersteller_display }}
 										</tr>
 									{% endfor %}
@@ -168,10 +168,10 @@
 													{% if ticket.id|get_current_status_insurance in schaden_erledigt %}
 							      				  		class="btn btn-secondary btn-circle btn-sm">
 							      						<i class="fas fa-check"></i>
-								      				{% elif ticket.id|get_last_update_insurance >= 9 %} 
+								      				{% elif ticket.id|insurance_update_update >= 9 %} 
 								      				  		class="btn btn-danger btn-circle btn-sm">
 								      				  		<i class="fas fa-exclamation-triangle"></i>
-								      				{% elif ticket.id|get_last_update_insurance >= 5 %} 
+								      				{% elif ticket.id|insurance_last_update >= 5 %} 
 								    				  		class="btn btn-warning btn-circle btn-sm">
 								      				    	<i class="fas fa-exclamation-triangle"></i>
 								      				{% else %}
@@ -181,7 +181,7 @@
 							  				    </a>
 							  				</td>
 							  				
-							  				<td><a href="#" {# modal for complete basic info + files, button to edit #}>{{ticket.get_unternehmen_display}}: {{ticket.schadensnummer}}</a></td>
+							  				<td><a href="{% url 'insurance:schaden-detail' pk=ticket.id %}" {# create modal for complete basic info + files, button to edit #}>{{ticket.get_unternehmen_display}}: {{ticket.schadensnummer}}</a></td>
 							  				<td><a href="#" {# modal to view complete current status w/ file, button to edit status #}>{{ticket|get_current_status_insurance}}</td>
 											<td>
 												{{ticket.auftragsnr}}
@@ -193,7 +193,7 @@
 														---- 
 												{% endif %}
 											</td>
-											<td>vor <b>{{ticket|get_last_update_insurance}}</b> Tage</td>
+											<td>vor <b>{{ticket|insurance_last_update}}</b> Tage</td>
 										</tr>
 									{% endfor %}
 								</tbody>

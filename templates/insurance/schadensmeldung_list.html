@@ -65,8 +65,8 @@
                   {% endif %}
                 </a>
               </th>
-              <td><a href="#" {# modal for complete basic info + files, button to edit #}>{{ schaden.get_unternehmen_display }}: {{ schaden.schadensnummer }}</a></td>
-              <td><a href="#" {# modal for complete status + file, button to update #}>{{ schaden|insurance_current_status }}</a></td>
+              <td><a href="{% url 'insurance:schaden-detail' pk=schaden.id%}" {# create modal to complete basic info + files, button to edit #}>{{ schaden.get_unternehmen_display }}: {{ schaden.schadensnummer }}</a></td>
+              <td><a href="#" {# create modal for complete status + file, button to update #}>{{ schaden|insurance_current_status }}</a></td>
               <td>{{ schaden.auftragsnr }}{% if schaden.rechnungsnr %} / {{schaden.rechnungsnr}} {% endif %}</td>
               <td>{{ schaden.kunde.kundennummer }}: {{ schaden.kunde.nachname }}</td>
               <td>vor <b>{{ schaden|insurance_last_update }}</b> Tage</td>

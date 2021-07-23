@@ -147,7 +147,7 @@ class EuroradInfo(models.Model):
 		return [(field.name, field.value_to_string(self)) for field in EuroradInfo._meta.fields]
 
 
-SCHADEN_STATUS_ERLEDIGT = ['be', 'ab',]
+SCHADEN_STATUS_ERLEDIGT = ['be', 'ab', 'abr',]
 
 # Rename to schaden? Name unneccesarily long
 class Schadensmeldung(models.Model):
@@ -198,6 +198,7 @@ class SchadensmeldungStatus(models.Model):
 		('kvf', 'KV freigegeben'),
 		('re', 'Rechnung eingereicht'),
 		('be', 'Bezahlt'),
+		('abr', 'Abzurechnen'),
 		('ab', 'Abgelehnt'),
 		)
 
