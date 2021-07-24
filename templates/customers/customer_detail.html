@@ -165,10 +165,10 @@
 										<tr scope="row">
 											<td>
 												<a href="{% url 'insurance:schaden-detail' pk=ticket.id %}"
-													{% if ticket.id|get_current_status_insurance in schaden_erledigt %}
+													{% if ticket.id|insurance_current_status in schaden_erledigt %}
 							      				  		class="btn btn-secondary btn-circle btn-sm">
 							      						<i class="fas fa-check"></i>
-								      				{% elif ticket.id|insurance_update_update >= 9 %} 
+								      				{% elif ticket.id|insurance_last_update >= 9 %} 
 								      				  		class="btn btn-danger btn-circle btn-sm">
 								      				  		<i class="fas fa-exclamation-triangle"></i>
 								      				{% elif ticket.id|insurance_last_update >= 5 %} 
@@ -182,7 +182,7 @@
 							  				</td>
 							  				
 							  				<td><a href="{% url 'insurance:schaden-detail' pk=ticket.id %}" {# create modal for complete basic info + files, button to edit #}>{{ticket.get_unternehmen_display}}: {{ticket.schadensnummer}}</a></td>
-							  				<td><a href="#" {# modal to view complete current status w/ file, button to edit status #}>{{ticket|get_current_status_insurance}}</td>
+							  				<td><a href="#" {# modal to view complete current status w/ file, button to edit status #}>{{ticket|insurance_current_status}}</td>
 											<td>
 												{{ticket.auftragsnr}}
 												{% if ticket.rechnungsnr %} / {{ticket.rechnungsnr}} {% endif %}
