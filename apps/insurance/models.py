@@ -3,16 +3,29 @@ import os
 from uuid import uuid4
 
 from django.db import models
+from django.urls import reverse, reverse_lazy
 
 from apps.customers import models as customer_models
 
 def set_upload_path(bike, filename):
-	#TODO: can't delete this because it's used in a migrate. Fix that.
+	#TODO: can't delete this because it's used in a migration. Fix that.
 	pass
 
 def set_path_and_rename(instance, filename):
 	ext = filename.split('.')[-1]
-	filename = f'kd{instance.rahmennummer.kunde.kundennummer}/{uuid4()}.{ext}'
+	filename = f'kd{instance.rahmennummer.kunde.kundennummer}/versicherungskarten/{uuid4()}.{ext}'
+
+	return filename
+
+# Rework, combine with other set_path_and_rename?
+def set_schadenfile_path_and_name(instance, filename):
+	ext = filename.split('.')[-1]
+	
+	kdnr = instance.schadensmeldung.kunde.kundennummer
+	unternehmen = instance.schadensmeldung.unternehmen
+	schadensnr = instance.schadensmeldung.schadensnummer
+
+	filename = f'kd{kdnr}/{unternehmen}{schadensnr}/{uuid4()}.{ext}'
 
 	return filename
 
@@ -97,7 +110,6 @@ class BusinessbikeInfo(models.Model):
 
 	def __str__(self):
 		return f'Businessbike {self.get_paket_display()}'
-		#{self.get_paket_display}
 
 	def get_fields(self):
 		return [(field.name, field.value_to_string(self)) for field in BusinessbikeInfo._meta.fields]
@@ -134,29 +146,39 @@ class EuroradInfo(models.Model):
 	def get_fields(self):
 		return [(field.name, field.value_to_string(self)) for field in EuroradInfo._meta.fields]
 
+
+SCHADEN_STATUS_ERLEDIGT = ['be', 'ab', 'abr',]
+
+# Rename to schaden? Name unneccesarily long
 class Schadensmeldung(models.Model):
+	kunde = models.ForeignKey(customer_models.Customer, on_delete=models.CASCADE)
+
 	COMPANIES = (
 		('as', 'Assona'),
-		('eu', 'Eurorad'),
+		('bi', 'Bikeleasing-Service'),
+		('bu', 'Businessbike'),
+		('en', 'ENRA'),
+		('jo', 'JobRad'),
+		('le', 'Lease-a-Bike'),
+		('me', 'Mein-Dienstrad'),
+		('we', 'Wertgarantie'),
 		)
 
 	unternehmen = models.CharField(max_length=3,
 									choices = COMPANIES
 								)
-	
+	# Inconsistency: either all fields nr or all fields nummer
 	schadensnummer = models.CharField(max_length = 30)
 
-	kundennummer = models.IntegerField()
-	kundenname = models.CharField(max_length = 30)
-
-	vorgangsnummer = models.CharField(max_length = 10)
+	auftragsnr = models.CharField(max_length = 10)
+	rechnungsnr = models.CharField(max_length = 10, blank=True, null=True)
 	reparatur_datum = models.DateField(blank=True, null=True)
 
 	created = models.DateField()
 	updated = models.DateField()
 
 	def __str__(self):
-		return f'{self.kundenname}: {self.vorgangsnummer} - Schaden {self.schadensnummer}'
+		return f'{self.kunde.kundennummer}: {self.kunde.nachname} - {self.unternehmen} {self.schadensnummer}'
 
 	def save(self):
 		if not self.id:
@@ -165,7 +187,7 @@ class Schadensmeldung(models.Model):
 		super(Schadensmeldung, self).save()
 
 
-# Rename to SchadensmeldungStatus?
+# Rename to SchadensStatus, name unecessarily long.
 class SchadensmeldungStatus(models.Model):
 	schadensmeldung = models.ForeignKey(Schadensmeldung, on_delete=models.CASCADE)
 
@@ -176,6 +198,7 @@ class SchadensmeldungStatus(models.Model):
 		('kvf', 'KV freigegeben'),
 		('re', 'Rechnung eingereicht'),
 		('be', 'Bezahlt'),
+		('abr', 'Abzurechnen'),
 		('ab', 'Abgelehnt'),
 		)
 
@@ -186,9 +209,28 @@ class SchadensmeldungStatus(models.Model):
 	anmerkung = models.TextField(blank=True)
 
 	def __str__(self):
-		return f'Update am {self.date} zur {self.schadensmeldung.vorgangsnummer} ({self.schadensmeldung.unternehmen} #{self.schadensmeldung.schadensnummer})'
+		return f'Update am {self.date} zur {self.schadensmeldung.unternehmen} {self.schadensmeldung.schadensnummer}'
 
 	def save(self):
 		if not self.id:
 			self.date = datetime.date.today()
 		super(SchadensmeldungStatus, self).save()
+
+class SchadensmeldungFile(models.Model):
+	schadensmeldung = models.ForeignKey(Schadensmeldung, on_delete=models.CASCADE)
+	date = models.DateField()
+
+	beschreibung = models.CharField(max_length=30)
+	file = models.FileField(upload_to=set_schadenfile_path_and_name)
+	anmerkung = models.TextField(blank=True)
+
+	def __str__(self):
+		return f'{self.schadensmeldung.unternehmen} {self.schadensmeldung.schadensnummer}: {self.beschreibung}'
+
+	def get_absolute_url(self):
+		return reverse('insurance:schaden-detail', args=(self.schadensmeldung.id,))
+
+	def save(self):
+		if not self.id:
+			self.date = datetime.date.today()
+		super(SchadensmeldungFile, self).save()

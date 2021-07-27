@@ -23,8 +23,8 @@
 	      	<tr>
 	      	  <th scope="col">KdNr</th>
 	      	  <th scope="col">Nachname</th>
-	      	  <th scope="col">Bikes<br/>(Vers/Gesamt)</th>
-	      	  <th scope="col">Offene Fälle</th>
+	      	  <th scope="col">Fahrzeuge<br/>(Vers/Gesamt)</th>
+	      	  <th scope="col">Offene Tickets</th>
 	      	</tr>
 	      </thead>
 	      <tbody>
@@ -33,9 +33,8 @@
 	      			<th scope="row"><a href="{% url 'customers:customer-detail' pk=customer.kundennummer %}">{{ customer.kundennummer }}</a></th>
 	      			<td>{{ customer.nachname }}</td>
 	      			<td>{{ customer.kundennummer|count_insured}} / {{ customer.kundennummer|count_bikes }}</td>
-	      			<td>{{ customer.kundennummer|count_open_tickets }} <!-- TODO: Display number of open tickets (warranties + support) for this customer --></td>
+	      			<td>{{ customer.kundennummer|count_open_tickets_all }}</td> {# Show modal with open tickets on click? #}
 	      		</tr>
-	      		{% comment %} {% endfor %} {% endcomment %}
 	      	{% endfor %}
 	      </tbody>
 	    </table>
@@ -55,7 +54,7 @@
     <script src="{% static 'js/datatables.js' %}"></script>
 
     <!-- ajax form submission -->
-	<script src="http://malsup.github.com/jquery.form.js"></script>
+	<script src="{% static 'js/jquery.form.js' %}"></script>
 
 	<!-- load response from desired form url -->
 	<script>

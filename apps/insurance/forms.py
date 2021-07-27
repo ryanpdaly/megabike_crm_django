@@ -61,13 +61,18 @@ class EuroradForm(forms.ModelForm):
 class SchadensmeldungForm(forms.ModelForm):
 	class Meta:
 		model = models.Schadensmeldung
-		fields = ('vorgangsnummer', 'kundennummer', 'kundenname', 'unternehmen', 'schadensnummer', 'reparatur_datum',)
+		fields = ('unternehmen', 'schadensnummer', 'auftragsnr', 'rechnungsnr', 'reparatur_datum',)
 		widgets = {'reparatur_datum': SelectDateWidget(years = valid_years)}
 
 class SchadensmeldungStatusForm(forms.ModelForm):
 	class Meta:
 		model = models.SchadensmeldungStatus
 		fields = ('status', 'anmerkung',)
+
+class SchadensmeldungFileForm(forms.ModelForm):
+	class Meta:
+		model = models.SchadensmeldungFile
+		fields = ('beschreibung', 'file', 'anmerkung',)
 
 class CustomStatusFormset(BaseInlineFormSet):
 	def clean(self):
@@ -87,7 +92,7 @@ StatusFormset = inlineformset_factory(
 
 """
 FileFormset = inlineformset_factory(
-		models.ReklaTicket, models.ReklaFile,
+		models.Schadensmeldung, models.SchadensmeldungFile,
 		exclude = ('created', 'updated', 'date'),
 		min_num = 1,
 		extra=0,
