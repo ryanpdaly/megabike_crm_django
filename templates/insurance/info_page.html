@@ -1,0 +1,135 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+{% block title %}
+	MegabikeCRM: Assona Info
+{% endblock %}
+
+{% block header %}
+	<h1 class="h2 mb-0 text-gray-800">Generelle Information zur {{json_data.name}} Versicherung</h1>
+{% endblock %}
+
+{% block content %}
+	<div class="container-fluid">
+		<div class="row top-buffer">
+			<div class="col-xl-8">
+				<div class="card shadow mb-4 h-100">
+					<div class="card-header py-3">
+						<h6 class="m-0 font-weight-bold text-primary">Generelle Info:</h6>
+					</div>
+					<div class="card-body">
+						<ul> 
+							{% for item in json_data.general_info %}<li>{{ item }}</li>{% endfor %}
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-lg-4">
+				<div class="card shadow mb-4 h-100">
+					<div class="card-header py-3">
+						<h6 class="m-0 font-weight-bold text-primary">Kontakt Info:</h6>
+					</div>
+					<div class="card-body">
+						<ul>
+							<li><a href="{{json_data.contact_info.consumer_site}}">Consumerseite</a></li>
+							<li><a href="{{json_data.contact_info.partner_site}}">Händlerportal</a></li>
+							<li>Telefon: {{json_data.contact_info.phone}}</li>
+							<li>Fax: {{json_data.contact_info.fax}}</li>
+							<li>Email: {{json_data.contact_info.email}}</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row mt-3">
+			<div class="col-lg-4">
+				<div class="card shadow mb-4 h-100">
+					<div class="card-header py-3">
+						<h6 class="m-0 font-weight-bold text-primary">Bei der Annahme benötigen wir:</h6>
+					</div>
+					<div class="card-body">
+						<ul>
+							{% for item in json_data.needed_info.at_annahme %}
+								<li>{{ item }}</li>
+							{% endfor %}
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-4">
+				<div class="card shadow mb-4 h-100">
+					<div class="card-header py-3">
+						<h6 class="m-0 font-weight-bold text-primary">Beim Rechnungsschreiben benötigen wir:</h6>
+					</div>
+					<div class="card-body">
+						<ul>
+							{% for item in json_data.needed_info.at_invoice %}
+								<li>{{ item }}</li>
+							{% endfor %}
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-4">
+				<div class="card shadow mb-4 h-100">
+					<div class="card-header py-3">
+						<h6 class="m-0 font-weight-bold text-primary">Bei der Abholung benötigen wir:</h6>
+					</div>
+					<div class="card-body">
+						<ul>
+							{% for item in json_data.needed_info.at_pickup %}
+								<li>{{ item }}</li>
+							{% endfor %}
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		{% for package in json_data.packages %}
+			<div class="row lg-6 mt-3">
+				<div class="col-lg-12">
+					<div class="card shadow mb-4">
+						<!-- Card Header - Accordion -->
+						<a href="#collapseCard{{package.name}}" class="card-header py-3" data-toggle="collapse"
+							role="button" aria-expanded="true" aria-controls="collapseCardExample">
+							<h6 class="m-0 font-weight-bold text-primary">Paket: {{ package.name }}</h6>
+						</a>
+						<!-- Card Content - Collapse -->
+						<div class="collapse show" id="collapseCard{{package.name}}">
+							<div class="row">
+								<div class="col-sm-5 ml-1 mt-1">
+									<div class="card h-100">
+										<h5 class="card-title mx-auto font-weight-bold text-success"><i class="fas fa-check"></i> Versichert:</h5>
+										<div class="card-body">
+											<ul>
+												{% for item in package.versichert %}
+													<li>{{item}}</li>
+												{% endfor %}
+											</ul>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-6 mr-1 mt-1">
+									<div class="card h-100">
+										<h5 class="card-title mx-auto font-weight-bold text-danger"><i class="fas fa-times"></i> Nicht versichert:</h5>
+										<div class="card-body">
+											<ul>
+												{% for item in package.nicht_versichert %}
+													<li>{{item}}</li>
+												{% endfor %}
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		{% endfor %}
+
+	</div>
+{% endblock %}

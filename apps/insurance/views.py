@@ -1,3 +1,4 @@
+import json
 import logging
 
 from django.contrib.auth.decorators import login_required
@@ -87,6 +88,22 @@ def info_page(request, insurance):
 	}
 
 	return render(request, f'insurance/info_{insurance}.html', context=context)
+
+class InfoPage(LoginRequiredMixin, generic.base.TemplateView, common_mixins.NotificationsMixin):
+	template_name = "insurance/info_page.html"
+
+	def get_context_data(self, **kwargs):
+		data = super().get_context_data(**kwargs)
+
+		#TODO: Figure out encoding to use ä, ö, ü, und ß from JSON
+		data['json_data'] = self.read_json('apps/insurance/insurance_info.json')[self.kwargs['insurance']]
+
+		return data
+
+	def read_json(self, path):
+		with open(path, 'r') as file:
+			return json.load(file)
+
 
 # TODO: Rework as CBV
 @login_required

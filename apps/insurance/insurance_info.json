@@ -1,0 +1,256 @@
+{"assona":
+	{
+		"name":"Assona",
+		"general_info": ["Schadensmeldung ueber den Warenwirtschaft, per Email, oder Haendlerseite"],
+		"contact_info":
+			{
+				"consumer_site":" http://plusgarantie.zeg.de/",
+				"partner_site": "https://partnerportal.assona.com/pos/index.do",
+				"phone": "030 - 208 666 54",
+				"fax": "030 - 208 666 56", 
+				"email": "kundenservice@assona.de"
+			},
+		"needed_info":{
+			"at_annahme": [
+				"Versicherungskarte ODER",
+				"Vertragsnummer ODER",
+				"Rahmennummer"
+			],
+			"at_invoice": [
+				"Rahmennummer",
+				"Schilderung des Schadenhergangs",
+				"Beschreibung Schadenbild (inkl. Einschaetzung der Ursache)",
+				"Hoehe der Reparaturkosten"
+			],
+			"at_pickup": [
+				"Unterschrift"
+			]
+		},
+		"packages": [
+			{
+				"name":"ZEG-Plus",
+				"versichert": [
+					"Verschleiss", 
+					"Pick-up-Service", 
+					"Diebstahl", 
+					"Vandalismus", 
+					"Akkuschaeden (auch durch Verschleiss"
+				],
+				"nicht_versichert": [
+					"Inspektionen", 
+					"Wartungs- oder Einstellarbeiten",
+					"Miet- und Leihraedern",
+					"Verlieren, Stehen- oder Liegenlassen des E-Bikes oder Teile",
+					"Schaeden, wodurch die Funktionsfaehigkeit nicht beeintraechtigt wird",
+					"Schaeden, die beim Wettkampveranstaltung entstehen"
+				],
+				"inspektion":"False",
+				"verschleiss":"True"
+			}
+		]
+	},
+	"bikeleasing":{
+		"name": "Bikeleasing Service",
+		"general_info": ["Schadensmeldung telefonisch, durch Haendlerportal, oder vom Nutzer durch Bikeleasing-App"],
+		"contact_info":{
+			"consumer_site": "https://www.bikeleasing.de/",
+			"partner_site": "https://portal.bikeleasing.de/",
+			"phone": "0561 - 503 433 63",
+			"fax": "0561 - 705 401 46",
+			"email": "bikeschaden@bikeleasing.de"
+		},
+		"needed_info":{
+			"at_annahme": [
+				"Namen des Nutzers", 
+				"Bei Fremdkunden - Nutzer-ID",
+				"Bei Diebstahl - eine Kopie des Polizeiberichts"],
+			"at_invoice": [
+				"Schadentag",
+				"Schadenort",
+				"Schilderung des Schadenshergangs",
+				"Kostenvoranschlag",
+				"Schadenbilder"
+			],
+			"at_pickup": ["Unterschrift"]
+		},
+		"packages": [
+			{
+				"name": "Premium",
+				"versichert": ["Diebstahl", "Sturzschaeden", "Mobilitaetsgarantie"],
+				"nicht_versichert": [
+					"Optische Maengel, wo die Funktionsfaehigkeit nicht beeintraechtigt ist",
+					"Einstellungs- / Justierarbeiten",
+					"Austausch von funktionsfaehigen Teilen",
+					"Eigenreparaturen"
+				],
+				"inspektion": "False",
+				"verschleiss": "False"
+			},
+			{
+				"name": "Premium-Plus",
+				"versichert": ["Die Leistungen des Premium Pakets", "Verschleiss"],
+				"nicht_versichert": [
+					"Optische Maengel, wo die Funktionsfaehigkeit nicht beeintraechtigt ist",
+					"Einstellungs- / Justierarbeiten",
+					"Austausch von funktionsfaehigen Teilen",
+					"Eigenreparaturen"
+				],
+				"inspektion": "False",
+				"verschleiss": "True"
+			},
+			{
+				"name": "Inspektion Plus",
+				"versichert": ["2x Inspektion waehrend des Leasinglaufzeit"],
+				"nicht_versichert": [
+					"Optische Maengel, wo die Funktionsfaehigkeit nicht beeintraechtigt ist",
+					"Einstellungs- / Justierarbeiten",
+					"Austausch von funktionsfaehigen Teilen",
+					"Eigenreparaturen"
+				],
+				"inspektion": "True",
+				"verschleiss": "False"
+			}
+		]
+	},
+	"businessbike":{
+		"name": "Businessbike",
+		"general_info": ["PLACEHOLDER TEXT"],
+		"contact_info":{
+			"consumer_site": "PLACEHOLDER_TEXT",
+			"partner_site": "PLACEHOLDER TEXT",
+			"phone": "PLACEHOLDER TEXT",
+			"fax": "PLACEHOLDER TEXT",
+			"email": "PLACEHOLDER TEXT"
+		},
+		"needed_info":{
+			"at_annahme": [
+				"Leasingbeginn",
+				"Leasingende",
+				"Versicherungsnummer",
+				"Rahmennummer",
+				"Versicherungspaket"
+			],
+			"at_invoice": ["PLACEHOLDER TEXT"],
+			"at_pickup": ["PLACEHOLDER TEXT"]
+		},
+		"packages": [
+			{
+				"name": "Durchsicht",
+				"versichert": ["UVV 1x Jaehrlich (25 EUR)"],
+				"nicht_versichert": ["Inspektion", "Verschleiss"],
+				"inspektion": "False",
+				"verschleiss": "False"
+			},
+			{
+				"name": "Inspektion",
+				"versichert": ["PLACEHOLDER"],
+				"nicht_versichert": ["PLACEHOLDER"],
+				"inspektion": "True or False",
+				"verschleiss": "True or False"
+			},
+			{
+				"name": "Full-Service",
+				"versichert": ["Verschleiss (bis 225EUR ueber gesamten Laufzeit)"],
+				"nicht_versichert": ["PLACEHOLDER"],
+				"inspektion": "True or False",
+				"verschleiss": "True or False"
+			}
+		]
+	},
+	"enra":{
+		"name": "ENRA",
+		"general_info": ["PLACEHOLDER TEXT"],
+		"contact_info":{
+			"consumer_site": "PLACEHOLDER_TEXT",
+			"partner_site": "PLACEHOLDER TEXT",
+			"phone": "PLACEHOLDER TEXT",
+			"fax": "PLACEHOLDER TEXT",
+			"email": "PLACEHOLDER TEXT"
+		},
+		"needed_info":{
+			"at_annahme": ["PLACEHOLDER TEXT"],
+			"at_invoice": ["PLACEHOLDER TEXT"],
+			"at_pickup": ["PLACEHOLDER TEXT"]
+		},
+		"packages": [
+			{
+				"name": "Package_1",
+				"versichert": ["PLACEHOLDER"],
+				"nicht_versichert": ["PLACEHOLDER"],
+				"inspektion": "True or False",
+				"verschleiss": "True or False"
+			},
+			{
+				"name": "Package_2",
+				"versichert": ["PLACEHOLDER"],
+				"nicht_versichert": ["PLACEHOLDER"],
+				"inspektion": "True or False",
+				"verschleiss": "True or False"
+			}
+		]
+	},
+	"Eurorad":{
+		"name": "Eurorad",
+		"general_info": ["PLACEHOLDER TEXT"],
+		"contact_info":{
+			"consumer_site": "PLACEHOLDER_TEXT",
+			"partner_site": "PLACEHOLDER TEXT",
+			"phone": "PLACEHOLDER TEXT",
+			"fax": "PLACEHOLDER TEXT",
+			"email": "PLACEHOLDER TEXT"
+		},
+		"needed_info":{
+			"at_annahme": ["PLACEHOLDER TEXT"],
+			"at_invoice": ["PLACEHOLDER TEXT"],
+			"at_pickup": ["PLACEHOLDER TEXT"]
+		},
+		"packages": [
+			{
+				"name": "Package_1",
+				"versichert": ["PLACEHOLDER"],
+				"nicht_versichert": ["PLACEHOLDER"],
+				"inspektion": "True or False",
+				"verschleiss": "True or False"
+			},
+			{
+				"name": "Package_2",
+				"versichert": ["PLACEHOLDER"],
+				"nicht_versichert": ["PLACEHOLDER"],
+				"inspektion": "True or False",
+				"verschleiss": "True or False"
+			}
+		]
+	},
+	"jobrad":{
+		"name": "JobRad",
+		"general_info": ["PLACEHOLDER TEXT"],
+		"contact_info":{
+			"consumer_site": "PLACEHOLDER_TEXT",
+			"partner_site": "PLACEHOLDER TEXT",
+			"phone": "PLACEHOLDER TEXT",
+			"fax": "PLACEHOLDER TEXT",
+			"email": "PLACEHOLDER TEXT"
+		},
+		"needed_info":{
+			"at_annahme": ["PLACEHOLDER TEXT"],
+			"at_invoice": ["PLACEHOLDER TEXT"],
+			"at_pickup": ["PLACEHOLDER TEXT"]
+		},
+		"packages": [
+			{
+				"name": "Package_1",
+				"versichert": ["PLACEHOLDER"],
+				"nicht_versichert": ["PLACEHOLDER"],
+				"inspektion": "True or False",
+				"verschleiss": "True or False"
+			},
+			{
+				"name": "Package_2",
+				"versichert": ["PLACEHOLDER"],
+				"nicht_versichert": ["PLACEHOLDER"],
+				"inspektion": "True or False",
+				"verschleiss": "True or False"
+			}
+		]
+	}
+}

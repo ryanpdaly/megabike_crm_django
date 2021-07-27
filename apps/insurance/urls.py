@@ -9,7 +9,8 @@ urlpatterns = [
 	path('input_<str:insurance>/<str:rn>/', views.input_insurance, name='input-insurance'),
 	path('police/all/', views.list_all, name='list-all'),
 	path('police/<str:rn>/', views.display_policy, name='display-policy'),	
-	path('info/<str:insurance>/', views.info_page, name='info-page'),
+	path('info/<str:insurance>/FBV', views.info_page, name='info-page-FBV'),
+	path('info/<str:insurance>/', views.InfoPage.as_view(), name='info-page'),
 
 	re_path(r'^schaden/list=(?P<filter>\w+)$', views.schaden_list, name='schaden-list'),
 	
