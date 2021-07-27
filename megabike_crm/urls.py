@@ -22,7 +22,8 @@ from django.urls import reverse, reverse_lazy
 from . import settings
 
 urlpatterns = [
-    path('', RedirectView.as_view(url='customers/', permanent=True)),
+    path('', RedirectView.as_view(url='common/', permanent=True)),
+    path('', RedirectView.as_view(url=reverse_lazy('common:main', permanent=True))),
     path('accounts/', include('django.contrib.auth.urls')),    
     path('admin/', admin.site.urls),
 
