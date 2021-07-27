@@ -53,9 +53,9 @@ def input_insurance(request, rn, insurance):
 		'ins_form':ins_form,
 		'update_bike':update_bike,
 
-		'open_contact_tickets': common_mixins.get_open_contact_tickets(),
-		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(),
-		'faellige_warranty_tickets': common_mixins.get_faellige_warranty_tickets(),
+		'open_contact_tickets': common_mixins.get_user_contact_tickets(request),
+		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(request),
+		'faellige_warranty_tickets': common_mixins.get_faellige_warranty_tickets(request),
 	}
 
 	return render(request, 'insurance/input_insurance.html', context=context)
@@ -69,9 +69,9 @@ def list_all(request):
 	context = {
 		'policies':policies,
 
-		'open_contact_tickets': common_mixins.get_open_contact_tickets(),
-		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(),
-		'faellige_warranty_tickets': common_mixins.get_faellige_warranty_tickets(),
+		'open_contact_tickets': common_mixins.get_user_contact_tickets(request),
+		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(request),
+		'faellige_warranty_tickets': common_mixins.get_faellige_warranty_tickets(request),
 	}
 
 	return render(request, 'insurance/list_all.html', context=context)
@@ -81,9 +81,9 @@ def list_all(request):
 def info_page(request, insurance):
 
 	context = {
-		'open_contact_tickets': common_mixins.get_open_contact_tickets(),
-		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(),
-		'faellige_warranty_tickets': common_mixins.get_faellige_warranty_tickets(),
+		'open_contact_tickets': common_mixins.get_user_contact_tickets(request),
+		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(request),
+		'faellige_warranty_tickets': common_mixins.get_faellige_warranty_tickets(request),
 	}
 
 	return render(request, f'insurance/info_{insurance}.html', context=context)
@@ -121,9 +121,9 @@ def display_policy(request, rn):
 		'rahmennummer': rn,
 		'insurance_info': insurance_info,
 
-		'open_contact_tickets': common_mixins.get_open_contact_tickets(),
-		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(),
-		'faellige_warranty_tickets': common_mixins.get_faellige_warranty_tickets(),
+		'open_contact_tickets': common_mixins.get_user_contact_tickets(request),
+		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(request),
+		'faellige_warranty_tickets': common_mixins.get_faellige_warranty_tickets(request),
 	}
 
 	return render(request, f'insurance/display_{INSURANCE_URL[insurance]}.html', context=context)
@@ -143,9 +143,9 @@ def schaden_list(request, filter):
 		'filter': filter,
 		'erledigt': erledigt,
 
-		'open_contact_tickets': common_mixins.get_open_contact_tickets(),
-		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(),
-		'faellige_warranty_tickets': common_mixins.get_faellige_warranty_tickets(),
+		'open_contact_tickets': common_mixins.get_user_contact_tickets(request),
+		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(request),
+		'faellige_warranty_tickets': common_mixins.get_faellige_warranty_tickets(request),
 	}
 
 	return render(request, f'insurance/schadensmeldung_list.html', context=context)

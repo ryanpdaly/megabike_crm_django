@@ -46,9 +46,9 @@ def bike_detail_view(request, pk, rn):
 		'company_form':company_form,
 		'insurance_info':insurance_info,
 
-		'open_contact_tickets': common_mixins.get_open_contact_tickets(),
-		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(),
-		'faellige_warranty_tickets': common_mixins.get_faellige_warranty_tickets(),
+		'open_contact_tickets': common_mixins.get_user_contact_tickets(request),
+		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(request),
+		'faellige_warranty_tickets': common_mixins.get_faellige_warranty_tickets(request),
 	}
 
 	return render(request, 'customers/bike_detail.html', context=context)
@@ -76,9 +76,9 @@ def bike_input_view(request, pk):
 		'bike_form': bike_form,
 		'customer': customer_instance,
 
-		'open_contact_tickets': common_mixins.get_open_contact_tickets(),
-		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(),
-		'faellige_warranty_tickets': common_mixins.get_faellige_warranty_tickets(),
+		'open_contact_tickets': common_mixins.get_user_contact_tickets(request),
+		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(request),
+		'faellige_warranty_tickets': common_mixins.get_faellige_warranty_tickets(request),
 	}
 
 	return render(request, 'customers/bike_input.html', context=context)
@@ -115,9 +115,9 @@ def customer_detail_view(request, pk):
 		'warranty_tickets': warranty_tickets,
 		'warranty_erledigt': warranty_erledigt,
 
-		'open_contact_tickets': common_mixins.get_open_contact_tickets(),
-		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(),
-		'faellige_warranty_tickets': common_mixins.get_faellige_warranty_tickets(),
+		'open_contact_tickets': common_mixins.get_user_contact_tickets(request),
+		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(request),
+		'faellige_warranty_tickets': common_mixins.get_faellige_warranty_tickets(request),
 	}
 
 	return render(request, 'customers/customer_detail.html', context=context)

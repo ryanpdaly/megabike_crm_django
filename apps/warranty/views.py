@@ -213,9 +213,9 @@ def display_file(request, pk, sk):
 	context={
 		'file_object':file_object,
 
-		'open_contact_tickets': common_mixins.get_open_contact_tickets(),
-		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(),
-		'faellige_warranty_tickets': common_mixins.get_faellige_warranty_tickets(),
+		'open_contact_tickets': common_mixins.get_user_contact_tickets(request),
+		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(request),
+		'faellige_warranty_tickets': common_mixins.get_faellige_warranty_tickets(request),
 	}
 
 	return render(request, 'warranty/display_file.html', context=context)

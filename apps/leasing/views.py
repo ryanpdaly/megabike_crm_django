@@ -9,9 +9,9 @@ from apps.common import mixins as common_mixins
 def leasing_info_page(request, unternehmen):
 
 	context = {
-		'open_contact_tickets': common_mixins.get_open_contact_tickets(),
-		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(),
-		'faellige_warranty_tickets': common_mixins.get_faellige_warranty_tickets(),
+		'open_contact_tickets': common_mixins.get_user_contact_tickets(request),
+		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(request),
+		'faellige_warranty_tickets': common_mixins.get_faellige_warranty_tickets(request),
 	}
 
 	return render(request, f'leasing/info_{unternehmen}.html', context=context)
