@@ -77,18 +77,6 @@ def list_all(request):
 
 	return render(request, 'insurance/list_all.html', context=context)
 
-# TODO: Rework as CBV
-@login_required
-def info_page(request, insurance):
-
-	context = {
-		'open_contact_tickets': common_mixins.get_open_contact_tickets(),
-		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(),
-		'faellige_warranty_tickets': common_mixins.get_faellige_warranty_tickets(),
-	}
-
-	return render(request, f'insurance/info_{insurance}.html', context=context)
-
 class InfoPage(LoginRequiredMixin, generic.base.TemplateView, common_mixins.NotificationsMixin):
 	template_name = "insurance/info_page.html"
 

@@ -114,11 +114,11 @@
 	},
 	"businessbike":{
 		"name": "Businessbike",
-		"general_info": ["PLACEHOLDER TEXT"],
+		"general_info": ["Rechnungsempfaenger: PEAC"],
 		"contact_info":{
-			"consumer_site": "PLACEHOLDER_TEXT",
-			"partner_site": "PLACEHOLDER TEXT",
-			"phone": "PLACEHOLDER TEXT",
+			"consumer_site": "https://www.businessbike.de/de",
+			"partner_site": "https://www.businessbike.de/portal/anmeldung",
+			"phone": "09161 - 782 0000",
 			"fax": "PLACEHOLDER TEXT",
 			"email": "PLACEHOLDER TEXT"
 		},
@@ -130,126 +130,280 @@
 				"Rahmennummer",
 				"Versicherungspaket"
 			],
-			"at_invoice": ["PLACEHOLDER TEXT"],
-			"at_pickup": ["PLACEHOLDER TEXT"]
+			"at_invoice": ["Schadensursache"],
+			"at_pickup": ["Unterschrift"]
 		},
 		"packages": [
 			{
-				"name": "Durchsicht",
+				"name": "Durchsicht+",
 				"versichert": ["UVV 1x Jaehrlich (25 EUR)"],
-				"nicht_versichert": ["Inspektion", "Verschleiss"],
+				"nicht_versichert": [
+					"Inspektion",
+					"Verschleiss", 
+					"Schaeden, die nicht die Funktion beeintraechtigen",
+					"Rost oder Oxidation",
+					"Kosten fuer Leihraeder",
+					"Nachtraegliche Veraenderungen, Umbauten, angebaute Teile"
+				],
 				"inspektion": "False",
 				"verschleiss": "False"
 			},
 			{
 				"name": "Inspektion",
-				"versichert": ["PLACEHOLDER"],
-				"nicht_versichert": ["PLACEHOLDER"],
-				"inspektion": "True or False",
-				"verschleiss": "True or False"
+				"versichert": ["1x jaehrlich Inspektion (75 EUR)"],
+				"nicht_versichert": [
+					"Verschleiss",
+					"Schaeden, die nicht die Funktion beeintraechtigen",
+					"Rost oder Oxidation",
+					"Kosten fuer Leihraeder",
+					"Nachtraegliche Veraenderungen, Umbauten, angebaute Teile"
+				],
+				"inspektion": "True",
+				"verschleiss": "False"
 			},
 			{
 				"name": "Full-Service",
-				"versichert": ["Verschleiss (bis 225EUR ueber gesamten Laufzeit)"],
-				"nicht_versichert": ["PLACEHOLDER"],
-				"inspektion": "True or False",
-				"verschleiss": "True or False"
+				"versichert": ["Jaehrlich Inspektion (75 EUR)", "Verschleiss (bis 225 EUR ueber gesamten Laufzeit)"],
+				"nicht_versichert": [
+					"Schaeden, die nicht die Funktion beeintraechtigen",
+					"Rost oder Oxidation",
+					"Kosten fuer Leihraeder",
+					"Nachtraegliche Veraenderungen, Umbauten, angebaute Teile"
+				],
+				"inspektion": "True",
+				"verschleiss": "True"
 			}
 		]
 	},
 	"enra":{
 		"name": "ENRA",
-		"general_info": ["PLACEHOLDER TEXT"],
+		"general_info": ["Nur Schadensversicherung", "Schadensmeldung per Email"],
 		"contact_info":{
-			"consumer_site": "PLACEHOLDER_TEXT",
-			"partner_site": "PLACEHOLDER TEXT",
-			"phone": "PLACEHOLDER TEXT",
+			"consumer_site": "https://www.enra.eu/",
+			"partner_site": "https://www.enraonline.de/login/",
+			"phone": "02131 - 124 360",
 			"fax": "PLACEHOLDER TEXT",
-			"email": "PLACEHOLDER TEXT"
+			"email": "info@enra.eu"
 		},
 		"needed_info":{
-			"at_annahme": ["PLACEHOLDER TEXT"],
-			"at_invoice": ["PLACEHOLDER TEXT"],
-			"at_pickup": ["PLACEHOLDER TEXT"]
+			"at_annahme": ["Vertragsnummer"],
+			"at_invoice": ["Rechnungsempfaenger: Kunde"],
+			"at_pickup": ["Unterschrift"]
 		},
 		"packages": [
 			{
-				"name": "Package_1",
-				"versichert": ["PLACEHOLDER"],
-				"nicht_versichert": ["PLACEHOLDER"],
-				"inspektion": "True or False",
-				"verschleiss": "True or False"
+				"name": "Rundumschutz",
+				"versichert": [
+					"Diebstahl / Teildiebstahl",
+					"Vandalismus",
+					"Sturz / Unfall",
+					"Unsachgemaesse Handhabung",
+					"Elektronikschaeden",
+					"Akku-Defekte",
+					"Brand / Explosion",
+					"Blitzschlag / Sturm / Hagel",
+					"Produktions-/Materialfehler nach Ablauf der Gewaehrleistung",
+					"Pick-up-Service"
+				],
+				"nicht_versichert": ["Inspektion", "Verschleiss"],
+				"inspektion": "False",
+				"verschleiss": "False"
 			},
 			{
-				"name": "Package_2",
-				"versichert": ["PLACEHOLDER"],
-				"nicht_versichert": ["PLACEHOLDER"],
-				"inspektion": "True or False",
-				"verschleiss": "True or False"
+				"name": "Akku-Plus",
+				"versichert": ["Akkuverschless ab dem 7. Monat"],
+				"nicht_versichert": ["Inspektion", "Veschleiss"],
+				"inspektion": "False",
+				"verschleiss": "False"
 			}
 		]
 	},
-	"Eurorad":{
+	"eurorad":{
 		"name": "Eurorad",
-		"general_info": ["PLACEHOLDER TEXT"],
+		"general_info": [
+			"Schadensmeldung ueber den Warenwirtschaft, per Email, oder Haendlerseite", 
+			"Rechnungempfänger: AGL Leasing Services"
+		],
 		"contact_info":{
-			"consumer_site": "PLACEHOLDER_TEXT",
-			"partner_site": "PLACEHOLDER TEXT",
-			"phone": "PLACEHOLDER TEXT",
-			"fax": "PLACEHOLDER TEXT",
-			"email": "PLACEHOLDER TEXT"
+			"consumer_site": "https://www.eurorad.de/",
+			"partner_site": "https://partnerportal.assona.com/pos/index.do",
+			"phone": "030 - 208 666 54",
+			"fax": "030 - 208 666 56",
+			"email": "kundenservice@assona.de"
 		},
 		"needed_info":{
-			"at_annahme": ["PLACEHOLDER TEXT"],
-			"at_invoice": ["PLACEHOLDER TEXT"],
-			"at_pickup": ["PLACEHOLDER TEXT"]
+			"at_annahme": [
+				"Verischerungskarte ODER", 
+				"Vertragsnummer ODER",
+				"Rahmennummer"
+			],
+			"at_invoice": [
+				"Rechnungsempfaenger: AGL Leasing Services",
+				"Rahmennummer",
+				"Schilderung des Schadenhergangs",
+				"Beschreibung Schadenbild (inkl. Einschaetzung der Ursache",
+				"Hoehe der Reparaturkosten"
+			],
+			"at_pickup": ["Unterschrift"]
 		},
 		"packages": [
 			{
-				"name": "Package_1",
-				"versichert": ["PLACEHOLDER"],
-				"nicht_versichert": ["PLACEHOLDER"],
-				"inspektion": "True or False",
-				"verschleiss": "True or False"
+				"name": "Basis",
+				"versichert": [
+					"40 EUR Selbstbeteiligung",
+					"75 EUR Bagatellschadensgrenze",
+					"Unfallschaden",
+					"Sturzschaden",
+					"Fallschaden",
+					"Elektronischaeden",
+					"Bedienungsfehler",
+					"Handhabungsfehler",
+					"Diebstahl",
+					"Raub",
+					"Feuchtigkeitsschaeden am Akku",
+					"Produktions-, Konstruktions-, und Materialfehler"
+				],
+				"nicht_versichert": [
+					"Verschleiss",
+					"Kosten fuer Inspektionen",
+					"Kosten fuer Wartungs- oder Einstellarbeiten",
+					"Kosten von Miet- und Leihraedern",
+					"Verlieren, Stehen- oder Liegenlassen des E-Bikes oder Teile",
+					"Schaeden, wodurch die Funktionsfaehigkeit nicht beeintraechtigt wird",
+					"Schaeden, die beim Wettkampfveranstaltung entstehen"
+				],
+				"inspektion": "False",
+				"verschleiss": "False"
 			},
 			{
 				"name": "Package_2",
-				"versichert": ["PLACEHOLDER"],
-				"nicht_versichert": ["PLACEHOLDER"],
-				"inspektion": "True or False",
-				"verschleiss": "True or False"
+				"versichert": [
+					"Versicherungsschutz des Basis Pakets UND",
+					"100% Verschleiss ab dem 1. Tag",
+					"Mobilitaetsschutzpaket (Unfall und Pannenhilfe)",
+					"UVV-Pruefung nach dem 1. und 2. Versicherungsjahr",
+					"Keine Selbstbeteiligung",
+					"Keine Bagatellschadensgrenze"
+				],
+				"nicht_versichert": [
+					"Kosten fuer Inspektionen",
+					"Kosten fuer Wartungs- oder Einstellarbeiten",
+					"Kosten von Miet- und Leihraedern",
+					"Verlieren, Stehen- oder Liegenlassen des E-Bikes oder Teile",
+					"Schaeden, wodurch die Funktionsfaehigkeit nicht beeintraechtigt wird",
+					"Schaeden, die beim Wettkampfveranstaltung entstehen"
+				],
+				"inspektion": "True",
+				"verschleiss": "False"
+			},
+			{
+				"name": "PremiumPLUS",
+				"versichert": [
+					"Versicherungsschutz des Premium Pakets UND",
+					"Inspektion inkl. UVV nach dem 1. und 2. Versicherungsjahr",
+					"Kuendigung des Arbeitnehmers durch Arbeitgeber",
+					"Kuendigung des Arbeitnehmers durch Arbeitnehmer",
+					"Unfalltod",
+					"Krankheitsbedingten Ausfall (bis max. 5000 EUR)",
+					"Elternzeit (bis 12 Monate)"
+				],
+				"nicht_versichert": [
+					"Kosten fuer Wartungs- oder Einstellarbeiten",
+					"Kosten von Miet- und Leihraedern",
+					"Verlieren, Stehen- oder Liegenlassen des E-Bikes oder Teile",
+					"Schaeden, wodurch die Funktionsfaehigkeit nicht beeintraechtigt wird",
+					"Schaeden, die beim Wettkampfveranstaltung entstehen"
+				],
+				"inspektion": "True",
+				"verschleiss": "True"
 			}
 		]
 	},
 	"jobrad":{
 		"name": "JobRad",
-		"general_info": ["PLACEHOLDER TEXT"],
+		"general_info": [
+			"Rechnungsempfaenger bei Inspektion: Kunde",
+			"Rechnungsempfaenger bei Schaeden: MLF Mercator Leasing"
+		],
 		"contact_info":{
-			"consumer_site": "PLACEHOLDER_TEXT",
-			"partner_site": "PLACEHOLDER TEXT",
+			"consumer_site": "https://www.jobrad.org/",
+			"partner_site": "https://www.jobrad.org/fachhandel/login.html",
 			"phone": "PLACEHOLDER TEXT",
 			"fax": "PLACEHOLDER TEXT",
 			"email": "PLACEHOLDER TEXT"
 		},
 		"needed_info":{
-			"at_annahme": ["PLACEHOLDER TEXT"],
-			"at_invoice": ["PLACEHOLDER TEXT"],
-			"at_pickup": ["PLACEHOLDER TEXT"]
+			"at_annahme": [
+				"Bei Inspektion: Service-ID",
+				"Bei Schaeden: Schadensfall-ID (nach Meldung des Schadens in Kundenportal)"
+			],
+			"at_invoice": [
+				"Bei Inspektion: Service bei Jobrad als 'Bereit zur Uebergabe' markieren",
+				"Bei Schaeden: Rechnung auf MLF-Mercator Leasing schreiben"
+			],
+			"at_pickup": [
+				"Bei Inspektion: Abholcode",
+				"Bei Schaeden: Unterschrift"
+			]
 		},
 		"packages": [
 			{
-				"name": "Package_1",
-				"versichert": ["PLACEHOLDER"],
-				"nicht_versichert": ["PLACEHOLDER"],
-				"inspektion": "True or False",
-				"verschleiss": "True or False"
+				"name": "JobRad-Vollkasko",
+				"versichert": [
+					"Diebstahl / Vandalismus",
+					"Unfall- / Sturzschaeden",
+					"Bedienungsfehler",
+					"Elektronikschaeden",
+					"24-Stunden-Notfallservice",
+					"Abschleppen bei Panne / Unfall",
+					"Ab 10km Entfernung vom Wohnsitz: Kosten f. Weiter-/Rueckfahrt",
+					"Ab 10km Entfernung vom Wohnsitz: Uebernahme von Uebernachtungskosten",
+					"Ab 10km Entfernung vom Wohnsitz: Ersatzfahrrad (max 25 EUR / Tag f. 14 Tage",
+					"Ab 10km Entfernung vom Wohnsitz: Fahrad-Ruecktransport"
+				],
+				"nicht_versichert": [
+					"Kosten fuer Inspektionen",
+					"Kosten fuer Wartungs- oder Einstellarbeiten",
+					"Kosten von Miet- und Leihraedern",
+					"Vierlieren, Stehen- oder Liegenlassen des E-Bikes oder Teile",
+					"Schaeden, wodurch die Funktionsfaehigkeit nicht beeintraechtigt wird",
+					"Schaeden, die beim Wettkampfveranstaltung entstehen"
+				],
+				"inspektion": "False",
+				"verschleiss": "False"
 			},
 			{
-				"name": "Package_2",
-				"versichert": ["PLACEHOLDER"],
-				"nicht_versichert": ["PLACEHOLDER"],
-				"inspektion": "True or False",
-				"verschleiss": "True or False"
+				"name": "Jobrad-Inspektion",
+				"versichert": [
+					"Versicherungsschutz des JobRad-Vollkasko Pakets",
+					"Jaehrliche Inspektion in Wert von 70 EUR (von 1. Oktober bis 31. Maerz verfuegbar)"
+				],
+				"nicht_versichert": [
+					"Kosten fuer Wartungs- oder Einstellarbeiten",
+					"Kosten von Miet- und Leihraedern",
+					"Vierlieren, Stehen- oder Liegenlassen des E-Bikes oder Teile",
+					"Schaeden, wodurch die Funktionsfaehigkeit nicht beeintraechtigt wird",
+					"Schaeden, die beim Wettkampfveranstaltung entstehen"
+				],
+				"inspektion": "True",
+				"verschleiss": "False"
+			},
+			{
+				"name": "Jobrad-Fullservice",
+				"versichert": [
+					"Versicherungsschutz des JobRad-Inspektion Pakets",
+					"Verschleiss-Reparaturen ab dem 7. Monat",
+					"Gesamtguthaben von 420 EUR ueber drei Jahre"
+				],
+				"nicht_versichert": [
+					"Kosten fuer Wartungs- oder Einstellarbeiten",
+					"Kosten von Miet- und Leihraedern",
+					"Vierlieren, Stehen- oder Liegenlassen des E-Bikes oder Teile",
+					"Schaeden, wodurch die Funktionsfaehigkeit nicht beeintraechtigt wird",
+					"Schaeden, die beim Wettkampfveranstaltung entstehen"
+				],
+				"inspektion": "True",
+				"verschleiss": "True"
 			}
 		]
 	}
