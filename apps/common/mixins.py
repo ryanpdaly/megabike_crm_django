@@ -32,6 +32,8 @@ def get_faellige_insurance_tickets(request):
 	if "insurance_responsibility" in user_groups:
 
 		insurance_tickets = insurance_models.Schadensmeldung.objects.all()
+		
+		# TODO: Rename. These are not being excluded, rather included.
 		insurance_tickets_excluded = []
 
 		# This will become terribly inefficient as we get more and more tickets. Solve this with either a different search/filter method or archiving old tickets.
