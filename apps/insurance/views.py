@@ -171,13 +171,15 @@ def schaden_list(request, status, company):
 
 		for schaden in schaden_list:
 			current_status = models.SchadensmeldungStatus.objects.filter(schadensmeldung=schaden).order_by('-id')[0]
+			is_faellig = current_status.date <= faellig_date
+			is_erledigt = current_status.status in ['be', 'ab',]
 
-			if (status == 'faellig') and (current_status.date < faellig_date):
-				logging.debug(f'{current_status.date} > {faellig_date}')
+			if status=='faellig':
+				if is_erledigt==True or is_faellig==False:
+					schaden_list = schaden_list.exclude(pk=schaden.pk)
+			elif status=='open' and is_erledigt==True:
 				schaden_list = schaden_list.exclude(pk=schaden.pk)
-			if (status == 'open') and (current_status.status in ['be', 'ab']):
-				schaden_list = schaden_list.exclude(pk=schaden.pk)
-			elif (status != 'open') and (current_status.status != status):
+			elif status!='open' and current_status.status != status:
 				schaden_list = schaden_list.exclude(pk=schaden.pk)
 
 	context = {
