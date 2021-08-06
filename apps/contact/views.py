@@ -19,7 +19,9 @@ class CallList(LoginRequiredMixin, generic.ListView, common_mixins.Notifications
 	def get_queryset(self):
 		data = super(CallList, self).get_queryset()
 
-		if self.kwargs.get('abteilung') != 'all':
+		if self.kwargs.get('abteilung') == 'all':
+			data = data.exclude(abteilung = 'neurad')
+		else:
 			data = data.filter(abteilung = self.kwargs.get('abteilung'))
 
 		# Alternative approach: Button group with possible statuses, create list of checked buttons on page load. Check against list.
