@@ -35,7 +35,7 @@
 							<li><a href="{{json_data.contact_info.consumer_site}}">Consumerseite</a></li>
 							<li><a href="{{json_data.contact_info.partner_site}}">Händlerportal</a></li>
 							<li>Telefon: {{json_data.contact_info.phone}}</li>
-							<li>Fax: {{json_data.contact_info.fax}}</li>
+							{% if json_data.contact_info.fax %}<li>Fax: {{json_data.contact_info.fax}}</li>{% endif %}
 							<li>Email: {{json_data.contact_info.email}}</li>
 						</ul>
 					</div>

@@ -1,7 +1,7 @@
 {"assona":
 	{
 		"name":"Assona",
-		"general_info": ["Schadensmeldung ueber den Warenwirtschaft, per Email, oder Haendlerseite"],
+		"general_info": ["Schadensmeldung über den Warenwirtschaft, per Email, oder Händlerseite"],
 		"contact_info":
 			{
 				"consumer_site":" http://plusgarantie.zeg.de/",
@@ -19,8 +19,8 @@
 			"at_invoice": [
 				"Rahmennummer",
 				"Schilderung des Schadenhergangs",
-				"Beschreibung Schadenbild (inkl. Einschaetzung der Ursache)",
-				"Hoehe der Reparaturkosten"
+				"Beschreibung Schadenbild (inkl. Einschätzung der Ursache)",
+				"Höhe der Reparaturkosten"
 			],
 			"at_pickup": [
 				"Unterschrift"
@@ -30,19 +30,19 @@
 			{
 				"name":"ZEG-Plus",
 				"versichert": [
-					"Verschleiss", 
+					"Verschleiß", 
 					"Pick-up-Service", 
 					"Diebstahl", 
 					"Vandalismus", 
-					"Akkuschaeden (auch durch Verschleiss"
+					"Akkuschäden (auch durch Verschleiß"
 				],
 				"nicht_versichert": [
 					"Inspektionen", 
 					"Wartungs- oder Einstellarbeiten",
-					"Miet- und Leihraedern",
+					"Miet- und Leihrädern",
 					"Verlieren, Stehen- oder Liegenlassen des E-Bikes oder Teile",
-					"Schaeden, wodurch die Funktionsfaehigkeit nicht beeintraechtigt wird",
-					"Schaeden, die beim Wettkampveranstaltung entstehen"
+					"Schäden, wodurch die Funktionsfähigkeit nicht beeinträchtigt wird",
+					"Schäden, die beim Wettkampveranstaltung entstehen"
 				],
 				"inspektion":"False",
 				"verschleiss":"True"
@@ -51,7 +51,7 @@
 	},
 	"bikeleasing":{
 		"name": "Bikeleasing Service",
-		"general_info": ["Schadensmeldung telefonisch, durch Haendlerportal, oder vom Nutzer durch Bikeleasing-App"],
+		"general_info": ["Schadensmeldung telefonisch, durch Händlerportal, oder vom Nutzer durch Bikeleasing-App"],
 		"contact_info":{
 			"consumer_site": "https://www.bikeleasing.de/",
 			"partner_site": "https://portal.bikeleasing.de/",
@@ -76,11 +76,11 @@
 		"packages": [
 			{
 				"name": "Premium",
-				"versichert": ["Diebstahl", "Sturzschaeden", "Mobilitaetsgarantie"],
+				"versichert": ["Diebstahl", "Sturzschäden", "Mobilitätsgarantie"],
 				"nicht_versichert": [
-					"Optische Maengel, wo die Funktionsfaehigkeit nicht beeintraechtigt ist",
+					"Optische Mängel, wo die Funktionsfähigkeit nicht beeinträchtigt ist",
 					"Einstellungs- / Justierarbeiten",
-					"Austausch von funktionsfaehigen Teilen",
+					"Austausch von funktionsfähigen Teilen",
 					"Eigenreparaturen"
 				],
 				"inspektion": "False",
@@ -88,11 +88,11 @@
 			},
 			{
 				"name": "Premium-Plus",
-				"versichert": ["Die Leistungen des Premium Pakets", "Verschleiss"],
+				"versichert": ["Die Leistungen des Premium Pakets", "Verschleiß"],
 				"nicht_versichert": [
-					"Optische Maengel, wo die Funktionsfaehigkeit nicht beeintraechtigt ist",
+					"Optische Mängel, wo die Funktionsfähigkeit nicht beeinträchtigt ist",
 					"Einstellungs- / Justierarbeiten",
-					"Austausch von funktionsfaehigen Teilen",
+					"Austausch von funktionsfähigen Teilen",
 					"Eigenreparaturen"
 				],
 				"inspektion": "False",
@@ -100,12 +100,75 @@
 			},
 			{
 				"name": "Inspektion Plus",
-				"versichert": ["2x Inspektion waehrend des Leasinglaufzeit"],
+				"versichert": ["2x Inspektion während des Leasinglaufzeit"],
 				"nicht_versichert": [
-					"Optische Maengel, wo die Funktionsfaehigkeit nicht beeintraechtigt ist",
+					"Optische Mängel, wo die Funktionsfähigkeit nicht beeinträchtigt ist",
 					"Einstellungs- / Justierarbeiten",
-					"Austausch von funktionsfaehigen Teilen",
+					"Austausch von funktionsfähigen Teilen",
 					"Eigenreparaturen"
+				],
+				"inspektion": "True",
+				"verschleiss": "False"
+			}
+		]
+	},
+	"bikeleasing":{
+		"name": "Bikeleasing-Service",
+		"general_info": [
+			"Rechnungsempfänger: Bikeleasing-Service",
+			"Inspektion, Schäden, und Verschleiß auf getrennte Rechnungen",
+			"Kundenanteil darf mit auf Rechnung stehen"
+		],
+		"contact_info": {
+			"consumer_site": "https://www.bikeleasing.de/",
+			"partner_site": "https://portal.bikeleasing.de/login",
+			"phone": "055 71 / 30 26 -0",
+			"email": "info@bikeleasing.de"
+		},
+		"needed_info":{
+			"at_annahme": [
+				"Service Card",
+				"Bei Inspektion: Inspektionscode"
+			],
+			"at_invoice": [
+				"Rechnungsempfänger: Bikeleasing-Service",
+				"Inspektion, Verschleiß, und Schäden auf getrennte Rechnungen"
+			],
+			"at_pickup": [
+				"Unterschrift"
+			]
+		},
+		"packages": [
+			{
+				"name": "Premium",
+				"versichert": ["UVV 1x Jährlich (kostenlos)"],
+				"nicht_versichert": [
+					"Verschleiß",
+					"Inspektion"
+				],
+				"inspektion": "False",
+				"verschleiss": "False"
+			},
+			{
+				"name": "Premium Plus",
+				"versichert": [
+					"UVV 1x Jährlich (kostenlos)",
+					"Verschleiß abhängig vom Preis des Rades (bis 5000 = 238/Jahr, bis 10k = 297/Jahr, ab 10k = 357/Jahr)"
+				],
+				"nicht_versichert": [
+					"Inspektion"
+				],
+				"inspektion": "False",
+				"verschleiss": "True"
+			},
+			{
+				"name": "Inspektion",
+				"versichert": [
+					"Versicherungsschutz des Premium/Premium Plus Pakets",
+					"1x jährlich Inspektion"
+				],
+				"nicht_versichert": [
+					"Verschleiß"
 				],
 				"inspektion": "True",
 				"verschleiss": "False"
@@ -114,13 +177,12 @@
 	},
 	"businessbike":{
 		"name": "Businessbike",
-		"general_info": ["Rechnungsempfaenger: PEAC"],
+		"general_info": ["Rechnungsempfänger bei Inspektion: PEAC oder Kunde", "Rechnungsempfänger bei Schäden: Regonova"],
 		"contact_info":{
 			"consumer_site": "https://www.businessbike.de/de",
 			"partner_site": "https://www.businessbike.de/portal/anmeldung",
 			"phone": "09161 - 782 0000",
-			"fax": "PLACEHOLDER TEXT",
-			"email": "PLACEHOLDER TEXT"
+			"email": "schaden@enra.eu"
 		},
 		"needed_info":{
 			"at_annahme": [
@@ -136,39 +198,39 @@
 		"packages": [
 			{
 				"name": "Durchsicht+",
-				"versichert": ["UVV 1x Jaehrlich (25 EUR)"],
+				"versichert": ["UVV 1x Jährlich (25€)"],
 				"nicht_versichert": [
 					"Inspektion",
-					"Verschleiss", 
-					"Schaeden, die nicht die Funktion beeintraechtigen",
+					"Verschleiß", 
+					"Schäden, die nicht die Funktion beeinträchtigen",
 					"Rost oder Oxidation",
-					"Kosten fuer Leihraeder",
-					"Nachtraegliche Veraenderungen, Umbauten, angebaute Teile"
+					"Kosten für Leihräder",
+					"Nachträgliche Veränderungen, Umbauten, angebaute Teile"
 				],
 				"inspektion": "False",
 				"verschleiss": "False"
 			},
 			{
 				"name": "Inspektion",
-				"versichert": ["1x jaehrlich Inspektion (75 EUR)"],
+				"versichert": ["1x jährlich Inspektion (75€)"],
 				"nicht_versichert": [
-					"Verschleiss",
-					"Schaeden, die nicht die Funktion beeintraechtigen",
+					"Verschleiß",
+					"Schäden, die nicht die Funktion beeinträchtigen",
 					"Rost oder Oxidation",
-					"Kosten fuer Leihraeder",
-					"Nachtraegliche Veraenderungen, Umbauten, angebaute Teile"
+					"Kosten für Leihräder",
+					"Nachträgliche Veränderungen, Umbauten, angebaute Teile"
 				],
 				"inspektion": "True",
 				"verschleiss": "False"
 			},
 			{
 				"name": "Full-Service",
-				"versichert": ["Jaehrlich Inspektion (75 EUR)", "Verschleiss (bis 225 EUR ueber gesamten Laufzeit)"],
+				"versichert": ["Jährlich Inspektion (75€)", "Verschleiß (bis 225€ über gesamten Laufzeit)"],
 				"nicht_versichert": [
-					"Schaeden, die nicht die Funktion beeintraechtigen",
+					"Schäden, die nicht die Funktion beeinträchtigen",
 					"Rost oder Oxidation",
-					"Kosten fuer Leihraeder",
-					"Nachtraegliche Veraenderungen, Umbauten, angebaute Teile"
+					"Kosten für Leihräder",
+					"Nachträgliche Veränderungen, Umbauten, angebaute Teile"
 				],
 				"inspektion": "True",
 				"verschleiss": "True"
@@ -182,12 +244,11 @@
 			"consumer_site": "https://www.enra.eu/",
 			"partner_site": "https://www.enraonline.de/login/",
 			"phone": "02131 - 124 360",
-			"fax": "PLACEHOLDER TEXT",
 			"email": "info@enra.eu"
 		},
 		"needed_info":{
 			"at_annahme": ["Vertragsnummer"],
-			"at_invoice": ["Rechnungsempfaenger: Kunde"],
+			"at_invoice": ["Rechnungsempfänger: Kunde"],
 			"at_pickup": ["Unterschrift"]
 		},
 		"packages": [
@@ -197,22 +258,22 @@
 					"Diebstahl / Teildiebstahl",
 					"Vandalismus",
 					"Sturz / Unfall",
-					"Unsachgemaesse Handhabung",
-					"Elektronikschaeden",
+					"Unsachgemässe Handhabung",
+					"Elektronikschäden",
 					"Akku-Defekte",
 					"Brand / Explosion",
 					"Blitzschlag / Sturm / Hagel",
-					"Produktions-/Materialfehler nach Ablauf der Gewaehrleistung",
+					"Produktions-/Materialfehler nach Ablauf der Gewährleistung",
 					"Pick-up-Service"
 				],
-				"nicht_versichert": ["Inspektion", "Verschleiss"],
+				"nicht_versichert": ["Inspektion", "Verschleiß"],
 				"inspektion": "False",
 				"verschleiss": "False"
 			},
 			{
 				"name": "Akku-Plus",
-				"versichert": ["Akkuverschless ab dem 7. Monat"],
-				"nicht_versichert": ["Inspektion", "Veschleiss"],
+				"versichert": ["Akkuverschleiß ab dem 7. Monat"],
+				"nicht_versichert": ["Inspektion", "Veschleiß"],
 				"inspektion": "False",
 				"verschleiss": "False"
 			}
@@ -221,7 +282,7 @@
 	"eurorad":{
 		"name": "Eurorad",
 		"general_info": [
-			"Schadensmeldung ueber den Warenwirtschaft, per Email, oder Haendlerseite", 
+			"Schadensmeldung über den Warenwirtschaft, per Email, oder Händlerseite", 
 			"Rechnungempfänger: AGL Leasing Services"
 		],
 		"contact_info":{
@@ -238,11 +299,11 @@
 				"Rahmennummer"
 			],
 			"at_invoice": [
-				"Rechnungsempfaenger: AGL Leasing Services",
+				"Rechnungsempfänger: AGL Leasing Services",
 				"Rahmennummer",
 				"Schilderung des Schadenhergangs",
-				"Beschreibung Schadenbild (inkl. Einschaetzung der Ursache",
-				"Hoehe der Reparaturkosten"
+				"Beschreibung Schadenbild (inkl. Einschätzung der Ursache",
+				"Höhe der Reparaturkosten"
 			],
 			"at_pickup": ["Unterschrift"]
 		},
@@ -250,27 +311,27 @@
 			{
 				"name": "Basis",
 				"versichert": [
-					"40 EUR Selbstbeteiligung",
-					"75 EUR Bagatellschadensgrenze",
+					"40€ Selbstbeteiligung",
+					"75€ Bagatellschadensgrenze",
 					"Unfallschaden",
 					"Sturzschaden",
 					"Fallschaden",
-					"Elektronischaeden",
+					"Elektronischäden",
 					"Bedienungsfehler",
 					"Handhabungsfehler",
 					"Diebstahl",
 					"Raub",
-					"Feuchtigkeitsschaeden am Akku",
+					"Feuchtigkeitsschäden am Akku",
 					"Produktions-, Konstruktions-, und Materialfehler"
 				],
 				"nicht_versichert": [
-					"Verschleiss",
-					"Kosten fuer Inspektionen",
-					"Kosten fuer Wartungs- oder Einstellarbeiten",
-					"Kosten von Miet- und Leihraedern",
+					"Verschleiß",
+					"Kosten für Inspektionen",
+					"Kosten für Wartungs- oder Einstellarbeiten",
+					"Kosten von Miet- und Leihrädern",
 					"Verlieren, Stehen- oder Liegenlassen des E-Bikes oder Teile",
-					"Schaeden, wodurch die Funktionsfaehigkeit nicht beeintraechtigt wird",
-					"Schaeden, die beim Wettkampfveranstaltung entstehen"
+					"Schäden, wodurch die Funktionsfähigkeit nicht beeinträchtigt wird",
+					"Schäden, die beim Wettkampfveranstaltung entstehen"
 				],
 				"inspektion": "False",
 				"verschleiss": "False"
@@ -279,19 +340,19 @@
 				"name": "Package_2",
 				"versichert": [
 					"Versicherungsschutz des Basis Pakets UND",
-					"100% Verschleiss ab dem 1. Tag",
-					"Mobilitaetsschutzpaket (Unfall und Pannenhilfe)",
-					"UVV-Pruefung nach dem 1. und 2. Versicherungsjahr",
+					"100% Verschleiß ab dem 1. Tag",
+					"Mobilitätsschutzpaket (Unfall und Pannenhilfe)",
+					"UVV-Prüfung nach dem 1. und 2. Versicherungsjahr",
 					"Keine Selbstbeteiligung",
 					"Keine Bagatellschadensgrenze"
 				],
 				"nicht_versichert": [
-					"Kosten fuer Inspektionen",
-					"Kosten fuer Wartungs- oder Einstellarbeiten",
-					"Kosten von Miet- und Leihraedern",
+					"Kosten für Inspektionen",
+					"Kosten für Wartungs- oder Einstellarbeiten",
+					"Kosten von Miet- und Leihrädern",
 					"Verlieren, Stehen- oder Liegenlassen des E-Bikes oder Teile",
-					"Schaeden, wodurch die Funktionsfaehigkeit nicht beeintraechtigt wird",
-					"Schaeden, die beim Wettkampfveranstaltung entstehen"
+					"Schäden, wodurch die Funktionsfähigkeit nicht beeinträchtigt wird",
+					"Schäden, die beim Wettkampfveranstaltung entstehen"
 				],
 				"inspektion": "True",
 				"verschleiss": "False"
@@ -301,18 +362,18 @@
 				"versichert": [
 					"Versicherungsschutz des Premium Pakets UND",
 					"Inspektion inkl. UVV nach dem 1. und 2. Versicherungsjahr",
-					"Kuendigung des Arbeitnehmers durch Arbeitgeber",
-					"Kuendigung des Arbeitnehmers durch Arbeitnehmer",
+					"Kündigung des Arbeitnehmers durch Arbeitgeber",
+					"Kündigung des Arbeitnehmers durch Arbeitnehmer",
 					"Unfalltod",
-					"Krankheitsbedingten Ausfall (bis max. 5000 EUR)",
+					"Krankheitsbedingten Ausfall (bis max. 5000€)",
 					"Elternzeit (bis 12 Monate)"
 				],
 				"nicht_versichert": [
-					"Kosten fuer Wartungs- oder Einstellarbeiten",
-					"Kosten von Miet- und Leihraedern",
+					"Kosten für Wartungs- oder Einstellarbeiten",
+					"Kosten von Miet- und Leihrädern",
 					"Verlieren, Stehen- oder Liegenlassen des E-Bikes oder Teile",
-					"Schaeden, wodurch die Funktionsfaehigkeit nicht beeintraechtigt wird",
-					"Schaeden, die beim Wettkampfveranstaltung entstehen"
+					"Schäden, wodurch die Funktionsfähigkeit nicht beeinträchtigt wird",
+					"Schäden, die beim Wettkampfveranstaltung entstehen"
 				],
 				"inspektion": "True",
 				"verschleiss": "True"
@@ -322,8 +383,8 @@
 	"jobrad":{
 		"name": "JobRad",
 		"general_info": [
-			"Rechnungsempfaenger bei Inspektion: Kunde",
-			"Rechnungsempfaenger bei Schaeden: MLF Mercator Leasing"
+			"Rechnungsempfänger bei Inspektion: Kunde",
+			"Rechnungsempfänger bei Schäden: MLF Mercator Leasing"
 		],
 		"contact_info":{
 			"consumer_site": "https://www.jobrad.org/",
@@ -335,15 +396,15 @@
 		"needed_info":{
 			"at_annahme": [
 				"Bei Inspektion: Service-ID",
-				"Bei Schaeden: Schadensfall-ID (nach Meldung des Schadens in Kundenportal)"
+				"Bei Schäden: Schadensfall-ID (nach Meldung des Schadens in Kundenportal)"
 			],
 			"at_invoice": [
-				"Bei Inspektion: Service bei Jobrad als 'Bereit zur Uebergabe' markieren",
-				"Bei Schaeden: Rechnung auf MLF-Mercator Leasing schreiben"
+				"Bei Inspektion: Service bei Jobrad als 'Bereit zur Übergabe' markieren",
+				"Bei Schäden: Rechnung auf MLF-Mercator Leasing schreiben"
 			],
 			"at_pickup": [
 				"Bei Inspektion: Abholcode",
-				"Bei Schaeden: Unterschrift"
+				"Bei Schäden: Unterschrift"
 			]
 		},
 		"packages": [
@@ -351,23 +412,23 @@
 				"name": "JobRad-Vollkasko",
 				"versichert": [
 					"Diebstahl / Vandalismus",
-					"Unfall- / Sturzschaeden",
+					"Unfall- / Sturzschäden",
 					"Bedienungsfehler",
-					"Elektronikschaeden",
+					"Elektronikschäden",
 					"24-Stunden-Notfallservice",
 					"Abschleppen bei Panne / Unfall",
-					"Ab 10km Entfernung vom Wohnsitz: Kosten f. Weiter-/Rueckfahrt",
-					"Ab 10km Entfernung vom Wohnsitz: Uebernahme von Uebernachtungskosten",
-					"Ab 10km Entfernung vom Wohnsitz: Ersatzfahrrad (max 25 EUR / Tag f. 14 Tage",
-					"Ab 10km Entfernung vom Wohnsitz: Fahrad-Ruecktransport"
+					"Ab 10km Entfernung vom Wohnsitz: Kosten f. Weiter-/Rückfahrt",
+					"Ab 10km Entfernung vom Wohnsitz: Übernahme von Übernachtungskosten",
+					"Ab 10km Entfernung vom Wohnsitz: Ersatzfahrrad (max 25€ / Tag f. 14 Tage",
+					"Ab 10km Entfernung vom Wohnsitz: Fahrad-Rücktransport"
 				],
 				"nicht_versichert": [
-					"Kosten fuer Inspektionen",
-					"Kosten fuer Wartungs- oder Einstellarbeiten",
-					"Kosten von Miet- und Leihraedern",
+					"Kosten für Inspektionen",
+					"Kosten für Wartungs- oder Einstellarbeiten",
+					"Kosten von Miet- und Leihrädern",
 					"Vierlieren, Stehen- oder Liegenlassen des E-Bikes oder Teile",
-					"Schaeden, wodurch die Funktionsfaehigkeit nicht beeintraechtigt wird",
-					"Schaeden, die beim Wettkampfveranstaltung entstehen"
+					"Schäden, wodurch die Funktionsfähigkeit nicht beeinträchtigt wird",
+					"Schäden, die beim Wettkampfveranstaltung entstehen"
 				],
 				"inspektion": "False",
 				"verschleiss": "False"
@@ -376,14 +437,14 @@
 				"name": "Jobrad-Inspektion",
 				"versichert": [
 					"Versicherungsschutz des JobRad-Vollkasko Pakets",
-					"Jaehrliche Inspektion in Wert von 70 EUR (von 1. Oktober bis 31. Maerz verfuegbar)"
+					"Jährliche Inspektion in Wert von 70€ (von 1. Oktober bis 31. März verfügbar)"
 				],
 				"nicht_versichert": [
-					"Kosten fuer Wartungs- oder Einstellarbeiten",
-					"Kosten von Miet- und Leihraedern",
+					"Kosten für Wartungs- oder Einstellarbeiten",
+					"Kosten von Miet- und Leihrädern",
 					"Vierlieren, Stehen- oder Liegenlassen des E-Bikes oder Teile",
-					"Schaeden, wodurch die Funktionsfaehigkeit nicht beeintraechtigt wird",
-					"Schaeden, die beim Wettkampfveranstaltung entstehen"
+					"Schäden, wodurch die Funktionsfähigkeit nicht beeinträchtigt wird",
+					"Schäden, die beim Wettkampfveranstaltung entstehen"
 				],
 				"inspektion": "True",
 				"verschleiss": "False"
@@ -393,14 +454,14 @@
 				"versichert": [
 					"Versicherungsschutz des JobRad-Inspektion Pakets",
 					"Verschleiss-Reparaturen ab dem 7. Monat",
-					"Gesamtguthaben von 420 EUR ueber drei Jahre"
+					"Gesamtguthaben von 420€ über drei Jahre"
 				],
 				"nicht_versichert": [
-					"Kosten fuer Wartungs- oder Einstellarbeiten",
-					"Kosten von Miet- und Leihraedern",
+					"Kosten für Wartungs- oder Einstellarbeiten",
+					"Kosten von Miet- und Leihrädern",
 					"Vierlieren, Stehen- oder Liegenlassen des E-Bikes oder Teile",
-					"Schaeden, wodurch die Funktionsfaehigkeit nicht beeintraechtigt wird",
-					"Schaeden, die beim Wettkampfveranstaltung entstehen"
+					"Schäden, wodurch die Funktionsfähigkeit nicht beeinträchtigt wird",
+					"Schäden, die beim Wettkampfveranstaltung entstehen"
 				],
 				"inspektion": "True",
 				"verschleiss": "True"

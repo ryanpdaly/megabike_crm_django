@@ -89,7 +89,7 @@ class InfoPage(LoginRequiredMixin, generic.base.TemplateView, common_mixins.Noti
 		return data
 
 	def read_json(self, path):
-		with open(path, 'r') as file:
+		with open(path, 'r', encoding="UTF-8") as file:
 			return json.load(file)
 
 
