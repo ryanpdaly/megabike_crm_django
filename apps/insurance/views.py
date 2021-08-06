@@ -1,3 +1,4 @@
+import datetime
 import json
 import logging
 
@@ -166,9 +167,14 @@ def schaden_list(request, status, company):
 		schaden_list = models.Schadensmeldung.objects.all()
 
 	if status != 'all':
+		faellig_date = (datetime.datetime.today() - datetime.timedelta(days=7)).date()
+
 		for schaden in schaden_list:
 			current_status = models.SchadensmeldungStatus.objects.filter(schadensmeldung=schaden).order_by('-id')[0]
-			logging.debug
+
+			if (status == 'faellig') and (current_status.date < faellig_date):
+				logging.debug(f'{current_status.date} > {faellig_date}')
+				schaden_list = schaden_list.exclude(pk=schaden.pk)
 			if (status == 'open') and (current_status.status in ['be', 'ab']):
 				schaden_list = schaden_list.exclude(pk=schaden.pk)
 			elif (status != 'open') and (current_status.status != status):

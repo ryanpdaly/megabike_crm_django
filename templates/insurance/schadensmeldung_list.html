@@ -34,12 +34,18 @@
               href="{% url 'insurance:schaden-list' status='all' company=company_selected %}">
                 Alle
           </a>
-                <a class="btn btn-{%if status_selected == 'open' %}success
-                                {%else%}secondary
-                                {%endif%}"
+          <a class="btn btn-{%if status_selected == 'open' %}success
+                              {%else%}secondary
+                              {%endif%}"
               href="{% url 'insurance:schaden-list' status='open' company=company_selected %}">
                 Offen
           </a>
+          <a class="btn btn-{%if status_selected == 'faellig' %}success
+                              {%else%}secondary
+                              {%endif%}"
+              href="{% url 'insurance:schaden-list' status='faellig' company=company_selected %}">
+                Fällig
+          </a>          
         </div>
 
         <div class="btn-group btn-group-sm shadow-sm">
