@@ -12,27 +12,49 @@
 {% endblock %}
 
 {% block content %}
+  <!-- Company filters -->
   <div>
-    <a {% if filter == 'all' %}
-      class="btn btn-outline-success btn-sm shadow-sm active" aria-pressed="true"
-    {% else %}
-      class="btn btn-secondary btn-sm shadow-sm button-sm"
-    {% endif %}
-      href="{% url 'insurance:schaden-list' filter='all' %}">
-      Alle Tickets
-    </a>
-    <a {% if filter == 'open' %}
-      class="btn btn-outline-success btn-sm shadow-sm active" aria-pressed="true"
-    {% else %}
-      class="btn btn-secondary btn-sm shadow-sm"
-    {% endif %}
-      href="{% url 'insurance:schaden-list' filter='open' %}">
-      Nur Offene Tickets
-    </a>
-  </div>
-  <br/> <!-- This is downright hackish. Fix the damned CSS. -->
+    <div class="btn-group btn-group-toggle" role="group" aria-label="Filter durch Versicherungsunternehmen">
+      {% for key, value in company_filters.items %}
+        <a class="btn btn-{%if value == company_selected %}success
+                          {%else%}secondary
+                          {%endif%}"
+          href="{% url 'insurance:schaden-list' status=status_selected company=value %}">
+            {{key}}
+        </a>
+      {% endfor %}
+      </div>
+  
+      <!-- Status filters -->
+      <div class="top-buffer">
+        <div class="btn-group btn-group-sm shadow-sm">
+          <a class="btn btn-{%if status_selected == 'all' %}success
+                                {%else%}secondary
+                                {%endif%}"
+              href="{% url 'insurance:schaden-list' status='all' company=company_selected %}">
+                Alle
+          </a>
+                <a class="btn btn-{%if status_selected == 'open' %}success
+                                {%else%}secondary
+                                {%endif%}"
+              href="{% url 'insurance:schaden-list' status='open' company=company_selected %}">
+                Offen
+          </a>
+        </div>
 
-    <div class='table-responsive'>
+        <div class="btn-group btn-group-sm shadow-sm">
+          {% for key, value in statuses.items %}
+            <a class="btn btn-{%if value == status_selected %}success
+                                {%else%}secondary
+                                {%endif%}"
+                href="{% url 'insurance:schaden-list' status=value company=company_selected %}">
+                  {{key}}
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    <div class='table-responsive top-buffer'>
       <table id="dataTable" class="table table-striped table-hover">
         <thead>
           <tr>
@@ -46,7 +68,6 @@
         </thead>
         <tbody>
           {% for schaden in schaden_list %}
-            {% if filter == 'all' or schaden|insurance_current_status not in erledigt %}
             <tr>
               <th scope="row">
                 <a href="{% url 'insurance:schaden-detail' pk=schaden.id%}"
@@ -71,7 +92,6 @@
               <td>{{ schaden.kunde.kundennummer }}: {{ schaden.kunde.nachname }}</td>
               <td>{{ schaden|insurance_last_update_date }}</td>
             </tr>
-          {% endif %}
           {% endfor %}
         </tbody>
       </table>
@@ -85,14 +105,17 @@
   <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
   <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
   <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
-  <script src="{% static 'vendor/datatables/date-eu.js' %}"></script>
+
+  <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+  <script src="//cdn.datatables.net/plug-ins/1.10.25/sorting/datetime-moment.js"></script>
 
   <!-- Intialize datatable -->
   <script>
     $(document).ready(function() {
+    $.fn.dataTable.moment('DD.MM.YYYY');
+
     var myTable = $('#dataTable').DataTable({
-      columnDefs: [{'targets': 5, type: 'date-euro'}],
-      order: [[5, 'desc']]
+      order: [[5, 'asc']]
       
       });
     });

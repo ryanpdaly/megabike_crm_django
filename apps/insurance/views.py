@@ -135,18 +135,53 @@ def display_policy(request, rn):
 
 # TODO: Rework as CBV
 @login_required
-def schaden_list(request, filter):
+def schaden_list(request, status, company):
+	company_filters = {
+		'Alle': 'all',
+		'Assona': 'as',
+		'Bikeleasing': 'bi',
+		'Businessbike': 'bu',
+		'ENRA': 'en',
+		'JobRad': 'jo',
+		'Lease-a-Bike': 'le',
+		'Mein-Dienstrad': 'me',
+		'Wertgarantie': 'we',
+	}
+	
+	statuses = {
+		'KV eingereicht': 'kv',
+		'KV freigegeben': 'kvf',
+		'Rechnung eingereicht': 're',
+		'Abzurechnen': 'azr',
+		'Bezahlt': 'be',
+		'Abgelehnt':'ab',
+	}
+	
+	# TODO: change insurance_current_status filter to use status instead of status display, then use our erledigt_status list from insurance.models
+	erledigt = ['Bezahlt', 'Abgelehnt',]	
 
-	schaden_list = models.Schadensmeldung.objects.all()
+	if company != 'all':
+		schaden_list = models.Schadensmeldung.objects.filter(unternehmen=company)
+	else:
+		schaden_list = models.Schadensmeldung.objects.all()
 
+	if status != 'all':
+		for schaden in schaden_list:
+			current_status = models.SchadensmeldungStatus.objects.filter(schadensmeldung=schaden).order_by('-id')[0]
 
-	# Might be better to change insurance_current_status filter to use status instead of status display, then use our erledigt_status list from insurance.models
-	erledigt = ['Bezahlt', 'Abgelehnt',]
+			if (status == 'open') and (current_status.get_status_display() in erledigt):
+				schaden_list = schaden_list.exclude(pk=schaden.pk)
+			elif current_status.status != status:
+				schaden_list = schaden_list.exclude(pk=schaden.pk)
 
 	context = {
 		'schaden_list': schaden_list,
-		'filter': filter,
+		'status_selected': status,
 		'erledigt': erledigt,
+		'statuses': statuses,
+
+		'company_selected': company,
+		'company_filters': company_filters,
 
 		'open_contact_tickets': common_mixins.get_user_contact_tickets(request),
 		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(request),

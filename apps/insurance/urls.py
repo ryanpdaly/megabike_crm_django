@@ -12,7 +12,7 @@ urlpatterns = [
 
 	path('info/<str:insurance>/', views.InfoPage.as_view(), name='info-page'),
 
-	re_path(r'^schaden/list=(?P<filter>\w+)$', views.schaden_list, name='schaden-list'),
+	re_path(r'^schaden/filters=(?P<status>\w+)&&(?P<company>\w+)$', views.schaden_list, name='schaden-list'),
 	
 	# Can't add trailing / to this without getting an error
 	path('schaden/new', views.SchadenCreate.as_view(), name='schaden-new'),
