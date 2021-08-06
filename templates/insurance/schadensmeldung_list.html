@@ -66,10 +66,10 @@
                 </a>
               </th>
               <td><a href="{% url 'insurance:schaden-detail' pk=schaden.id%}" {# create modal to complete basic info + files, button to edit #}>{{ schaden.get_unternehmen_display }}: {{ schaden.schadensnummer }}</a></td>
-              <td><a href="#" {# create modal for complete status + file, button to update #}>{{ schaden|insurance_current_status }}</a></td>
+              <td>{# <a href="#"create modal for complete status + file, button to update> #}{{ schaden|insurance_current_status }}{#</a>#}</td>
               <td>{{ schaden.auftragsnr }}{% if schaden.rechnungsnr %} / {{schaden.rechnungsnr}} {% endif %}</td>
               <td>{{ schaden.kunde.kundennummer }}: {{ schaden.kunde.nachname }}</td>
-              <td>vor <b>{{ schaden|insurance_last_update }}</b> Tage</td>
+              <td>{{ schaden|insurance_last_update_date }}</td>
             </tr>
           {% endif %}
           {% endfor %}
@@ -85,12 +85,14 @@
   <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
   <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
   <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+  <script src="{% static 'vendor/datatables/date-eu.js' %}"></script>
 
   <!-- Intialize datatable -->
   <script>
     $(document).ready(function() {
     var myTable = $('#dataTable').DataTable({
-      "order": [[5, 'desc']]
+      columnDefs: [{'targets': 5, type: 'date-euro'}],
+      order: [[5, 'desc']]
       
       });
     });
