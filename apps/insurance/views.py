@@ -158,7 +158,7 @@ def schaden_list(request, status, company):
 	}
 	
 	# TODO: change insurance_current_status filter to use status instead of status display, then use our erledigt_status list from insurance.models
-	erledigt = ['Bezahlt', 'Abgelehnt',]	
+	erledigt = ['Bezahlt', 'Abgelehnt',]
 
 	if company != 'all':
 		schaden_list = models.Schadensmeldung.objects.filter(unternehmen=company)
@@ -168,10 +168,10 @@ def schaden_list(request, status, company):
 	if status != 'all':
 		for schaden in schaden_list:
 			current_status = models.SchadensmeldungStatus.objects.filter(schadensmeldung=schaden).order_by('-id')[0]
-
-			if (status == 'open') and (current_status.get_status_display() in erledigt):
+			logging.debug
+			if (status == 'open') and (current_status.status in ['be', 'ab']):
 				schaden_list = schaden_list.exclude(pk=schaden.pk)
-			elif current_status.status != status:
+			elif (status != 'open') and (current_status.status != status):
 				schaden_list = schaden_list.exclude(pk=schaden.pk)
 
 	context = {
