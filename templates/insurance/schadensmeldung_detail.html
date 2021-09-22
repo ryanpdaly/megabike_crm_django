@@ -47,6 +47,10 @@
 					</a>
 					<table class='table table-striped top-buffer'>
 						<tr>
+							<th scope="row">Bearbeiter:</th>
+							<td>{{ schadensmeldung.get_bearbeiter_display }}</td>
+						</tr>
+						<tr>
 							<th scope='row'>Kunde:</th>
 							<td>{{ schadensmeldung.kunde.kundennummer }}: {{ schadensmeldung.kunde.nachname }} </td>
 						</tr>
@@ -153,7 +157,7 @@
 						{% for status in status_updates %}
 							<tr scope="row">
 								<th>{{ status.date }}</th>
-								<th>{{ status.mitarbeiter }}</th>
+								<td>{{ status.get_bearbeiter_display }}</td>
 								<td>{{ status.get_status_display }}</td>
 								<td>{{ status.anmerkung }}</td>
 							</tr>
