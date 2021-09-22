@@ -128,3 +128,6 @@ dmypy.json
 
 # PyCharm Inspection
 /.idea
+
+# Employee Names & Privacy stuff
+employees.json
