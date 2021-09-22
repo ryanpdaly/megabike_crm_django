@@ -64,6 +64,7 @@
       <table id="dataTable" class="table table-striped table-hover">
         <thead>
           <tr>
+            <th scope="col">Bearbeiter</th>
             <th scope="col"></th>
             <th scope="col">Schadensnummer</th>            
             <th scope="col">Status</th>
@@ -75,7 +76,8 @@
         <tbody>
           {% for schaden in schaden_list %}
             <tr>
-              <th scope="row">
+              <td scope="row">{{ schaden.get_bearbeiter_display }}</td>
+              <th>
                 <a href="{% url 'insurance:schaden-detail' pk=schaden.id%}"
                   {% if schaden|insurance_current_status in erledigt %}
                     class="btn btn-secondary btn-circle btn-sm">
@@ -94,7 +96,8 @@
               </th>
               <td><a href="{% url 'insurance:schaden-detail' pk=schaden.id%}" {# create modal to complete basic info + files, button to edit #}>{{ schaden.get_unternehmen_display }}: {{ schaden.schadensnummer }}</a></td>
               <td>{# <a href="#"create modal for complete status + file, button to update> #}{{ schaden|insurance_current_status }}{#</a>#}</td>
-              <td>{{ schaden.auftragsnr }}{% if schaden.rechnungsnr %} / {{schaden.rechnungsnr}} {% endif %}</td>
+              <td>{{ schaden.auftragsnr }}{% if schaden.rechnungsnr %} / {{schaden.rechnungsnr}}
+                {% if schaden.zahlungsreferenz %}<br> Zahlung: {{ schaden.zahlungsreferenz }}{% endif %}</td> {% endif %}
               <td>{{ schaden.kunde.kundennummer }}: {{ schaden.kunde.nachname }}</td>
               <td>{{ schaden|insurance_last_update_date }}</td>
             </tr>

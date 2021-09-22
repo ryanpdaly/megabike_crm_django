@@ -375,7 +375,8 @@ class SchadenStatusUpdate(LoginRequiredMixin, PermissionRequiredMixin, generic.C
 
 	template_name = 'insurance/schadensmeldung_status_update.html'
 
-	fields = ('status', 'anmerkung',)
+	# TODO: Why doesn't this use the form created in insurance/forms.py?
+	fields = ('status', 'anmerkung', 'bearbeiter')
 
 	def get_success_url(self, **kwargs):
 		return reverse('insurance:schaden-detail', kwargs={'pk':self.kwargs['pk']})
@@ -394,7 +395,8 @@ class SchadenStatusUpdate(LoginRequiredMixin, PermissionRequiredMixin, generic.C
 class SchadensmeldungAddFile(LoginRequiredMixin, generic.CreateView):
 	model = models.SchadensmeldungFile
 
-	fields = ('beschreibung', 'file', 'anmerkung')
+	# TODO: Why doesn't this use the form from insurance/forms.py?
+	fields = ('beschreibung', 'file', 'anmerkung', 'bearbeiter')
 
 	template_name = 'insurance/schadensmeldung_file_add.html'
 
