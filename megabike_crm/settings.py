@@ -153,10 +153,14 @@ LOGGING = {
         'console': {
             'class': 'logging.StreamHandler',
         },
+        'mail_admins':{
+            'level': 'WARNING',
+            'class': 'django.utils.log.AdminEmailHandler',
+        }
     },
     'loggers': {
         'django': {
-            'handlers': ['file', 'console'],
+            'handlers': ['file', 'console', 'mail_admins'],
             'level': 'INFO',
             'propagate': True,
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO')
