@@ -48,7 +48,7 @@ DEFAULT_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
-
+    'django_apscheduler',
 ]
 
 LOCAL_APPS =[
