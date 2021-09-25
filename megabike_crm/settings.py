@@ -14,10 +14,11 @@ import logging
 import os
 from pathlib import Path
 
+# TODO: This should absolutely raise an exception if unable to import
 try:
    from megabike_crm.local_settings import *
 except ImportError:
-    pass 
+    pass
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -31,13 +32,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '1b^hzox3ssx0_sln0e^7@0l#a4g(=j5b!5b+0ym5*#itm98zly'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if PRODUCTION:
+    DEBUG = False
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+else:
+    DEBUG = True
 
+# Security: 
+X_FRAME_OPTIONS = "SAMEORIGIN"
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.0.152',]
 
-
 # Application definition
-
 DEFAULT_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -74,7 +80,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-X_FRAME_OPTIONS = "SAMEORIGIN"
 ROOT_URLCONF = 'megabike_crm.urls'
 
 TEMPLATES = [
@@ -113,7 +118,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
@@ -140,6 +144,7 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
+# Logging:
 logging.basicConfig(
     level = logging.DEBUG,
     format = '[%(asctime)s] %(levelname)s %(message)s',
