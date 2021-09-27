@@ -56,8 +56,9 @@ LOCAL_APPS =[
     'apps.common',
     'apps.customers',
     'apps.insurance',
-    'apps.warranty',
     'apps.leasing',
+    'apps.scheduled_tasks',
+    'apps.warranty',
 ]
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -167,3 +168,18 @@ LOGGING = {
         },
     },
 }
+
+"""
+Scheduler config to:
+    - Store jobs in project database
+    - Execute jobs in threads inside the application process
+"""
+SCHEDULER CONFIG = {
+    "apscheduler.jobstores.default": {
+        "class": "django_apscheduler.jobstores:DjangoJobStore"
+    },
+    "apscheduler.executers.processpool": {
+        "type": "threadpool"
+    }
+}
+SCHEDULER_AUTOSTART = True

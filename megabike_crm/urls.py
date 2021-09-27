@@ -32,7 +32,9 @@ urlpatterns = [
     path('customers/', include('apps.customers.urls')),
     path('insurance/', include('apps.insurance.urls')),
     path('leasing/', include('apps.leasing.urls')),
+    path('tasks/', include('apps.scheduled_tasks.urls')),
     path('warranty/', include('apps.warranty.urls')),
+
 ]
 
 if settings.DEBUG:
