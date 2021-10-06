@@ -1,17 +1,19 @@
 import logging
 
 from django.apps import AppConfig
+from django.conf import settings
 
 
 logger = logging.getLogger(__name__)
 
+
 class ScheduledTasksConfig(AppConfig):
-    name = 'scheduled_tasks'
+    name = 'apps.scheduled_tasks'
 
     def ready(self):
-        logger.WARNING("scheduled_tasks app ready")
-        
-        from . import runscheduler
+        logger.info("scheduled_tasks app ready")
+
+        from apps.scheduled_tasks.management import startup_scheduler
         if settings.SCHEDULER_AUTOSTART:
-            runscheduler.start()
+            startup_scheduler.start()
         

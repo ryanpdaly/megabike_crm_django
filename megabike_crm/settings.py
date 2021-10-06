@@ -30,10 +30,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '1b^hzox3ssx0_sln0e^7@0l#a4g(=j5b!5b+0ym5*#itm98zly'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if PRODUCTION:
+    DEBUG = False
+else:
+    DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.0.152',]
-
+if PRODUCTION:
+    DEFAULT_DOMAIN = ALLOWED_HOSTS[2]
+else:
+    DEFAULT_DOMAIN = ALLOWED_HOSTS[0]
 
 # Application definition
 
@@ -161,7 +167,6 @@ LOGGING = {
     'loggers': {
         'django': {
             'handlers': ['file', 'console', 'mail_admins'],
-            'level': 'INFO',
             'propagate': True,
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO')
         },

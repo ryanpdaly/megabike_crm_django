@@ -204,6 +204,9 @@ class Schadensmeldung(models.Model):
         self.updated = datetime.datetime.today()
         super(Schadensmeldung, self).save()
 
+    def get_full_url(self):
+        pass
+
 
 # Rename to SchadensStatus, name unecessarily long.
 class SchadensmeldungStatus(models.Model):

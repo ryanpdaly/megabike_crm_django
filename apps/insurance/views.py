@@ -166,6 +166,8 @@ def schaden_list(request, status, company):
 	else:
 		schaden_list = models.Schadensmeldung.objects.all()
 
+
+	# TODO: This filter seems a little convoluted, unneccesarily complicated. Rework this.
 	if status != 'all':
 		faellig_date = (datetime.datetime.today() - datetime.timedelta(days=7)).date()
 

@@ -35,7 +35,7 @@ def count_open_tickets(kdnr):
 	return open_tickets
 
 @register.filter(name='insurance_last_update_date')
-def get_last_update_date(schaden):
+def insurance_last_update_date(schaden):
 	last_update_date = models.SchadensmeldungStatus.objects.filter(schadensmeldung=schaden).order_by('-id')[0].date
 
 	return last_update_date

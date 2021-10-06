@@ -1,0 +1,56 @@
+{% load static %}
+{% load insurance_filters %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            text-align: center;
+        }
+
+        th, td {
+            padding: 15px;
+        }
+    </style>
+</head>
+<body>
+    <p>Insgesamt {{ticket_list.count}} fällige Reklamationstickets am {{ date }}:</p>
+    <table>
+        <thead>
+            <tr>
+                <th scope="col">Letzte Bearbeitung</th>
+                <th scope="col">Rechnung: Kunde</th>
+                <th scope="col">Unternehmen</th>
+                <th scope="col">Bearbeiter</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ticket in ticket_list %}
+                <tr>
+                    <td scope="row">
+                        {{ticket|insurance_last_update_date}}<br/>
+                        {{ ticket|insurance_current_status }}
+                    </td>
+                    <th>
+                        {# TODO: Figure hour how to include domain in URL #}
+                        <a href="{% url 'insurance:schaden-detail' pk=ticket.id %}">
+                        </a>
+                            {{ ticket.rechnungsnr }}: {{ ticket.kunde.nachname }}<br/>
+                            {{domain}}{% url 'insurance:schaden-detail' pk=ticket.id %}
+
+                    </th>
+                    <td>
+                        {{ ticket.get_unternehmen_display }}: {{ ticket.schadensnummer }} <br/>
+                        {% if ticket.zahlungsreferenz %}{{ ticket.zahlungsreferenz }}{% endif %}
+                    </td>
+                    <td>{{ ticket.get_bearbeiter_display }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

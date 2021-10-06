@@ -6,6 +6,7 @@ from megabike_crm import local_settings
 
 # Create your views here.
 
+"""
 def fällig_versicherungs_tickets():
 	send_mail(
 		'Test scheduled email',
@@ -14,3 +15,4 @@ def fällig_versicherungs_tickets():
 		INSURANCE_EMPLOYEES,
 		fail_silently = False,
 		)
+"""
