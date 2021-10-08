@@ -55,9 +55,6 @@
 							{{ form.non_field_errors }}
 							<table>
 								<div class="fieldWrapper">
-									<tr>	
-										<td colspan="2">{{ form.unternehmen.error }}</td>
-									</tr>
 									<tr>
 										<td>{{ form.unternehmen.label_tag }}</td>
 										<td>{{ form.unternehmen }}</td>
@@ -65,17 +62,11 @@
 								</div>
 								<div class="fieldWrapper">
 									<tr>
-										<td colspan="2">{{ form.schadensnummer.error }}</td>
-									</tr>
-									<tr>
 										<td>{{ form.schadensnummer.label_tag }}</td>
 										<td>{{ form.schadensnummer }}</td>
 									</tr>
 								</div>
 								<div class="fieldWrapper">
-									<tr>
-										<td colspan="2">{{ form.auftragsnr.error }}</td>
-									</tr>
 									<tr>
 										<td>{{ form.auftragsnr.label_tag }}</td>
 										<td>{{ form.auftragsnr }}</td>
@@ -83,17 +74,11 @@
 								</div>
 								<div class="fieldWrapper">
 									<tr>
-										<td colspan="2">{{ form.rechnungsnr.error }}</td>
-									</tr>
-									<tr>
 										<td>{{ form.rechnungsnr.label_tag }}</td>
 										<td>{{ form.rechnungsnr }}</td>
 									</tr>
 								</div>
 								<div class="fieldWrapper">
-									<tr>
-										<td colspan="2">{{ form.reparatur_datum.error }}</td>
-									</tr>
 									<tr>
 										<td>{{ form.reparatur_datum.label_tag }}</td>
 										<td>
@@ -108,17 +93,11 @@
 								</div>
 								<div class="fieldWrapper">
 									<tr>
-										<td colspan="2">{{ form.zahlungsreferenz.error }}</td>
-									</tr>
-									<tr>
 										<td>{{ form.zahlungsreferenz.label_tag }}</td>
 										<td>{{ form.zahlungsreferenz }}</td>
 									</tr>
 								</div>
 								<div class="fieldWrapper">
-									<tr>
-										<td colspan="2">{{ form.bearbeiter.error }}</td>
-									</tr>
 									<tr>
 										<td>{{ form.bearbeiter.label_tag }}</td>
 										<td>{{ form.bearbeiter }}</td>
@@ -137,8 +116,32 @@
 						</div>
 						<div class="card-body">
 							<table>
-								{{ status_form.as_table }}
+									{{ status_form.as_table }}
 							</table>
+							<!--
+							{% for form in status_form %}
+							<table>
+								<div class="fieldWrapper">
+									<tr>
+										<td>{{ form.status.label_tag }}</td>
+										<td>{{ form.status }}</td>
+									</tr>
+								</div>
+								<div class="fieldWrapper">
+									<tr>
+										<td>{{ form.anmerkung.label_tag }}</td>
+										<td >{{ form.anmerkung }}</td>
+									</tr>
+								</div>
+								<div class="fieldWrapper">
+									<tr>
+										<td>{{ form.bearbeiter.label_tag }}</td>
+										<td>{{ form.bearbeiter }}</td>
+									</tr>
+								</div>
+							</table>
+							{% endfor %}
+							-->
 						</div>
 					</div>
 				</div>

@@ -82,6 +82,12 @@ class SchadensmeldungForm(forms.ModelForm):
 				})
 		}
 		
+	def __init__(self, *args, **kwargs):
+		super(SchadensmeldungForm, self).__init__(*args, **kwargs)
+		for field in self.fields:
+			self.fields[field].widget.attrs.update({
+				'class': 'form-control'
+				})
 
 
 class SchadensmeldungStatusForm(forms.ModelForm):
@@ -89,11 +95,25 @@ class SchadensmeldungStatusForm(forms.ModelForm):
 		model = models.SchadensmeldungStatus
 		fields = ('status', 'anmerkung', 'bearbeiter')
 
+	def __init__(self, *args, **kwargs):
+		super(SchadensmeldungStatusForm, self).__init__(*args, **kwargs)
+		for field in self.fields:
+			self.fields[field].widget.attrs.update({
+				'class': 'form-control'
+				})
+
 
 class SchadensmeldungFileForm(forms.ModelForm):
 	class Meta:
 		model = models.SchadensmeldungFile
 		fields = ('beschreibung', 'file', 'anmerkung', 'bearbeiter')
+
+	def __init__(self, *args, **kwargs):
+		super(SchadensmeldungFileForm, self).__init__(*args, **kwargs)
+		for field in self.fields:
+			self.fields[field].widget.attrs.update({
+				'class': 'form-control'
+				})
 
 
 class CustomStatusFormset(BaseInlineFormSet):
@@ -102,6 +122,14 @@ class CustomStatusFormset(BaseInlineFormSet):
 			status = form.cleaned_data.get('status')
 			if not status:
 				raise ValidationError('Keinen Status', 'error')
+
+	def __init__(self, *args, **kwargs):
+		super(CustomStatusFormset, self).__init__(*args, **kwargs)
+
+		for form in self.forms:
+			for field in form.fields:
+				form.fields[field].widget.attrs.update({'class': 'form-control'})
+
 
 
 StatusFormset = inlineformset_factory(
