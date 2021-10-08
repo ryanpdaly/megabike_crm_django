@@ -215,8 +215,10 @@ class SchadensmeldungStatus(models.Model):
         ('kv', 'KV eingereicht'),
         ('kvf', 'KV freigegeben'),
         ('re', 'Rechnung eingereicht'),
-        ('be', 'Bezahlt'),
+        ('nb', 'In Nachbearbeitung'),
         ('azr', 'Abzurechnen'),
+        ('rs', 'Restsumme offen'),
+        ('be', 'Bezahlt'),
         ('ab', 'Abgelehnt'),
     )
 
