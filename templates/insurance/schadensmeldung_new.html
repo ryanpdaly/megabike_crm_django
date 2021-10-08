@@ -1,6 +1,30 @@
 {% extends 'common/base.html' %}
 {% load static %}
 
+{% block head %}
+	<script type="text/javascript" src="{% static 'js/jquery.form.js' %}"></script>
+
+    <!-- Font Awesome -->
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+    <!-- JQuery UI -->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+	integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+	crossorigin="anonymous"></script>
+
+    <!-- Moment.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.min.js" integrity="sha256-VBLiveTKyUZMEzJd6z2mhfxIqz3ZATCuVMawPZGzIfA=" crossorigin="anonymous"></script>
+
+    <!-- Tempus Dominus Bootstrap 4 -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/css/tempusdominus-bootstrap-4.min.css" integrity="sha256-XPTBwC3SBoWHSmKasAk01c08M6sIA5gF5+sRxqak2Qs=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/js/tempusdominus-bootstrap-4.min.js" integrity="sha256-z0oKYg6xiLq3yJGsp/LsY9XykbweQlHl42jHv2XTBz4=" crossorigin="anonymous"></script>
+	<!--
+	<script type="text/javascript" src="{% static 'vendor/tempus-dominus/tempusdominus-bootstrap4.min.js"></script>
+	<link rel="stylesheet" href="{% static 'vendor/tempus-dominus/tempusdominus-bootstrap4.min.css">-->
+
+
+{% endblock %}
+
 {% block header %}
 	<h1 class="h2 mb-0 text-gray-800">Schadensmeldung erstellen</h1>
 {% endblock %}
@@ -19,9 +43,86 @@
 							<div id="replaceable-content">
 								{% include 'customers/customer_search_partial.html' %}
 							</div>
+							<br/> {# TODO: Get rid of this. Put form into its own div with top-buffer #}
+							<!-- 
 							<table>
 								{{ form.as_table }}
 							</table>
+							-->
+							{{ form.non_field_errors }}
+							<table>
+								<div class="fieldWrapper">
+									<tr>	
+										<td colspan="2">{{ form.unternehmen.error }}</td>
+									</tr>
+									<tr>
+										<td>{{ form.unternehmen.label_tag }}</td>
+										<td>{{ form.unternehmen }}</td>
+									</tr>
+								</div>
+								<div class="fieldWrapper">
+									<tr>
+										<td colspan="2">{{ form.schadensnummer.error }}</td>
+									</tr>
+									<tr>
+										<td>{{ form.schadensnummer.label_tag }}</td>
+										<td>{{ form.schadensnummer }}</td>
+									</tr>
+								</div>
+								<div class="fieldWrapper">
+									<tr>
+										<td colspan="2">{{ form.auftragsnr.error }}</td>
+									</tr>
+									<tr>
+										<td>{{ form.auftragsnr.label_tag }}</td>
+										<td>{{ form.auftragsnr }}</td>
+									</tr>
+								</div>
+								<div class="fieldWrapper">
+									<tr>
+										<td colspan="2">{{ form.rechnungsnr.error }}</td>
+									</tr>
+									<tr>
+										<td>{{ form.rechnungsnr.label_tag }}</td>
+										<td>{{ form.rechnungsnr }}</td>
+									</tr>
+								</div>
+								<div class="fieldWrapper">
+									<tr>
+										<td colspan="2">{{ form.reparatur_datum.error }}</td>
+									</tr>
+									<tr>
+										<td>{{ form.reparatur_datum.label_tag }}</td>
+										<td>
+											<div class="input-group date" id="datepicker1" data-target-input="nearest">
+												{{ form.reparatur_datum }}
+												<div class="input-group-append" data-target="#datepicker1" data-toggle="datepicker">
+													<div class="input-group-text"><i class="fa fa-calendar"></i></div>
+												</div>
+											</div>
+										</td>
+									</tr>
+								</div>
+								<div class="fieldWrapper">
+									<tr>
+										<td colspan="2">{{ form.zahlungsreferenz.error }}</td>
+									</tr>
+									<tr>
+										<td>{{ form.zahlungsreferenz.label_tag }}</td>
+										<td>{{ form.zahlungsreferenz }}</td>
+									</tr>
+								</div>
+								<div class="fieldWrapper">
+									<tr>
+										<td colspan="2">{{ form.bearbeiter.error }}</td>
+									</tr>
+									<tr>
+										<td>{{ form.bearbeiter.label_tag }}</td>
+										<td>{{ form.bearbeiter }}</td>
+									</tr>
+								</div>
+							</table>				
+							
 							<input type='submit' value='Save' class='btn btn-primary btn-large btn-block'>
 						</div>
 					</div>
@@ -48,4 +149,11 @@
 	{{ block.super }}
 	<script type="text/javascript" src="{% static 'js/main.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/jquery.form.js' %}"></script>
+
+	<script type="text/javascript">
+		$(function (){
+			$("#datepicker1").datepicker();
+		});
+	</script>
+
 {% endblock %}

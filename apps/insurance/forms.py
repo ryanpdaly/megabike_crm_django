@@ -4,6 +4,9 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.forms import SelectDateWidget
 from django.forms.models import BaseInlineFormSet, inlineformset_factory
+from django.forms.widgets import DateInput
+
+from tempus_dominus.widgets import DatePicker
 
 from apps.customers.models import Customer, Bike
 import apps.insurance.models as models
@@ -73,7 +76,12 @@ class SchadensmeldungForm(forms.ModelForm):
 		model = models.Schadensmeldung
 		fields = ('unternehmen', 'schadensnummer', 'auftragsnr', 'rechnungsnr',
 					'reparatur_datum', 'zahlungsreferenz', 'bearbeiter')
-		widgets = {'reparatur_datum': SelectDateWidget(years=valid_years)}
+		widgets = {'reparatur_datum': DateInput(attrs={
+				'class': 'form-control datetimepicker-input',
+				'data-target': '#datetimepicker1'
+				})
+		}
+		
 
 
 class SchadensmeldungStatusForm(forms.ModelForm):

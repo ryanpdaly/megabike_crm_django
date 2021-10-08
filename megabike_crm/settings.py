@@ -48,7 +48,7 @@ DEFAULT_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
-
+    'tempus_dominus'
 ]
 
 LOCAL_APPS =[
@@ -62,7 +62,11 @@ LOCAL_APPS =[
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
+
+# Installed Apps Settings
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+TEMPUS_DOMINUS_LOCALIZE = True
+TEMPUS_DOMINUS_INCLUDE_ASSETS = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
