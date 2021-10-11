@@ -125,7 +125,9 @@ LANGUAGE_CODE = 'de-de'
 
 TIME_ZONE = 'Europe/Berlin'
 
+# TODO: Are both of these the wrong format? Should they be %d.%m.%Y?
 DATE_FORMAT = 'd.m.Y'
+DATE_INPUT_FORMATS = 'd.m.Y'
 
 USE_I18N = True
 
@@ -144,30 +146,46 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
+
 # TODO: Setup email logging
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'timestamp': {
+            'format': '{asctime} {levelname} {message}',
+            'style': '{'
+        }
+    },
     'handlers':{
         'file': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
             'filename': 'logs/megabikeCRM-info.log',
+            'formatter': 'timestamp',
         },
         'console': {
+            'level': 'DEBUG',
             'class': 'logging.StreamHandler',
+            'formatter': 'timestamp'
         },
         'mail_admins':{
             'level': 'WARNING',
             'class': 'django.utils.log.AdminEmailHandler',
+            'formatter': 'timestamp'
         }
     },
     'loggers': {
+        '': {
+            'handlers': ['file', 'console',],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
         'django': {
             'handlers': ['file', 'console', 'mail_admins'],
-            'level': 'INFO',
+            #'level': 'DEBUG',
             'propagate': True,
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO')
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG')
         },
     },
 }

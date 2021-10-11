@@ -28,3 +28,10 @@ class CustomerSearchForm(forms.ModelForm):
 		model = models.Customer
 		fields = ['kundennummer']
 		widgets = {'kundennummer':forms.NumberInput(attrs={'placeholder':'Kundennummer', 'id':'kdnr_checked'})}
+
+	def __init__(self, *args, **kwargs):
+		super(CustomerSearchForm, self).__init__(*args, **kwargs)
+		for field in self.fields:
+			self.fields[field].widget.attrs.update({
+				'class': 'form-control'
+				})

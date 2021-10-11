@@ -20,6 +20,8 @@ from apps.insurance import models
 from apps.warranty import models as warranty_models
 
 
+logger = logging.getLogger(__name__)
+
 # TODO: Rework as CBV
 @login_required
 def input_insurance(request, rn, insurance):
@@ -227,7 +229,6 @@ class SchadenDetail(LoginRequiredMixin, generic.DetailView, common_mixins.Notifi
 # TODO: This view doesn't open the modal, seems to redirect to normal SchadenDetail
 class SchadenDetailModal(LoginRequiredMixin, generic.DetailView):
 	model = models.Schadensmeldung
-	#template_name_suffix = '_detail_modal'
 	template = 'schadensmeldung_detail_modal.html'
 
 	# TODO: This get_context_data is exactly the same as in SchadenDetail, create ContextMixin?
@@ -322,8 +323,15 @@ class SchadenCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateV
 		# Handles POST requests, instatiates form instance and formsets with POST variables and checks validity
 		self.object = None
 		form_class = self.get_form_class()
-		form = self.get_form(form_class)
 		
+		# TODO: This seems janky as hell. Figure out how to do this in the regular form processing/cleaning of Django.
+		post_data = request.POST.copy()
+		input_date = post_data['reparatur_datum']
+		post_data['reparatur_datum'] = datetime.datetime.strptime(input_date, '%d.%m.%Y')
+		request.POST = post_data
+
+		form = self.get_form(form_class)
+
 		customer_search = customer_forms.CustomerSearchForm(self.request.POST, instance=form.instance)
 		status_form = forms.StatusFormset(self.request.POST, instance=form.instance)
 		
@@ -332,11 +340,12 @@ class SchadenCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateV
 		else:
 			return self.form_invalid(request, form, status_form, customer_search)
 
+
 	def form_valid(self, request, form, status_form, customer_search):
-		# Called if all forms valid. Creates ReklaTicket and ReklaTicketStatus instances, redirects to success url
+		# Called if all forms valid. Creates Schadensmeldung and SchadensmeldungStatus instances, redirects to success url
 		self.object = form.save(commit=False)
 		
-		# pre-processing for ReklaTicket goes here
+		# pre-processing for Schadensmeldung Ticket goes here
 		self.object.kunde_id = customer_search.cleaned_data['kundennummer']
 		
 		self.object.save()
@@ -357,6 +366,7 @@ class SchadenCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateV
 		)
 
 
+# TODO: Errors are not displayed on modal, redirects to page without any styling
 class SchadenEdit(LoginRequiredMixin, PermissionRequiredMixin, generic.UpdateView, common_mixins.NotificationsMixin):
 	model = models.Schadensmeldung
 	permission_required = ()
@@ -364,6 +374,15 @@ class SchadenEdit(LoginRequiredMixin, PermissionRequiredMixin, generic.UpdateVie
 	template_name_suffix = '_edit'
 	
 	form_class = forms.SchadensmeldungForm
+
+	# TODO: This seems janky as hell. Figure out how to properly format date input as string within the regular processes of Django
+	def post(self, request, *args, **kwargs):
+		post_data = request.POST.copy()
+		input_date = post_data['reparatur_datum']
+		post_data['reparatur_datum'] = datetime.datetime.strptime(input_date, '%d.%m.%Y')
+		request.POST = post_data
+
+		return super(SchadenEdit, self).post(request, *args, **kwargs)
 
 	def get_success_url(self, **kwargs):
 		return reverse('insurance:schaden-detail', kwargs={'pk':self.kwargs['pk']})
@@ -391,7 +410,7 @@ class SchadenStatusUpdate(LoginRequiredMixin, PermissionRequiredMixin, generic.C
 		form.instance.schadensmeldung = schaden[0]
 		return super().form_valid(form)
 
-# Create a custom.AddFile class?
+
 class SchadensmeldungAddFile(LoginRequiredMixin, generic.CreateView):
 	model = models.SchadensmeldungFile
 

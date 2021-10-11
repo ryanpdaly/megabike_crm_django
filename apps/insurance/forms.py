@@ -76,11 +76,17 @@ class SchadensmeldungForm(forms.ModelForm):
 		model = models.Schadensmeldung
 		fields = ('unternehmen', 'schadensnummer', 'auftragsnr', 'rechnungsnr',
 					'reparatur_datum', 'zahlungsreferenz', 'bearbeiter')
-		widgets = {'reparatur_datum': DateInput(attrs={
-				'class': 'form-control datetimepicker-input',
-				'data-target': '#datetimepicker1'
-				})
-		}
+
+		widgets = {'reparatur_datum': DatePicker(
+			attrs = {
+				'append': 'fa fa-calendar',
+				'icon_toggle': True,
+			},
+			options = {
+				'format': 'DD.MM.YYYY',
+			}
+			)}
+	
 		
 	def __init__(self, *args, **kwargs):
 		super(SchadensmeldungForm, self).__init__(*args, **kwargs)

@@ -3,29 +3,6 @@
 
 {% block head %}
 	<script type="text/javascript" src="{% static 'js/jquery.form.js' %}"></script>
-
-
-    <!-- Font Awesome -- ALREADY DEFINED IN BASE -->
-    <!--<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">-->
-
-    {% comment %}
-    <!-- JQuery UI -->
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
-	integrity="sha256-VazP97ZCwtekAsvgPB
-	-->
-
-    <!-- Moment.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.min.js" integrity="sha256-VBLiveTKyUZMEzJd6z2mhfxIqz3ZATCuVMawPZGzIfA=" crossorigin="anonymous"></script>
-
-    <!-- Tempus Dominus Bootstrap 4 -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/css/tempusdominus-bootstrap-4.min.css" integrity="sha256-XPTBwC3SBoWHSmKasAk01c08M6sIA5gF5+sRxqak2Qs=" crossorigin="anonymous" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/js/tempusdominus-bootstrap-4.min.js" integrity="sha256-z0oKYg6xiLq3yJGsp/LsY9XykbweQlHl42jHv2XTBz4=" crossorigin="anonymous"></script>
-	<!--
-	<script type="text/javascript" src="{% static 'vendor/tempus-dominus/tempusdominus-bootstrap4.min.js"></script>
-	<link rel="stylesheet" href="{% static 'vendor/tempus-dominus/tempusdominus-bootstrap4.min.css">-->
-	{% endcomment %}
-
-
 {% endblock %}
 
 {% block header %}
@@ -34,7 +11,7 @@
 
 {% block content %}
 	<div class="container-fluid">
-		<form method='POST' enctype="multipart/form-data">
+		<form action="" method='POST' enctype="multipart/form-data">
 			{% csrf_token %}
 			<div class="row top-buffer">
 				<div class="col-xl-6">
@@ -47,64 +24,9 @@
 								{% include 'customers/customer_search_partial.html' %}
 							</div>
 							<br/> {# TODO: Get rid of this. Put form into its own div with top-buffer #}
-							<!-- 
 							<table>
 								{{ form.as_table }}
 							</table>
-							-->
-							{{ form.non_field_errors }}
-							<table>
-								<div class="fieldWrapper">
-									<tr>
-										<td>{{ form.unternehmen.label_tag }}</td>
-										<td>{{ form.unternehmen }}</td>
-									</tr>
-								</div>
-								<div class="fieldWrapper">
-									<tr>
-										<td>{{ form.schadensnummer.label_tag }}</td>
-										<td>{{ form.schadensnummer }}</td>
-									</tr>
-								</div>
-								<div class="fieldWrapper">
-									<tr>
-										<td>{{ form.auftragsnr.label_tag }}</td>
-										<td>{{ form.auftragsnr }}</td>
-									</tr>
-								</div>
-								<div class="fieldWrapper">
-									<tr>
-										<td>{{ form.rechnungsnr.label_tag }}</td>
-										<td>{{ form.rechnungsnr }}</td>
-									</tr>
-								</div>
-								<div class="fieldWrapper">
-									<tr>
-										<td>{{ form.reparatur_datum.label_tag }}</td>
-										<td>
-											<div class="input-group date" id="datetimepicker1" data-target-input="nearest">
-												{{ form.reparatur_datum }}
-												<div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
-													<div class="input-group-text"><i class="fa fa-calendar"></i></div>
-												</div>
-											</div>
-										</td>
-									</tr>
-								</div>
-								<div class="fieldWrapper">
-									<tr>
-										<td>{{ form.zahlungsreferenz.label_tag }}</td>
-										<td>{{ form.zahlungsreferenz }}</td>
-									</tr>
-								</div>
-								<div class="fieldWrapper">
-									<tr>
-										<td>{{ form.bearbeiter.label_tag }}</td>
-										<td>{{ form.bearbeiter }}</td>
-									</tr>
-								</div>
-							</table>				
-							
 							<input type='submit' value='Save' class='btn btn-primary btn-large btn-block'>
 						</div>
 					</div>
@@ -118,30 +40,6 @@
 							<table>
 									{{ status_form.as_table }}
 							</table>
-							<!--
-							{% for form in status_form %}
-							<table>
-								<div class="fieldWrapper">
-									<tr>
-										<td>{{ form.status.label_tag }}</td>
-										<td>{{ form.status }}</td>
-									</tr>
-								</div>
-								<div class="fieldWrapper">
-									<tr>
-										<td>{{ form.anmerkung.label_tag }}</td>
-										<td >{{ form.anmerkung }}</td>
-									</tr>
-								</div>
-								<div class="fieldWrapper">
-									<tr>
-										<td>{{ form.bearbeiter.label_tag }}</td>
-										<td>{{ form.bearbeiter }}</td>
-									</tr>
-								</div>
-							</table>
-							{% endfor %}
-							-->
 						</div>
 					</div>
 				</div>
@@ -155,7 +53,8 @@
 	{{ block.super }}
 	<script type="text/javascript" src="{% static 'js/main.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/jquery.form.js' %}"></script>
-	    <!-- JQuery UI -->
+	
+	<!-- JQuery UI -->
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
 	integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
 	crossorigin="anonymous"></script>
@@ -163,16 +62,5 @@
     <!-- Moment.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.min.js" integrity="sha256-VBLiveTKyUZMEzJd6z2mhfxIqz3ZATCuVMawPZGzIfA=" crossorigin="anonymous"></script>
 
-    <!-- Tempus Dominus Bootstrap 4 -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/css/tempusdominus-bootstrap-4.min.css" integrity="sha256-XPTBwC3SBoWHSmKasAk01c08M6sIA5gF5+sRxqak2Qs=" crossorigin="anonymous" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/js/tempusdominus-bootstrap-4.min.js" integrity="sha256-z0oKYg6xiLq3yJGsp/LsY9XykbweQlHl42jHv2XTBz4=" crossorigin="anonymous"></script>
-
-	<script type="text/javascript">
-		$(function (){
-			$("#datetimepicker1").datetimepicker({
-				format: 'DD.MM.YYYY'
-				});
-		});
-	</script>
-
+	{{ form.media }}
 {% endblock %}
