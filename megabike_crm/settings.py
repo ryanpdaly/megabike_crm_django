@@ -15,7 +15,7 @@ import os
 from pathlib import Path
 
 try:
-   from megabike_crm.local_settings import *
+    from megabike_crm.local_settings import *
 except ImportError:
     pass 
 
@@ -48,6 +48,7 @@ DEFAULT_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
@@ -73,6 +74,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.sites.middleware.CurrentSiteMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -134,6 +136,11 @@ USE_I18N = True
 USE_L10N = False
 
 USE_TZ = True
+
+"""
+Settings for Django Sites Framework
+"""
+SITE_ID = 0
 
 
 # Static files (CSS, JavaScript, Images)

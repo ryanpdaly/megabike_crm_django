@@ -2,7 +2,8 @@ import datetime
 import logging
 
 from django.conf import settings
-# from django.conf import local_settings
+from django.contrib.sites.models import Site
+from django.contrib.sites import shortcuts
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.urls import reverse
@@ -18,8 +19,8 @@ import apps.insurance.models as insurance_models
 logger = logging.getLogger(__name__)
 
 
-# TODO: This sends two emails, one with text and one with html
 def email_faellig_versicherung():
+	# TODO: We end up using this date in a couple places and redefine it every time. Set in settings/local_settings?
 	faellig_date = (datetime.datetime.today() - datetime.timedelta(days=7)).date()
 	schaden_list = insurance_models.Schadensmeldung.objects.all()
 	logging.info(schaden_list)
@@ -27,13 +28,15 @@ def email_faellig_versicherung():
 	for schaden in schaden_list:
 		current_status = insurance_models.SchadensmeldungStatus.objects.filter(schadensmeldung=schaden).order_by('-id')[0]
 		is_faellig = current_status.date <= faellig_date
-		is_erledigt = current_status.status in ['be', ]
+		is_erledigt = current_status.status in ['be', 'ab', ]
 
 		if is_erledigt is True or is_faellig is False:
 			schaden_list = schaden_list.exclude(pk=schaden.pk)
 
 		# TODO: Figure out how to add domain to our url.
-		schaden.url = f'{settings.DEFAULT_DOMAIN}{reverse("insurance:schaden-detail", kwargs={"pk":schaden.id,})}'
+		# domain = 'localhost:8000/'
+		domain = shortcuts.get_current_site()
+		schaden.url = f'{domain}{reverse("insurance:schaden-detail", kwargs={"pk":schaden.id,})}'
 
 	context = {
 		'ticket_list': schaden_list,
@@ -46,12 +49,12 @@ def email_faellig_versicherung():
 		context=context,
 	)
 
-	logger.info("Sending email")
+	# TODO: Set recipients using variable in local_settings before production
 	send_mail(
 		f'Insgesamt {schaden_list.count()} fällige Versicherungsfälle',
 		'',
 		'megabikeCRM@gmail.com',
-		['megabikeCRM+test@gmail.com'],
+		['megabikeCRM@gmail.com'],
 		fail_silently=False,
 		html_message=msg_html
 		)
@@ -77,7 +80,7 @@ def start():
 	scheduler.add_job(
 		email_faellig_versicherung,
 		# jobstore='djangojobstore',
-		trigger=CronTrigger(minute="*/5"),
+		trigger=CronTrigger(minute="*/1"),
 		id="insurance_email",
 		max_instances=1,
 		replace_existing=True
