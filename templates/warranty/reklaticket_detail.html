@@ -30,7 +30,7 @@
 						Aktuelle Stand: {{ current_status.get_status_display }}
 					</h6>
 				</a>
-				<div class="collapse card-body" id="collapseBasicInfo">
+				<div class="collapse card-body show" id="collapseBasicInfo">
 					<a class="d-none d-sm-inline-block btn btn-primary shadow-sm btn-block" data-toggle="modal" data-target="#modal" data-url="{% url 'warranty:update-ticket' pk=reklaticket.id%}">
 					<i class="fas fa-download fa-sm text-white-50"></i> 
 						Ticket bearbeiten
@@ -88,7 +88,7 @@
 						Datein:
 					</h6>
 				</a>
-				<div class="collapse card-body" id="collapseFiles">
+				<div class="collapse card-body show" id="collapseFiles">
 					<button type="button" class="d-none d-sm-inline-block btn btn-primary shadow-sm btn-block" 
 						data-toggle="modal" data-target="#modal" data-url="{% url 'warranty:add-file' pk=reklaticket.id %}">
 						<i class="fas fa-download fa-sm text-white-50"></i> 
@@ -134,7 +134,7 @@
 						Status Updates:
 					</h6>
 				</a>
-				<div class="collapse card-body" id="collapseStatus">
+				<div class="collapse card-body show" id="collapseStatus">
 
 					<button type="button" class="d-none d-sm-inline-block btn btn-primary shadow-sm btn-block" 
 						data-toggle="modal" data-target="#modal" data-url="{% url 'warranty:update-status' pk=reklaticket.id %}">

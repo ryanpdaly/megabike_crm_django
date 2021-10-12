@@ -4,7 +4,6 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.forms import SelectDateWidget
 from django.forms.models import BaseInlineFormSet, inlineformset_factory
-from django.forms.widgets import DateInput
 
 from tempus_dominus.widgets import DatePicker
 

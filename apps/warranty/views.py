@@ -1,3 +1,4 @@
+import datetime
 import logging
 
 from django.contrib.auth.decorators import login_required, permission_required
@@ -13,6 +14,8 @@ from apps.warranty import models, forms
 from apps.customers import models as customer_models
 from apps.customers import forms as customer_forms
 
+
+logger = logging.getLogger(__name__)
 
 class TicketList(LoginRequiredMixin, generic.ListView, common_mixins.NotificationsMixin):
 	model = models.ReklaTicket
@@ -103,6 +106,13 @@ class CreateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateVi
 
 	def post(self, request, *args, **kwargs):
 		# Handles POST requests, instatiates form instance and formsets with POST variables and checks validity
+
+		# TODO: This seems janky as hell. Figure out how to do this in the regular form processing/cleaning of Django.
+		post_data = request.POST.copy()
+		input_date = post_data['angenommen']
+		post_data['angenommen'] = datetime.datetime.strptime(input_date, '%d.%m.%Y')
+		request.POST = post_data
+
 		self.object = None
 		form_class = self.get_form_class()
 		form = self.get_form(form_class)
@@ -163,6 +173,7 @@ class DisplayTicket(LoginRequiredMixin, generic.DetailView, common_mixins.Notifi
 
 		return data
 
+# TODO: Rename to be less ambiguous, maybe something like EditTicket
 class UpdateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.UpdateView, common_mixins.NotificationsMixin):
 	model = models.ReklaTicket
 	permission_required = ('warranty.add_reklaticket',)
@@ -170,6 +181,8 @@ class UpdateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.UpdateVi
 	success_url = reverse_lazy('warranty:main')
 
 	form_class = forms.NewTicketForm
+
+
 
 class AddFile(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView, common_mixins.NotificationsMixin):
 	model = models.ReklaFile
