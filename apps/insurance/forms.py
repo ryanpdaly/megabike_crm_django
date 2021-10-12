@@ -21,6 +21,13 @@ for year in range(int(datetime.now.year())-5, int(datetime.now.year())+6):
 
 
 class CompanyForm(forms.ModelForm):
+	def __init__(self, *args, **kwargs):
+		super(CompanyForm, self).__init__(*args, **kwargs)
+		for field in self.fields:
+			self.fields[field].widget.attrs.update({
+				'class': 'form-control'
+				})
+
 	class Meta:
 		model = models.InsuranceCompanies
 		fields = ['company_name']
@@ -33,41 +40,143 @@ class UpdateBikeForm(forms.ModelForm):
 
 
 class AssonaForm(forms.ModelForm):
+	def __init__(self, *args, **kwargs):
+		super(AssonaForm, self).__init__(*args, **kwargs)
+		for field in self.fields:
+			self.fields[field].widget.attrs.update({
+				'class': 'form-control'
+			})
+
 	class Meta:
 		model = models.AssonaInfo
-		exclude = ('id',)
-		widgets = {'beginn': SelectDateWidget(years=valid_years)}
+		fields = ('rahmennummer', 'vertragsnummer', 'beginn', 'versicherungskarte',)
+		# widgets = {'beginn': SelectDateWidget(years=valid_years)}
+
+		widgets = {
+			'beginn': DatePicker(
+				attrs = {
+					'append': 'fa fa-calendar',
+					'icon_toggle': True,
+				},
+				options = {
+					'format': 'DD.MM.YYYY',
+				}
+			)
+		}
 
 
 class BikeleasingForm(forms.ModelForm):
+	def __init__(self, *args, **kwargs):
+		super(BikeleasingForm, self).__init__(*args, **kwargs)
+		for field in self.fields:
+			self.fields[field].widget.attrs.update({
+				'class': 'form-control'
+			})
+
 	class Meta:
 		model = models.BikeleasingInfo
-		fields = '__all__'
-		widgets = {'beginn': SelectDateWidget(years=valid_years)}
+		fields = ('rahmennummer', 'nutzer_id', 'paket', 'inspektion', 'leasingbank', 'beginn',
+					'versicherungskarte')
+
+		widgets = {
+			'beginn': DatePicker(
+				attrs = {
+					'append': 'fa fa-calendar',
+					'icon_toggle': True,
+				},
+				options = {
+					'format': 'DD.MM.YYYY',
+				}
+			)
+		}
 
 
 class BusinessbikeForm(forms.ModelForm):
+	def __init__(self, *args, **kwargs):
+		super(BusinessbikeForm, self).__init__(*args, **kwargs)
+		for field in self.fields:
+			self.fields[field].widget.attrs.update({
+				'class': 'form-control'
+			})
+
 	class Meta:
 		model = models.BusinessbikeInfo
-		fields = '__all__'
+		# TODO: Explicitly list desired fields
+		fields = ('rahmennummer', 'beginn', 'ende', 'policenummer', 'paket', 'verschleiss_guthaben',
+					'versicherungskarte',)
+
 		widgets = {
-			'beginn': SelectDateWidget(years=valid_years),
-			'ende': SelectDateWidget(years=valid_years),
-			}
+			'beginn': DatePicker(
+				attrs = {
+					'append': 'fa fa-calendar',
+					'icon_toggle': True,
+				},
+				options = {
+					'format': 'DD.MM.YYYY',
+				}
+			),
+			'ende': DatePicker(
+				attrs = {
+					'append': 'fa fa-calendar',
+					'icon_toggle': True,
+				},
+				options = {
+					'format': 'DD.MM.YYYY',
+				}
+			)
+		}
 
 
 class EnraForm(forms.ModelForm):
+	def __init__(self, *args, **kwargs):
+		super(EnraForm, self).__init__(*args, **kwargs)
+		for field in self.fields:
+			self.fields[field].widget.attrs.update({
+				'class': 'form-control'
+			})
+
 	class Meta:
 		model = models.EnraInfo
-		fields = '__all__'
-		widgets = {'beginn': SelectDateWidget(years=valid_years)}
+		# TODO: Explicitly list desired fields
+		fields = ('rahmennummer', 'beginn', 'policenummer', 'versicherungskarte',)
+
+		widgets = {
+			'beginn': DatePicker(
+				attrs = {
+					'append': 'fa fa-calendar',
+					'icon_toggle': True,
+				},
+				options = {
+					'format': 'DD.MM.YYYY',
+				}
+			)
+		}
 
 
 class EuroradForm(forms.ModelForm):
+	def __init__(self, *args, **kwargs):
+		super(EuroradForm, self).__init__(*args, **kwargs)
+		for field in self.fields:
+			self.fields[field].widget.attrs.update({
+				'class': 'form-control'
+			})
+
 	class Meta:
 		model = models.EuroradInfo
-		fields = '__all__'
-		widgets = {'beginn': SelectDateWidget(years=valid_years)}
+		# TODO: Explicitly list desired fields
+		fields = ('rahmennummer', 'beginn', 'vertragsnummer', 'versicherungskarte')
+
+		widgets = {
+			'beginn': DatePicker(
+				attrs = {
+					'append': 'fa fa-calendar',
+					'icon_toggle': True,
+				},
+				options = {
+					'format': 'DD.MM.YYYY',
+				}
+			)
+		}
 
 
 class SchadensmeldungForm(forms.ModelForm):
@@ -77,11 +186,11 @@ class SchadensmeldungForm(forms.ModelForm):
 					'reparatur_datum', 'zahlungsreferenz', 'bearbeiter')
 
 		widgets = {'reparatur_datum': DatePicker(
-			attrs = {
+			attrs={
 				'append': 'fa fa-calendar',
 				'icon_toggle': True,
 			},
-			options = {
+			options={
 				'format': 'DD.MM.YYYY',
 			}
 			)}

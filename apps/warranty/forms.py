@@ -21,15 +21,17 @@ class NewTicketForm(forms.ModelForm):
 		fields = ('sachbearbeiter', 'angenommen', 'hersteller', 'artikelnr', 
 					'bezeichnung', 'menge', 'auftragsnr', 'fehlerbeschreibung',)
 
-		widgets = {'angenommen': DatePicker(
-			attrs = {
-				'append': 'fa fa-calendar',
-				'icon_toggle': True,
-			},
-			options = {
-				'format': 'DD.MM.YYYY',
-			}
-		)}
+		widgets = {
+			'angenommen': DatePicker(
+				attrs = {
+					'append': 'fa fa-calendar',
+					'icon_toggle': True,
+				},
+				options = {
+					'format': 'DD.MM.YYYY',
+				}
+			)
+		}
 
 	def __init__(self, *args, **kwargs):
 		super(NewTicketForm, self).__init__(*args, **kwargs)

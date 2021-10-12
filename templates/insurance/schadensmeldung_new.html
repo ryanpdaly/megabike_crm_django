@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block head %}
-	<script type="text/javascript" src="{% static 'js/jquery.form.js' %}"></script>
+
 {% endblock %}
 
 {% block header %}
@@ -38,7 +38,7 @@
 						</div>
 						<div class="card-body">
 							<table>
-									{{ status_form.as_table }}
+								{{ status_form.as_table }}
 							</table>
 						</div>
 					</div>
@@ -47,7 +47,6 @@
 		</form>
 	</div>
 {% endblock %}
-
 
 {% block javascript %}
 	{{ block.super }}

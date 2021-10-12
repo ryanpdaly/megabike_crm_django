@@ -202,6 +202,7 @@ class AddFile(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView, c
 
 		return super().form_valid(form)
 
+# TODO: Why doesn't this use the StatusUpdateForm created in forms?
 class UpdateStatus(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView, common_mixins.NotificationsMixin):
 	model = models.ReklaStatusUpdate
 	permission_required = ('warranty.add_reklaticket',)

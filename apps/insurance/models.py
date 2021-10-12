@@ -130,9 +130,10 @@ class EnraInfo(models.Model):
     beginn = models.DateField()
     policenummer = models.CharField(max_length=20)
 
-    versicherungskarte = models.FileField(blank=True,
-                                          upload_to=set_path_and_rename,
-                                          )
+    versicherungskarte = models.FileField(
+                            blank=True,
+                            upload_to=set_path_and_rename,
+                          )
 
     def __str__(self):
         return 'ENRA'
