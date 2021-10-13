@@ -176,11 +176,13 @@ LOGGING = {
         }
     },
     'loggers': {
+        """
         '': {
             'handlers': ['file', 'console',],
             'level': 'INFO',
             'propagate': True,
         },
+        """
         'django': {
             'handlers': ['file', 'console', 'mail_admins'],
             #'level': 'DEBUG',

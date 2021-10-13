@@ -22,6 +22,7 @@ from apps.warranty import models as warranty_models
 
 logger = logging.getLogger(__name__)
 
+
 # TODO: Rework as CBV
 @login_required
 def input_insurance(request, rn, insurance):
@@ -29,16 +30,29 @@ def input_insurance(request, rn, insurance):
 	kdnr = bike_instance.kunde.kundennummer
 	rn = bike_instance.rahmennummer
 
-	INSURANCE_DISPATCHER = {
-		'as':forms.AssonaForm,
-		'bl':forms.BikeleasingForm,
-		'bu':forms.BusinessbikeForm,
-		'en':forms.EnraForm,
-		'eu':forms.EuroradForm,	
+	insurance_dispatcher = {
+		'as': forms.AssonaForm,
+		'bl': forms.BikeleasingForm,
+		'bu': forms.BusinessbikeForm,
+		'en': forms.EnraForm,
+		'eu': forms.EuroradForm,
 	}
 
 	if request.method == "POST":
-		ins_form = INSURANCE_DISPATCHER[insurance](request.POST, request.FILES)
+		post_data = request.POST.copy()
+
+		# TODO: Reduce repetition
+		if 'beginn' in post_data:
+			input_date = post_data['beginn']
+			post_data['beginn'] = datetime.datetime.strptime(input_date, '%d.%m.%Y')
+
+		if 'ende' in post_data:
+			input_date = post_data['ende']
+			post_data['ende'] = datetime.datetime.strptime(input_date, '%d.%m.%Y')
+
+		request.POST = post_data
+
+		ins_form = insurance_dispatcher[insurance](request.POST, request.FILES)
 
 		update_bike = forms.UpdateBikeForm(request.POST, instance=bike_instance)
 
@@ -46,16 +60,16 @@ def input_insurance(request, rn, insurance):
 			ins_form.save()
 			update_bike.save()
 
-			return HttpResponseRedirect(reverse('customers:customer-detail', kwargs={'pk':kdnr,}))
+			return HttpResponseRedirect(reverse('customers:customer-detail', kwargs={'pk': kdnr}))
 	else:
-		ins_form = INSURANCE_DISPATCHER[insurance](initial={"rahmennummer":rn})
+		ins_form = insurance_dispatcher[insurance](initial={"rahmennummer": rn})
 
-		update_bike = forms.UpdateBikeForm(instance=bike_instance, initial={"insurance":insurance})
+		update_bike = forms.UpdateBikeForm(instance=bike_instance, initial={"insurance": insurance})
 
 	context = {
-		'bike':bike_instance,
-		'ins_form':ins_form,
-		'update_bike':update_bike,
+		'bike': bike_instance,
+		'ins_form': ins_form,
+		'update_bike': update_bike,
 
 		'open_contact_tickets': common_mixins.get_user_contact_tickets(request),
 		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(request),
@@ -64,6 +78,7 @@ def input_insurance(request, rn, insurance):
 
 	return render(request, 'insurance/input_insurance.html', context=context)
 
+
 # TODO: Rework as CBV
 @login_required
 def list_all(request):
@@ -71,7 +86,7 @@ def list_all(request):
 	policies = customer_models.Bike.objects.exclude(insurance='no')
 
 	context = {
-		'policies':policies,
+		'policies': policies,
 
 		'open_contact_tickets': common_mixins.get_user_contact_tickets(request),
 		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(request),
@@ -80,17 +95,18 @@ def list_all(request):
 
 	return render(request, 'insurance/list_all.html', context=context)
 
+
 class InfoPage(LoginRequiredMixin, generic.base.TemplateView, common_mixins.NotificationsMixin):
 	template_name = "insurance/info_page.html"
 
 	def get_context_data(self, **kwargs):
 		data = super().get_context_data(**kwargs)
 
-		#TODO: Figure out encoding to use ä, ö, ü, und ß from JSON
 		data['json_data'] = self.read_json('apps/insurance/insurance_info.json')[self.kwargs['insurance']]
 
 		return data
 
+	# TODO: There is no reason this needs to be in this class. Should probably be in a common/utils file
 	def read_json(self, path):
 		with open(path, 'r', encoding="UTF-8") as file:
 			return json.load(file)
@@ -102,7 +118,7 @@ def display_policy(request, rn):
 	bike_instance = get_object_or_404(customer_models.Bike, rahmennummer=rn)
 	insurance = bike_instance.insurance
 
-	INSURANCE_OPTIONS = {
+	insurance_options = {
 		'no': 'None',
 		'as': models.AssonaInfo,
 		'bl': models.BikeleasingInfo,
@@ -111,17 +127,17 @@ def display_policy(request, rn):
 		'eu': models.EuroradInfo,
 	}
 
-	INSURANCE_URL = {
-		'no':'none',
-		'as':'assona',
-		'bl':'bikeleasing',
-		'bu':'businessbike',
-		'en':'enra',
-		'eu':'eurorad'
+	insurance_url = {
+		'no': 'none',
+		'as': 'assona',
+		'bl': 'bikeleasing',
+		'bu': 'businessbike',
+		'en': 'enra',
+		'eu': 'eurorad'
 	}
 
 	if bike_instance.insurance != 'no':
-		insurance_info = get_object_or_404(INSURANCE_OPTIONS[insurance], rahmennummer=rn)
+		insurance_info = get_object_or_404(insurance_options[insurance], rahmennummer=rn)
 	else:
 		insurance_info = False
 
@@ -134,7 +150,8 @@ def display_policy(request, rn):
 		'faellige_warranty_tickets': common_mixins.get_faellige_warranty_tickets(request),
 	}
 
-	return render(request, f'insurance/display_{INSURANCE_URL[insurance]}.html', context=context)
+	return render(request, f'insurance/display_{insurance_url[insurance]}.html', context=context)
+
 
 # TODO: Rework as CBV
 @login_required
@@ -157,12 +174,14 @@ def schaden_list(request, status, company):
 		'Rechnung eingereicht': 're',
 		'Abzurechnen': 'azr',
 		'Bezahlt': 'be',
-		'Abgelehnt':'ab',
+		'Abgelehnt': 'ab',
 	}
 	
-	# TODO: change insurance_current_status filter to use status instead of status display, then use our erledigt_status list from insurance.models
-	erledigt = ['Bezahlt', 'Abgelehnt',]
+	# TODO: change insurance_current_status filter to use status instead of status display,
+	#  then use our erledigt_status list from insurance.models
+	erledigt = ['Bezahlt', 'Abgelehnt', ]
 
+	# TODO: Rename schaden_list, shadows function-view name
 	if company != 'all':
 		schaden_list = models.Schadensmeldung.objects.filter(unternehmen=company)
 	else:
@@ -174,14 +193,14 @@ def schaden_list(request, status, company):
 		for schaden in schaden_list:
 			current_status = models.SchadensmeldungStatus.objects.filter(schadensmeldung=schaden).order_by('-id')[0]
 			is_faellig = current_status.date <= faellig_date
-			is_erledigt = current_status.status in ['be', 'ab',]
+			is_erledigt = current_status.status in ['be', 'ab', ]
 
-			if status=='faellig':
-				if is_erledigt==True or is_faellig==False:
+			if status == 'faellig':
+				if is_erledigt is True or is_faellig is False:
 					schaden_list = schaden_list.exclude(pk=schaden.pk)
-			elif status=='open' and is_erledigt==True:
+			elif status == 'open' and is_erledigt is True:
 				schaden_list = schaden_list.exclude(pk=schaden.pk)
-			elif status!='open' and current_status.status != status:
+			elif status != 'open' and current_status.status != status:
 				schaden_list = schaden_list.exclude(pk=schaden.pk)
 
 	context = {
@@ -200,6 +219,7 @@ def schaden_list(request, status, company):
 
 	return render(request, f'insurance/schadensmeldung_list.html', context=context)
 
+
 """
 class SchadenList(LoginRequiredMixin, generic.ListView, common_mixins.NotificationsMixin):
 	model = models.Schadensmeldung
@@ -211,6 +231,7 @@ class SchadenList(LoginRequiredMixin, generic.ListView, common_mixins.Notificati
 		return context
 """
 
+
 class SchadenDetail(LoginRequiredMixin, generic.DetailView, common_mixins.NotificationsMixin):
 	model = models.Schadensmeldung
 	template_name_suffix = '_detail'
@@ -218,10 +239,12 @@ class SchadenDetail(LoginRequiredMixin, generic.DetailView, common_mixins.Notifi
 	def get_context_data(self, **kwargs):
 		data = super().get_context_data(**kwargs)
 
-		data['status_updates'] = models.SchadensmeldungStatus.objects.filter(schadensmeldung=self.kwargs['pk']).order_by('-id')
+		data['status_updates'] = models.SchadensmeldungStatus.objects.filter(
+			schadensmeldung=self.kwargs['pk']).order_by('-id')
 		data['current_status'] = data['status_updates'][0]
 
-		data['files'] = models.SchadensmeldungFile.objects.filter(schadensmeldung=self.kwargs['pk'])
+		data['files'] = models.SchadensmeldungFile.objects.filter(
+			schadensmeldung=self.kwargs['pk'])
 
 		return data
 
@@ -235,10 +258,12 @@ class SchadenDetailModal(LoginRequiredMixin, generic.DetailView):
 	def get_context_data(self, **kwargs):
 		data = super().get_context_data(**kwargs)
 
-		data['status_updates'] = models.SchadensmeldungStatus.objects.filter(schadensmeldung=self.kwargs['pk']).order_by('-id')
+		data['status_updates'] = models.SchadensmeldungStatus.objects.filter(
+			schadensmeldung=self.kwargs['pk']).order_by('-id')
 		data['current_status'] = data['status_updates'][0]
 
-		data['files'] = models.SchadensmeldungFile.objects.filter(schadensmeldung=self.kwargs['pk'])
+		data['files'] = models.SchadensmeldungFile.objects.filter(
+			schadensmeldung=self.kwargs['pk'])
 
 		return data
 
@@ -248,7 +273,8 @@ class SchadenCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateV
 	permission_required = ()
 	
 	template_name = 'insurance/schadensmeldung_new.html'
-	success_url = reverse_lazy('insurance:schaden-list', kwargs={'status':'open', 'company':'all'})
+	success_url = reverse_lazy('insurance:schaden-list',
+								kwargs={'status': 'open', 'company': 'all'})
 	form_class = forms.SchadensmeldungForm
 
 	def get_context_data(self, **kwargs):
@@ -257,7 +283,8 @@ class SchadenCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateV
 		kdnr_input = self.request.GET.get("kdnr_input")
 
 		if kdnr_input:
-			customer_options = customer_models.Customer.objects.filter(kundennummer__icontains=kdnr_input)
+			customer_options = customer_models.Customer.objects.filter(
+				kundennummer__icontains=kdnr_input)
 		else:
 			customer_options = customer_models.Customer.objects.all()
 
@@ -267,6 +294,8 @@ class SchadenCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateV
 
 	def get(self, request, *args, **kwargs):
 		# Handles GET requests, instantiates blank form and formsets
+
+		# What is this attribute declaration even doing?
 		self.object = None
 
 		form_class = self.get_form_class()
@@ -285,7 +314,8 @@ class SchadenCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateV
 
 			if kdnr_checked:
 				kdnr_checked = int(kdnr_checked)
-				customer_search = customer_forms.CustomerSearchForm(initial={'kundennummer':kdnr_checked})
+				customer_search = customer_forms.CustomerSearchForm(
+					initial={'kundennummer': kdnr_checked})
 			
 				if customer_models.Customer.objects.filter(kundennummer__in=customer_options).exists():
 					logging.debug("Selected customer in customer options list")
@@ -293,18 +323,20 @@ class SchadenCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateV
 				else:
 					logging.debug("Selected customer NOT in customer options list")
 					self.kwargs['kdnr_checked'] = None
-					kdnr_checked=None
+					kdnr_checked = None
 
 			else:
-				customer_search = customer_forms.CustomerSearchForm(initial={'kundennummer':kdnr_input})
+				customer_search = customer_forms.CustomerSearchForm(
+					initial={'kundennummer': kdnr_input})
 
 			html = render_to_string(
 				template_name="customers/customer_search_partial.html",
-				context={"customer_options": customer_options,
-							"kdnr_checked": kdnr_checked,
-							"kdnr_input": kdnr_input,
-							"customer_search": customer_search,
-						}
+				context={
+					"customer_options": customer_options,
+					"kdnr_checked": kdnr_checked,
+					"kdnr_input": kdnr_input,
+					"customer_search": customer_search,
+				}
 			)
 
 			data_dict = {"html_from_view": html}
@@ -341,6 +373,7 @@ class SchadenCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateV
 			return self.form_invalid(request, form, status_form, customer_search)
 
 
+	# TODO: Signature of method does not match that of ModelFormClass --> form_valid(self, form)
 	def form_valid(self, request, form, status_form, customer_search):
 		# Called if all forms valid. Creates Schadensmeldung and SchadensmeldungStatus instances, redirects to success url
 		self.object = form.save(commit=False)
@@ -357,6 +390,7 @@ class SchadenCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateV
 
 		return HttpResponseRedirect(self.get_success_url())
 
+	# TODO: Signature of method does not match that of FormMixin --> form_invalid(self, form)
 	def form_invalid(self, request, form, status_form, files_form):
 		# Called if form invalid, re-renders context data with data-filled forms and errors
 

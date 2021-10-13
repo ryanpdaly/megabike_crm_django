@@ -40,12 +40,18 @@ class UpdateBikeForm(forms.ModelForm):
 
 
 class AssonaForm(forms.ModelForm):
+	# TODO: This places a form-control box behind the file button. Fix that
 	def __init__(self, *args, **kwargs):
 		super(AssonaForm, self).__init__(*args, **kwargs)
 		for field in self.fields:
-			self.fields[field].widget.attrs.update({
-				'class': 'form-control'
-			})
+			if field == 'versicherungskarte':
+				self.fields[field].widget.attrs.update({
+					'class': 'form-control-file'
+				})
+			else:
+				self.fields[field].widget.attrs.update({
+					'class': 'form-control'
+				})
 
 	class Meta:
 		model = models.AssonaInfo
@@ -66,12 +72,18 @@ class AssonaForm(forms.ModelForm):
 
 
 class BikeleasingForm(forms.ModelForm):
+	# TODO: This places a form-control box behind the file button. Fix that
 	def __init__(self, *args, **kwargs):
 		super(BikeleasingForm, self).__init__(*args, **kwargs)
 		for field in self.fields:
-			self.fields[field].widget.attrs.update({
-				'class': 'form-control'
-			})
+			if field == 'versicherungskarte':
+				self.fields[field].widget.attrs.update({
+					'class': 'form-control-file'
+				})
+			else:
+				self.fields[field].widget.attrs.update({
+					'class': 'form-control'
+				})
 
 	class Meta:
 		model = models.BikeleasingInfo
@@ -92,12 +104,18 @@ class BikeleasingForm(forms.ModelForm):
 
 
 class BusinessbikeForm(forms.ModelForm):
+	# TODO: This places a form-control box behind the file button. Fix that
 	def __init__(self, *args, **kwargs):
 		super(BusinessbikeForm, self).__init__(*args, **kwargs)
 		for field in self.fields:
-			self.fields[field].widget.attrs.update({
-				'class': 'form-control'
-			})
+			if field == 'versicherungskarte':
+				self.fields[field].widget.attrs.update({
+					'class': 'form-control-file'
+				})
+			else:
+				self.fields[field].widget.attrs.update({
+					'class': 'form-control'
+				})
 
 	class Meta:
 		model = models.BusinessbikeInfo
@@ -128,12 +146,18 @@ class BusinessbikeForm(forms.ModelForm):
 
 
 class EnraForm(forms.ModelForm):
+	# TODO: This places a form-control box behind the file button. Fix that
 	def __init__(self, *args, **kwargs):
 		super(EnraForm, self).__init__(*args, **kwargs)
 		for field in self.fields:
-			self.fields[field].widget.attrs.update({
-				'class': 'form-control'
-			})
+			if field == 'versicherungskarte':
+				self.fields[field].widget.attrs.update({
+					'class': 'form-control-file'
+				})
+			else:
+				self.fields[field].widget.attrs.update({
+					'class': 'form-control'
+				})
 
 	class Meta:
 		model = models.EnraInfo
@@ -154,12 +178,18 @@ class EnraForm(forms.ModelForm):
 
 
 class EuroradForm(forms.ModelForm):
+	# TODO: This places a form-control box behind the file button. Fix that
 	def __init__(self, *args, **kwargs):
 		super(EuroradForm, self).__init__(*args, **kwargs)
 		for field in self.fields:
-			self.fields[field].widget.attrs.update({
-				'class': 'form-control'
-			})
+			if field == 'versicherungskarte':
+				self.fields[field].widget.attrs.update({
+					'class': 'form-control-file'
+				})
+			else:
+				self.fields[field].widget.attrs.update({
+					'class': 'form-control'
+				})
 
 	class Meta:
 		model = models.EuroradInfo
