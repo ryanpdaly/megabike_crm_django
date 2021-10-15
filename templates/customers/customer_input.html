@@ -12,13 +12,13 @@
       {% csrf_token %}
       <div class="modal-body">
       	<table>
-			{{ form.as_table }}
-		</table>
-		<br/>
-		<h4 class="mb-0 text-gray-800">Fahrzeug hinzufügen</h4>
-		<table>
-			{{ bikes.as_table }}
-		</table>
+			   {{ form.as_table }}
+    		</table>
+    		<br/>
+    		<h4 class="mb-0 text-gray-800">Fahrzeug hinzufügen</h4>
+    		<table>
+    			{{ bikes.as_table }}
+    		</table>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
