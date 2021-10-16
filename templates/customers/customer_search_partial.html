@@ -54,34 +54,20 @@
 </script>
 
 <script>
-	//document.getElementById("results-container").addEventListener("click",
 	$('#results-container').on("click", function(e){
 			if(e.target && e.target.nodeName == "SPAN"){
-				console.log("New customer checked")
 
-				var button = document.getElementById("new_customer")
-				var form_url = button.getAttribute("data-url")
-
-				$('#input_modal').on('show.bs.modal', function (event) {});
+				var button = $("#new_customer");
+				var form_url = button.data("url")
 				
-				var form =	$.ajax({
-								url: form_url,
-								context: document.body,
-								async: true,
-							}).done(function(response){
-								
-								console.log("Ajax call success")
-
-								$("#input_modal").html(response);
-								$('#input_modal').modal('show')
-
-								console.log()
-							});
-
+				$.ajax({
+					url: form_url,
+					context: document.body,
+					async: true,
+				}).done(function(response){
+					$("#input_modal").html(response);
+					$('#input_modal').modal('show')
+				});
 			}
-
-			if(e.target && e.target.nodeName == "INPUT"){
-				console.log("List item clicked");
-			} 
 		});
 </script>
