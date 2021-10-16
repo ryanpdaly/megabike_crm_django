@@ -4,7 +4,6 @@
 	{{ customer_search.non_field_errors }}
 	<div class="fieldWrapper">
 		{{ customer_search.kundennummer.errors }}
-
 		{{ customer_search.kundennummer.as_hidden }} <br/>
 	</div>
 	<div>
@@ -43,12 +42,11 @@
 {% endif %}
 </div>
 
-<script src="{% static 'js/jquery-3.6.0.js' %}"></script>
-
-<div class="input_modal" id="input_modal" tabindex="-1" role="dialog">
+<div class="modal" id="input_modal" tabindex="-1" role="dialog">
 
 </div>
 
+<script src="{% static 'js/jquery-3.6.0.js' %}"></script>
 
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" 
 	integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" 
@@ -56,35 +54,34 @@
 </script>
 
 <script>
-	document.getElementById("results-container").addEventListener("click", function(e){
-		if(e.target && e.target.nodeName == "SPAN"){
-			console.log("New customer checked")
+	//document.getElementById("results-container").addEventListener("click",
+	$('#results-container').on("click", function(e){
+			if(e.target && e.target.nodeName == "SPAN"){
+				console.log("New customer checked")
 
-			var button = document.getElementById("new_customer")
-			var form_url = button.getAttribute("data-url")
+				var button = document.getElementById("new_customer")
+				var form_url = button.getAttribute("data-url")
 
-			console.log('Modal call triggered')
-			console.log(button)
-			console.log(form_url)
-		    
-			var myModal = $("input_modal")
+				$('#input_modal').on('show.bs.modal', function (event) {});
+				
+				var form =	$.ajax({
+								url: form_url,
+								context: document.body,
+								async: true,
+							}).done(function(response){
+								
+								console.log("Ajax call success")
 
-			$.ajax({
-				url: form_url,
-				context: document.body,
-				async: true,
+								$("#input_modal").html(response);
+								$('#input_modal').modal('show')
 
-			}).done(function(response){
-				$("input_modal").html(response);
-				$("#input_modal").modal('toggle');
-			});
+								console.log()
+							});
 
-			
-			console.log(myModal)
-		}
+			}
 
-		if(e.target && e.target.nodeName == "INPUT"){
-			console.log("List item clicked");
-		} 
-	});
+			if(e.target && e.target.nodeName == "INPUT"){
+				console.log("List item clicked");
+			} 
+		});
 </script>

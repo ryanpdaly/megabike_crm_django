@@ -28,8 +28,12 @@
   </div>
 </div>
 
+
 <script src="{% static 'js/jquery-3.6.0.js' %}"></script>
 <script src="{% static 'js/jquery.form.js' %}"></script>
+<script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+
 <script>
     var form_options = { target: '#modal', success: function(response) {} };
     $('#news-create').ajaxForm(form_options);
