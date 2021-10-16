@@ -48,11 +48,13 @@
 
 <script src="{% static 'js/jquery-3.6.0.js' %}"></script>
 
+{# TODO: Us local static file instead of CDN #}
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" 
 	integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" 
 	crossorigin="anonymous">
 </script>
 
+{# Creates event listener for clicks on button to create customer, opens modal #}
 <script>
 	$('#results-container').on("click", function(e){
 			if(e.target && e.target.nodeName == "SPAN"){
@@ -66,6 +68,7 @@
 					async: true,
 				}).done(function(response){
 					$("#input_modal").html(response);
+					$("#save").replaceWith('<input type="submit" id="save" name="save_to_new_schaden" value="Speichern" class="btn btn-primary">')
 					$('#input_modal').modal('show')
 				});
 			}

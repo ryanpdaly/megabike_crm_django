@@ -126,9 +126,19 @@ def customer_detail_view(request, pk):
 class CustomerInputView(LoginRequiredMixin, generic.CreateView, common_mixins.NotificationsMixin):
 	model = models.Customer
 	template_name = 'customers/customer_input.html'
-	success_url = reverse_lazy('customers:customer-list')
 
 	form_class = forms.CustomerForm
+
+	
+	def form_valid(self, form):
+		context = self.get_context_data()
+		bikes = context['bikes']
+		self.object = form.save()
+		if bikes.is_valid():
+			bikes.instance = self.object
+			bikes.save()
+		return super().form_valid(form)	
+
 
 	def get_context_data(self, **kwargs):
 		data = super().get_context_data(**kwargs)
@@ -138,14 +148,15 @@ class CustomerInputView(LoginRequiredMixin, generic.CreateView, common_mixins.No
 			data['bikes'] = forms.BikeFormset()
 		return data
 
-	def form_valid(self, form):
-		context = self.get_context_data()
-		bikes = context['bikes']
-		self.object = form.save()
-		if bikes.is_valid():
-			bikes.instance = self.object
-			bikes.save()
-		return super().form_valid(form)
+	def get_success_url(self):
+		# TODO: On customer creation, forward to new customer
+		if self.request.POST.get('save_to_customer'):
+			return reverse('customers:customer-list')
+		elif self.request.POST.get('save_to_new_schaden'):
+			return reverse('insurance:schaden-new')
+		else:
+			return reverse('customers:customer-list')
+
 
 class CustomerListView(LoginRequiredMixin, generic.ListView, common_mixins.NotificationsMixin):
 	model = models.Customer
