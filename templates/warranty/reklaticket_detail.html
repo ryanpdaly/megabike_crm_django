@@ -10,7 +10,8 @@
 		  Ticket bearbeiten
 		</button>
 		<div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
-			<a class="dropdown-item" href="{% url 'warranty:update-ticket' pk=reklaticket.id %}">Infos bearbeiten</a>
+			{% comment %}<a class="dropdown-item" href="{% url 'warranty:update-ticket' pk=reklaticket.id %}">Infos bearbeiten</a>{% endcomment %}
+			<a class="dropdown-item" data-toggle="modal" data-target="#modal" data-url="{% url 'warranty:update-ticket' pk=reklaticket.id%}">Infos bearbeiten</a>
 			<div class="dropdown-divider"></div>
 			<a class="dropdown-item" data-toggle="modal" data-target="#modal" data-url="{% url 'warranty:update-status' pk=reklaticket.id %}">Status Update hinzufügen</a>
 			<a class="dropdown-item" data-toggle="modal" data-target="#modal" data-url="{% url 'warranty:add-file' pk=reklaticket.id %}">Datei hinzufügen</a>
@@ -30,7 +31,7 @@
 					</h6>
 				</a>
 				<div class="collapse card-body" id="collapseBasicInfo">
-					<a href="{% url 'warranty:update-ticket' pk=reklaticket.id %}" class="d-none d-sm-inline-block btn btn-primary shadow-sm btn-block">
+					<a class="d-none d-sm-inline-block btn btn-primary shadow-sm btn-block" data-toggle="modal" data-target="#modal" data-url="{% url 'warranty:update-ticket' pk=reklaticket.id%}">
 					<i class="fas fa-download fa-sm text-white-50"></i> 
 						Ticket bearbeiten
 					</a>
@@ -174,7 +175,7 @@
 	{{ block.super }}
 
 	<!-- ajax form submission -->
-	<script src="http://malsup.github.com/jquery.form.js"></script>
+	<script src="http://malsup.github.io/jquery.form.js"></script>
 
 	<!-- load response from desired form url -->
 	<script>

@@ -1,9 +1,11 @@
+{% load static %}
+{% load insurance_filters %}
+{% load warranty_filters %}
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    {% load static %}
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -11,6 +13,7 @@
     <meta name="author" content="">
 
     <title>{% block title %} MegabikeCRM {% endblock %}</title>
+    <link rel="icon" href="{% static 'favicon.ico' %}"/>
 
     <!-- Custom fonts for this template-->
     <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
@@ -19,7 +22,11 @@
 
     <!-- Custom styles for this template-->
     <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
-    <!--<link href="{% static 'css/megabike-crm.css' %}" rel="stylesheet">-->
+    <link href="{% static 'css/megabike-crm.css' %}" rel="stylesheet">
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+        crossorigin="anonymous"></script>
 
 </head>
 
@@ -57,12 +64,6 @@
                     <span>Kontaktanfragen</span>
                 </a>
             </li>
-            <li class="nav-item inactive">
-                <a class="nav-link" href="{% url 'contact:outgoing-list' %}">
-                    <i class="fas fa-phone-volume"></i>
-                    <span>Ausgehende Anrufe</span>
-                </a>
-            </li>
 
             <hr class="sidebar-divider">
 
@@ -71,7 +72,7 @@
                 Leasing
             </div>
 
-            <!-- Nav Item - Insurance Info Collapse Menu -->
+            <!-- Nav Item - Leasing Info Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseLeasing"
                     aria-expanded="true" aria-controls="collapseLeasing">
@@ -96,6 +97,11 @@
                 Versicherung
             </div>
 
+            <li class="nav-item inactive">
+                <a class="nav-link" href="{% url 'insurance:schaden-list' status='open' company='all' %}">
+                    <i class="fas fa-car-crash"></i>
+                    <span>Schadensmeldungen</span></a>
+            </li>
 
             <li class="nav-item inactive">
                 <a class="nav-link" href="{% url 'insurance:list-all' %}">
@@ -165,6 +171,120 @@
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
 
+                        <!-- Nav Item - Phone Contacts Alerts-->
+                        <li class="nav-item dropdown no-arrow mx-1">
+                            <a class="nav-link dropdown-toggle" href="#" id="phoneDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-phone"></i>
+                                {% if open_contact_tickets.count %}
+                                    <span class="badge badge-danger badge-counter">
+                                        {{open_contact_tickets.count}}
+                                    </span>
+                                {% endif %}
+                            </a>
+                            <!-- Dropdown - Phone Contacts Alerts-->
+                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="phoneDropdown">
+                                <h6 class="dropdown-header">
+                                    {% if open_contact_tickets.count %}
+                                        Offene Kontaktanfragen
+                                    {% else %}
+                                        Keine offene Kontaktanfragen
+                                    {% endif %}    
+                                </h6>
+                                {% for contact in open_contact_tickets %}
+                                    <a class="dropdown-item d-flex align-items-center" href="{% url 'contact:call-list' abteilung='all' filter='open' %}">
+                                        <div class="mr-3">
+                                            <div class="icon-circle bg-primary">
+                                                <i class="fas fa-file-alt text-white"></i>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="small text-gray-500">{{contact.date}} {{contact.get_abteilung_display}}</div>
+                                            <span class="font-weight-bold">{{contact.kundenname}} {{contact.telefonnr}}</span>
+                                        </div>
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        </li>
+
+                        <!-- Nav Item - Insurance Claims Alerts-->
+                        {% if faellige_insurance_tickets %}
+                            <li class="nav-item dropdown no-arrow mx-1">
+                                <a class="nav-link dropdown-toggle" href="#" id="insuranceDropdown" role="button"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-car-crash"></i>
+                                    <!-- Counter - Insurance Claims -->
+                                    {% if faellige_insurance_tickets.count %}
+                                        <span class="badge badge-danger badge-counter">
+                                            {{faellige_insurance_tickets.count}}
+                                        </span>
+                                    {% endif %}
+                                </a>
+                            <!-- Dropdown - Insurance Claims Alerts-->
+                                <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                    aria-labelledby="insuranceDropdown">
+                                    <h6 class="dropdown-header">
+                                        Fällige Schadensmeldungen
+                                    </h6>
+                                    
+                                    {% for ticket in faellige_insurance_tickets %}
+                                        <a class="dropdown-item d-flex align-items-center" href="{% url 'insurance:schaden-detail' pk=ticket.id %}">
+                                            <div class="mr-3">
+                                                <div class="icon-circle bg-primary">
+                                                    <i class="fas fa-file-alt text-white"></i>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="small text-gray-500">
+                                                    {{ticket|insurance_last_update_date}} {{ticket|insurance_current_status}}
+                                                </div>
+                                                <span class="font-weight-bold">{{ticket.auftragsnr}}: {{ticket.kunde.nachname}}</span>
+                                            </div>
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            </li>
+                        {% endif %}
+
+                         <!-- Nav Item - Warranty Tickets -->
+                         {% if faellige_warranty_tickets %}
+                            <li class="nav-item dropdown no-arrow mx-1">
+                                <a class="nav-link dropdown-toggle" href="#" id="warrrantyDropdown" role="button"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-wrench"></i>
+                                    <!-- Counter - Warranty Tickets -->
+                                    {% if faellige_warranty_tickets.count %}
+                                        <span class="badge badge-danger badge-counter">
+                                            {{faellige_warranty_tickets.count}}
+                                        </span>
+                                    {% endif %}
+                                </a>
+                            <!-- Dropdown - Insurance Claims -->
+                                <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                    aria-labelledby="warrantyDropdown">
+                                    <h6 class="dropdown-header">
+                                        Fällige Reklamation
+                                    </h6>
+                                    {% for ticket in faellige_warranty_tickets %}
+                                        <a class="dropdown-item d-flex align-items-center" href="{% url 'warranty:display-ticket' pk=ticket.id %}">
+                                            <div class="mr-3">
+                                                <div class="icon-circle bg-primary">
+                                                    <i class="fas fa-file-alt text-white"></i>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="small text-gray-500">
+                                                    {{ticket|warranty_last_update_date}} {{ticket|warranty_current_status}}
+                                                </div>
+                                                <span class="font-weight-bold">{{ticket.get_hersteller_display}}{{ticket.id}}</span>
+                                            </div>
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            </li>
+                        {% endif %}
+
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
@@ -212,7 +332,6 @@
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
                         <span>Copyright &copy; Ryan Daly 2021</span><br/>
-                        <span>Alpha Release</span>
                     </div>
                 </div>
             </footer>
@@ -259,9 +378,7 @@
 
         <!-- Custom scripts for all pages-->
         <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
-
-        <!-- Page level plugins -->
-        <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
+        <!--<script type="text/javascript" src="{% static 'js/main.js' %}"></script>-->
     {% endblock %}
 </body>
 

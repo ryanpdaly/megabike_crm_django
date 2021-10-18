@@ -16,7 +16,10 @@
 							<h6 class="m-0 font-weight-bold text-primary">Ticket Infos:</h6>
 						</div>
 						<div class="card-body">
-							<table>
+							<div id="replaceable-content">
+								{% include 'customers/customer_search_partial.html' %}
+							</div>
+							<table class="top-buffer">
 								{{ form.as_table }}
 							</table>
 							<br/>
@@ -48,4 +51,21 @@
 
 {% block javascript %}
 	{{ block.super }}
+	<script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/jquery.form.js' %}"></script>
+  	<script>
+		$('#modal').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget)
+		    var form_url = button.data('url')
+
+		    var modal = $(this)
+		    
+		    $.ajax({
+		        url: form_url,
+		        context: document.body,
+		    }).done(function(response) {
+		        modal.html(response);
+		    });
+		})
+	</script>
 {% endblock %}

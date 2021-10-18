@@ -1,7 +1,31 @@
+.customer-search-list{
+	position:  relative;
+	height:  150px;
+	overflow: auto;
+}
+
 .top-buffer{
 	margin-top:20px;
 }
 
+.top-buffer-xs{
+	margin-top: 5px;
+}
+
 ul.errorlist{
 	color:#ff0000 !important;
+}
+
+@keyframes blinker {
+	from {opacity:  1.0;}
+	to {opacity:  0.0;}
+}
+
+.blink{
+	text-decoration:  blink;
+	animation-name:  blinker;
+	animation-duration:  0.6s;
+	animation-iteration-count: infinite;
+	animation-timing-function: ease-in-out;
+	animation-direction: alternate;
 }

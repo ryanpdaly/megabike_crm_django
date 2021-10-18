@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
+import logging
 import os
 from pathlib import Path
 
@@ -46,7 +47,7 @@ DEFAULT_APPS = [
     'django.contrib.staticfiles',
 ]
 
-THIRD_PARTY_APPS=[
+THIRD_PARTY_APPS = [
 
 ]
 
@@ -139,3 +140,31 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+# TODO: Setup email logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers':{
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': 'logs/megabikeCRM-info.log',
+        },
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+        'mail_admins':{
+            'level': 'WARNING',
+            'class': 'django.utils.log.AdminEmailHandler',
+        }
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file', 'console', 'mail_admins'],
+            'level': 'INFO',
+            'propagate': True,
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO')
+        },
+    },
+}

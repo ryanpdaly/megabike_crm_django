@@ -1,0 +1,198 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% load insurance_filters %}
+
+{% block header %}
+	<h1 class="h2 mb-0 text-gray-800">Schadensmeldung: {{ schadensmeldung.get_unternehmen_display }} {{ schadensmeldung.schadensnummer }}</h1>
+	<div class="dropdown mb-4">
+		<button class="btn btn-primary shadow-dm d-none d-sm-inline-block" type="button"
+			id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+		  <i class="fas fa-edit"></i>
+		  Schaden bearbeiten
+		</button>
+		<div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
+			<a class="dropdown-item" data-toggle="modal" data-target="#modal"
+				data-url="{% url 'insurance:schaden-edit' pk=schadensmeldung.id %}">Infos bearbeiten
+			</a>
+			<div class="dropdown-divider"></div>
+			<a class="dropdown-item" data-toggle="modal" data-target="#modal" 
+					data-url="{% url 'insurance:schaden-status' pk=schadensmeldung.id %}">
+				Status Update hinzufügen
+			</a>
+			<a class="dropdown-item" data-toggle="modal" data-target="#modal"
+					data-url="{% url 'insurance:schaden-file-add' pk=schadensmeldung.id %}">
+				Datei hinzufügen
+			</a>
+		</div>
+	</div>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+	<div class="row top-buffer">
+		<div class="col-xl-6 mx-auto">
+			<div class="card shadow mb-4">
+				<a href="#collapseBasicInfo" class="d-block card-header py-3" data-toggle="collapse" role="button" 
+					aria-expanded="true" aria-controls="collaseBasicInfo">
+					<h6 class="m-0 font-weight-bold text-primary">
+						Aktuelle Stand: {{ current_status.get_status_display }}
+					</h6>
+				</a>
+				<div class="collapse card-body show" id="collapseBasicInfo">
+					<a class="d-none d-sm-inline-block btn btn-primary shadow-sm btn-block" 
+						data-toggle="modal" data-target="#modal"
+						data-url="{% url 'insurance:schaden-edit' pk=schadensmeldung.id %}" >
+					<i class="fas fa-download fa-sm text-white-50"></i> 
+						Ticket bearbeiten
+					</a>
+					<table class='table table-striped top-buffer'>
+						<tr>
+							<th scope="row">Bearbeiter:</th>
+							<td>{{ schadensmeldung.get_bearbeiter_display }}</td>
+						</tr>
+						<tr>
+							<th scope='row'>Kunde:</th>
+							<td>{{ schadensmeldung.kunde.kundennummer }}: {{ schadensmeldung.kunde.nachname }} </td>
+						</tr>
+						<tr>
+							<th scope='row'>Auftragsnummer:</th>
+							<td>{{ schadensmeldung.auftragsnr }}</td>
+						</tr>
+						<tr>
+							<th scope='row'>Rechnungsnummer:</th>
+							<td> {% if schadensmeldung.rechnungsnr %}
+									{{ schadensmeldung.rechnungsnr }} vom {{ schadensmeldung.reparatur_datum }}
+								 {% endif %}
+							</td>
+						</tr>
+						<tr>
+							<th scope='row'>Schadensnummer:</th>
+							<td>{{ schadensmeldung.get_unternehmen_display }} {{ schadensmeldung.schadensnummer }}</td>
+						</tr>
+						<tr>
+							<th scope='row'>Status:</th>
+							<td>{{ schadensmeldung|insurance_current_status }}</td>
+						</tr>
+						<tr>
+							<th scope='row'>Last Update: </th>
+							<td>vor <b>{{ schadensmeldung|insurance_last_update }}</b> Tage</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="col-xl-6 mx-auto">
+			<div class="card shadow mb-4">
+				<a href="#collapseBasicInfo" class="d-block card-header py-3" data-toggle="collapse" role="button" 
+					aria-expanded="true" aria-controls="collaseFiles">
+					<h6 class="m-0 font-weight-bold text-primary">
+						Dateien
+					</h6>
+				</a>
+				<div class="collapse card-body show" id="collapseBasicInfo">
+					<a class="d-none d-sm-inline-block btn btn-primary shadow-sm btn-block" 
+						data-toggle="modal" data-target="#modal"
+						data-url="{% url 'insurance:schaden-file-add' pk=schadensmeldung.id %}" >
+					<i class="fas fa-download fa-sm text-white-50"></i> 
+						Datei hinzufügen
+					</a>
+					{% if files %}
+						<table class="table table-hover top-buffer">
+							<thead class="thead-dark">
+								<tr scope="row">
+									<th></th>
+									<th>Datum:</th>
+									<th>Beschreibung</th>
+								</tr>
+							</thead>
+							<tbody class="table-striped">
+								{% for file in files %}
+								<tr>
+									<td><button type="button" class="btn btn-primary btn-circle btn-sm"
+											data-toggle="modal" data-target="#modal" 
+											data-url="{% url 'insurance:schaden-file-display' pk=schadensmeldung.id sk=file.id %}">
+											<i class="fas fa-binoculars"></i>
+										</button></td>
+									<td>{{ file.date}}</td>
+									<td>{{ file.beschreibung }}</td>
+								</tr>
+							{% endfor %}
+							</tbody>
+						</table>
+					{% else %}
+						<div class="text-gray-400 top-buffer">Keine Datein vorhanden</div>
+					{% endif %}					
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xl-12">
+			<div class="card shadow mb-4">
+				<a href="#collapseStatus" class="d-block card-header py-3" data-toggle="collapse" role="button"
+					aria-expanded="false" aria-controls="collapseStatus">
+					<h6 class="m-0 font-weight-bold text-primary">
+						Status Updates
+					</h6>
+				</a>
+				<div class="collapse card-body show" id="collapseStatus">
+
+					<button type="button" class="d-none d-sm-inline-block btn btn-primary shadow-sm btn-block" 
+							data-toggle="modal" data-target="#modal" 
+							data-url="{% url 'insurance:schaden-status' pk=schadensmeldung.id %}">
+						<i class="fas fa-download fa-sm text-white-50"></i> 
+						Status Update hinzufügen
+					</button>
+
+					<table class="table top-buffer">
+						<thead class="thead-dark">
+							<tr scope="row">
+								<th>Datum</th>
+								<th>Mitarbeiter</th>
+								<th>Status</th>
+								<th>Anmerkungen</th>
+							</tr>
+						</thead>
+						<tbody class="table-striped">
+						{% for status in status_updates %}
+							<tr scope="row">
+								<th>{{ status.date }}</th>
+								<td>{{ status.get_bearbeiter_display }}</td>
+								<td>{{ status.get_status_display }}</td>
+								<td>{{ status.anmerkung }}</td>
+							</tr>
+						{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal" id="modal" tabindex="-1" role="dialog"></div>
+{% endblock %}
+
+{% block javascript %}
+	{{ block.super }}
+
+	<!-- ajax form submission -->
+	<script src="{% static 'js/jquery.form.js' %}"></script>
+
+	<!-- load response from desired form url -->
+	<script>
+		$('#modal').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget)
+		    var form_url = button.data('url')
+
+		    var modal = $(this)
+		    
+		    $.ajax({
+		        url: form_url,
+		        context: document.body,
+		    }).done(function(response) {
+		        modal.html(response);
+		    });
+		})
+	</script>
+{% endblock %}

@@ -1,16 +1,20 @@
+import logging
+
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import generic
+from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
 
+from apps.common import mixins as common_mixins
 from apps.warranty import models, forms
+from apps.customers import models as customer_models
+from apps.customers import forms as customer_forms
 
-# Create your views here.
 
-class TicketList(LoginRequiredMixin, generic.ListView):
+class TicketList(LoginRequiredMixin, generic.ListView, common_mixins.NotificationsMixin):
 	model = models.ReklaTicket
 	template_name = 'warranty/list_all.html'
 
@@ -18,7 +22,7 @@ class TicketList(LoginRequiredMixin, generic.ListView):
 		data = super().get_context_data(**kwargs)
 		return data
 
-class CreateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView):
+class CreateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView, common_mixins.NotificationsMixin):
 	model = models.ReklaTicket
 	permission_required = ('warranty.add_reklaticket',)
 
@@ -26,18 +30,74 @@ class CreateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateVi
 	success_url = reverse_lazy('warranty:main')
 
 	form_class = forms.NewTicketForm
-	
+
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+
+		kdnr_input = self.request.GET.get("kdnr_input")
+
+		if kdnr_input:
+			customer_options = customer_models.Customer.objects.filter(kundennummer__icontains=kdnr_input)
+		else:
+			customer_options = customer_models.Customer.objects.all()
+
+		context['customer_options'] = customer_options
+
+		return context
+
 	def get(self, request, *args, **kwargs):
 		# Handles GET requests, instantiates blank form and formsets
 		self.object = None
+
 		form_class = self.get_form_class()
 		form = self.get_form(form_class)
+
+		# TODO: rename customer_search to customer_form?
+		customer_search = customer_forms.CustomerSearchForm()
 		status_form = forms.StatusFormset()
 		files_form = forms.FileFormset()
+
+		if self.request.is_ajax():
+			kdnr_input = request.GET.get('kdnr_input')
+			self.kwargs['kdnr_input'] = kdnr_input
+
+			customer_options = customer_models.Customer.objects.filter(kundennummer__icontains=kdnr_input)
+			
+			kdnr_checked = self.request.GET.get('kdnr_checked')
+
+			if kdnr_checked:
+				kdnr_checked = int(kdnr_checked)
+				customer_search = customer_forms.CustomerSearchForm(initial={'kundennummer':kdnr_checked})
+
+				if customer_models.Customer.objects.filter(kundennummer__in=customer_options).exists():
+					logging.debug("Selected customer in customer options list")
+					self.kwargs['kdnr_checked'] = int(kdnr_checked)
+				else:
+					logging.debug("Selected customer NOT in customer options list")
+					self.kwargs['kdnr_checked'] = None
+					kdnr_checked=None
+
+			else:
+				customer_search = customer_forms.CustomerSearchForm(initial={'kundennummer':kdnr_input})
+
+			html = render_to_string(
+				template_name="customers/customer_search_partial.html",
+				context={"customer_options": customer_options,
+							"kdnr_checked": kdnr_checked,
+							"kdnr_input": kdnr_input,
+							"customer_search": customer_search,
+						}
+			)
+
+			data_dict = {"html_from_view": html}
+
+			return JsonResponse(data=data_dict, safe=False)	
+
 		return render(request, self.template_name,
 			self.get_context_data(form = form,
 									status_form = status_form,
-									files_form = files_form
+									files_form = files_form,
+									customer_search = customer_search,
 									)
 								)
 
@@ -46,17 +106,25 @@ class CreateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateVi
 		self.object = None
 		form_class = self.get_form_class()
 		form = self.get_form(form_class)
+		
+		customer_search = customer_forms.CustomerSearchForm(self.request.POST, instance=form.instance)
 		status_form = forms.StatusFormset(self.request.POST, instance=form.instance)
 		files_form = forms.FileFormset(self.request.POST, self.request.FILES, instance=form.instance)
-		if form.is_valid() and status_form.is_valid():
-			return self.form_valid(request, form, status_form, files_form)
-		else:
-			return self.form_invalid(request, form, status_form, files_form)
+		
 
-	def form_valid(self, request, form, status_form, files_form):
+		# This does not check if the kdnr entered is valid
+		if form.is_valid() and status_form.is_valid() and customer_search.is_valid():
+			return self.form_valid(request, form, status_form, files_form, customer_search)
+		else:
+			return self.form_invalid(request, form, status_form, files_form, customer_search)
+
+	def form_valid(self, request, form, status_form, files_form, customer_search):
 		# Called if all forms valid. Creates ReklaTicket and ReklaTicketStatus instances, redirects to success url
 		self.object = form.save(commit=False)
+		
 		# pre-processing for ReklaTicket goes here
+		self.object.kunde_id = customer_search.cleaned_data['kundennummer']
+		
 		self.object.save()
 
 		status_form = status_form.save(commit=False)
@@ -81,7 +149,7 @@ class CreateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateVi
 																)
 		)
 
-class DisplayTicket(LoginRequiredMixin, generic.DetailView):
+class DisplayTicket(LoginRequiredMixin, generic.DetailView, common_mixins.NotificationsMixin):
 	model = models.ReklaTicket
 	template_name_suffix = '_detail'
 
@@ -95,15 +163,15 @@ class DisplayTicket(LoginRequiredMixin, generic.DetailView):
 
 		return data
 
-class UpdateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.UpdateView):
+class UpdateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.UpdateView, common_mixins.NotificationsMixin):
 	model = models.ReklaTicket
 	permission_required = ('warranty.add_reklaticket',)
-	template_name_suffix = '_update'
+	template_name_suffix = '_update_modal'
 	success_url = reverse_lazy('warranty:main')
 
 	form_class = forms.NewTicketForm
 
-class AddFile(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView):
+class AddFile(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView, common_mixins.NotificationsMixin):
 	model = models.ReklaFile
 	permission_required = ('warranty.add_reklaticket',)
 	fields = ('beschreibung', 'file', 'anmerkung',)
@@ -121,7 +189,7 @@ class AddFile(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView):
 
 		return super().form_valid(form)
 
-class UpdateStatus(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView):
+class UpdateStatus(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView, common_mixins.NotificationsMixin):
 	model = models.ReklaStatusUpdate
 	permission_required = ('warranty.add_reklaticket',)
 	fields = ('status', 'anmerkung')
@@ -144,6 +212,10 @@ def display_file(request, pk, sk):
 
 	context={
 		'file_object':file_object,
+
+		'open_contact_tickets': common_mixins.get_user_contact_tickets(request),
+		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(request),
+		'faellige_warranty_tickets': common_mixins.get_faellige_warranty_tickets(request),
 	}
 
 	return render(request, 'warranty/display_file.html', context=context)

@@ -2,6 +2,7 @@
 {% load static %}
 {% load customer_filters %}
 {% load warranty_filters %}
+{% load insurance_filters %}
 
 {% block title %}
 	MegabikeCRM: Kd{{ customer.kundennummer }}
@@ -36,7 +37,6 @@
 						<h6 class="m-0 font-weight-bold text-primary">Fahrzeuge ({{ customer.kundennummer|count_bikes }} stk):</h6>
 					</a>
 					<div class="collapse card-body" id="collapseFahrzeuge">
-
 						{% if bikes %}
 							<div class="table-responsive">
 							  <table id="dataTable" class="table table-striped">
@@ -81,10 +81,10 @@
 				<div class="card shadow mb-4 h-100">
 					<a href="#collapseRekla" class="d-block card-header py-3" data-toggle="collapse" role="button" 
 						aria-expanded="true" aria-controls="collaseRekla">
-						<h6 class="m-0 font-weight-bold text-primary">Rekla Tickets ({{customer.kundennummer|count_open_tickets}} stk):</h6>
+						<h6 class="m-0 font-weight-bold text-primary">Rekla Tickets ({{customer.kundennummer|count_open_tickets_warranty}} in bearbeitung):</h6>
 					</a>
 					<div class="collapse card-body" id="collapseRekla">
-						{% if reklas %}
+						{% if warranty_tickets %}
 							<div class="table-responsive">
 							  <table id="dataTable" class="table table-striped">
 								<thead class="thead-dark">
@@ -97,39 +97,34 @@
 								  </tr>
 								</thead>
 								<tbody>
-									{% for rekla in reklas %}
+									{% for ticket in warranty_tickets %}
 										<tr scope="row">
 											<td>
-											{% comment %}
-												1) Need to uniform terminology. In some places I use rekla, in some tickets
-												2) This is a lot of repeated code from warranty/list_all.html
-											{% endcomment %}
-												{% if rekla.id|get_current_status == 'Erledigt' %}
-							      				  	<a href="{% url 'warranty:display-ticket' pk=rekla.id %}" 
+											{# This is a lot of repeated code from warranty/list_all.html #}
+												{% if ticket.id|warranty_current_status == 'Erledigt' %}
+							      				  	<a href="{% url 'warranty:display-ticket' pk=ticket.id %}" 
 							      				  		class="btn btn-secondary btn-circle btn-sm">
 							      						<i class="fas fa-check"></i>
 							      				  	</a>
-							      				{% elif rekla.id|get_last_update >= 9 %}
-							      				  	<a href="{% url 'warranty:display-ticket' pk=rekla.id %}" 
+							      				{% elif ticket.id|warranty_last_update >= 9 %}
+							      				  	<a href="{% url 'warranty:display-ticket' pk=ticket.id %}" 
 							      				  		class="btn btn-danger btn-circle btn-sm">
 							      				  		<i class="fas fa-exclamation-triangle"></i>
 							      				  	</a>
-							      				{% elif rekla.id|get_last_update >= 5 %}
-							    				  	<a href="{% url 'warranty:display-ticket' pk=rekla.id %}" 
+							      				{% elif ticket.id|warranty_last_update >= 5 %}
+							    				  	<a href="{% url 'warranty:display-ticket' pk=ticket.id %}" 
 							    				  		class="btn btn-warning btn-circle btn-sm">
 							      				    	<i class="fas fa-exclamation-triangle"></i>
-							      				  	</a>
 							      				{% else %}
-							      				  <a href="{% url 'warranty:display-ticket' pk=rekla.id %}" 
 							      				  	class="btn btn-success btn-circle btn-sm">
 							      				  	<i class="fas fa-info-circle"></i>
-							      				  </a>
 							  				    {% endif %}
+								  				</a>
 							  				</td>
-											<td><a href="{% url 'warranty:display-ticket' pk=rekla.id %}">{{ rekla.id }}</a></td>
-											<td><a href="{% url 'warranty:display-ticket' pk=rekla.id %}">{{ rekla.id|get_current_status }}</a></td>
-											<td>vor <b>{{ rekla.id|get_last_update }}</b> Tage</td>
-											<td>{{ rekla.get_hersteller_display }}
+											<td><a href="{% url 'warranty:display-ticket' pk=ticket.id %}">{{ ticket.id }}</a></td>
+											<td><a href="{% url 'warranty:display-ticket' pk=ticket.id %}">{{ ticket.id|warranty_current_status }}</a></td>
+											<td>vor <b>{{ ticket.id|warranty_last_update }}</b> Tage</td>
+											<td>{{ ticket.get_hersteller_display }}
 										</tr>
 									{% endfor %}
 								</tbody>
@@ -144,6 +139,77 @@
 				</div>
 			</div>
 		</div>
+		<div class="row top-buffer">
+			<div class="col-xl-12">
+				<div class="card shadow mb-4 h-100">
+					<a href="#collapseInsurance" class="d-block card-header py-3" data-toggle="collapse" role="button" 
+						aria-expanded="true" aria-controls="collaseInsurance">
+						<h6 class="m-0 font-weight-bold text-primary">Insurance Tickets ({{customer.kundennummer|count_open_tickets_insurance}} in bearbeitung):</h6>
+					</a>
+					<div class="collapse card-body" id="collapseInsurance">
+						{% if insurance_tickets %}
+							<div class="table-responsive">
+							  <table id="dataTable" class="table table-striped">
+								<thead class="thead-dark">
+								  <tr>
+								  	<th scope="col"></th>
+								    <th scope="col">Schadensnummer</th>								  	
+								  	<th scope="col">Status</th>
+								    <th scope="col">Vorgangsnummer</th>
+								    <th scope="col">Reparatur Datum</th>
+								    <th scope="col">Zuletzt bearbeitet</th>
+								  </tr>
+								</thead>
+								<tbody>
+									{% for ticket in insurance_tickets %}
+										<tr scope="row">
+											<td>
+												<a href="{% url 'insurance:schaden-detail' pk=ticket.id %}"
+													{% if ticket.id|insurance_current_status in schaden_erledigt %}
+							      				  		class="btn btn-secondary btn-circle btn-sm">
+							      						<i class="fas fa-check"></i>
+								      				{% elif ticket.id|insurance_last_update >= 9 %} 
+								      				  		class="btn btn-danger btn-circle btn-sm">
+								      				  		<i class="fas fa-exclamation-triangle"></i>
+								      				{% elif ticket.id|insurance_last_update >= 5 %} 
+								    				  		class="btn btn-warning btn-circle btn-sm">
+								      				    	<i class="fas fa-exclamation-triangle"></i>
+								      				{% else %}
+								      				  	class="btn btn-success btn-circle btn-sm">
+								      				  	<i class="fas fa-info-circle"></i>
+								  				    {% endif %}
+							  				    </a>
+							  				</td>
+							  				
+							  				<td><a href="{% url 'insurance:schaden-detail' pk=ticket.id %}" {# create modal for complete basic info + files, button to edit #}>{{ticket.get_unternehmen_display}}: {{ticket.schadensnummer}}</a></td>
+							  				<td><a href="#" {# modal to view complete current status w/ file, button to edit status #}>{{ticket|insurance_current_status}}</td>
+											<td>
+												{{ticket.auftragsnr}}
+												{% if ticket.rechnungsnr %} / {{ticket.rechnungsnr}} {% endif %}
+											</td>
+											<td>{% if ticket.reparatur_datum %}
+													{{ticket.reparatur_datum}}
+												{% else %}
+														---- 
+												{% endif %}
+											</td>
+											<td>vor <b>{{ticket|insurance_last_update}}</b> Tage</td>
+										</tr>
+									{% endfor %}
+								</tbody>
+							  </table>
+							</div>
+						{% else %}
+							<li>
+								Keine Insurance Tickets vorhanden.
+							</li>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+
+
 	</div>
 
 <div class="modal" id="modal" tabindex="-1" role="dialog"></div>
@@ -157,7 +223,7 @@
     <script src="{% static 'js/datatables.js' %}"></script>
 
 	<!-- ajax form submission -->
-	<script src="http://malsup.github.com/jquery.form.js"></script>
+	<script src="{% static 'js/jquery.form.js' %}"></script>
 
 	<!-- load response from desired form url -->
 	<script>

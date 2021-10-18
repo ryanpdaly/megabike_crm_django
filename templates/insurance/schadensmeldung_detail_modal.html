@@ -1,0 +1,51 @@
+<!-- Modal -->
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Schadensmeldung {{schadensmeldung.schadensnummer}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class='table table-striped top-buffer'>
+          <tr>
+            <th scope='row'>Kunde:</th>
+            <td>{{ schadensmeldung.kunde.kundennummer }}: {{ schadensmeldung.kunde.nachname }} </td>
+          </tr>
+          <tr>
+            <th scope='row'>Auftragsnummer:</th>
+            <td>{{ schadensmeldung.auftragsnr }}</td>
+          </tr>
+          <tr>
+            <th scope='row'>Rechnungsnummer:</th>
+            <td> {% if schadensmeldung.rechnungsnr %}
+                {{ schadensmeldung.rechnungsnr }} vom {{ schadensmeldung.reparatur_datum }}
+               {% endif %}
+            </td>
+          </tr>
+          <tr>
+            <th scope='row'>Schadensnummer:</th>
+            <td>{{ schadensmeldung.get_unternehmen_display }} {{ schadensmeldung.schadensnummer }}</td>
+          </tr>
+          <tr>
+            <th scope='row'>Status:</th>
+            <td>{{ schadensmeldung|get_current_status_insurance }}</td>
+          </tr>
+          <tr>
+            <th scope='row'>Last Update: </th>
+            <td>vor <b>{{ schadensmeldung|get_last_update_insurance }}</b> Tage</td>
+          </tr>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <input type="submit" value="Save" class="btn btn-primary">
+      </div>
+    </div>
+  </div>
+
+<script>
+    var form_options = { target: '#modal', success: function(response) {} };
+    $('#news-create').ajaxForm(form_options);
+</script>
