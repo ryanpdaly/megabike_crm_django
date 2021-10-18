@@ -261,6 +261,7 @@ class SchadenCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateV
 			customer_options = customer_models.Customer.objects.all()
 
 		context['customer_options'] = customer_options
+		context['customer_input_forward'] = "to_new_schaden"
 
 		return context
 
@@ -303,6 +304,7 @@ class SchadenCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateV
 							"kdnr_checked": kdnr_checked,
 							"kdnr_input": kdnr_input,
 							"customer_search": customer_search,
+							"customer_input_forward": "to_new_schaden",
 						}
 			)
 
@@ -313,8 +315,7 @@ class SchadenCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateV
 		return render(request, self.template_name,
 			self.get_context_data(form = form,
 									status_form = status_form,
-									customer_search = customer_search
-									#files_form = files_form
+									customer_search = customer_search,
 									)
 								)
 

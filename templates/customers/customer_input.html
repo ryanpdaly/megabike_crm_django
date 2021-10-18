@@ -4,6 +4,7 @@
   <div class="modal-content">
     <div class="modal-header">
       <h5 class="modal-title" id="staticBackdropLabel">Kundenprofil erstellen</h5>
+      <div>Forward to: {{view.kwargs.forward_to}}</div>
       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -22,7 +23,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
-        <input type="submit" id="save" name="save_to_customer" value="Speichern" class="btn btn-primary">
+        <input type="submit" id="save" name="{{view.kwargs.forward_to}}" value="Speichern" class="btn btn-primary">
       </div>
     </form>
   </div>

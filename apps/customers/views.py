@@ -65,7 +65,6 @@ def bike_input_view(request, pk):
 			bike_form.save()
 
 			return HttpResponseRedirect(reverse('customers:customer-detail', kwargs={'pk':pk}))
-
 	else:
 		bike_form = forms.BikeForm(initial={'kunde':pk})
 
@@ -129,7 +128,6 @@ class CustomerInputView(LoginRequiredMixin, generic.CreateView, common_mixins.No
 
 	form_class = forms.CustomerForm
 
-	
 	def form_valid(self, form):
 		context = self.get_context_data()
 		bikes = context['bikes']
@@ -142,6 +140,7 @@ class CustomerInputView(LoginRequiredMixin, generic.CreateView, common_mixins.No
 
 	def get_context_data(self, **kwargs):
 		data = super().get_context_data(**kwargs)
+
 		if self.request.POST:
 			data['bikes'] = forms.BikeFormset(self.request.POST)
 		else:
@@ -149,11 +148,13 @@ class CustomerInputView(LoginRequiredMixin, generic.CreateView, common_mixins.No
 		return data
 
 	def get_success_url(self):
-		# TODO: On customer creation, forward to new customer
-		if self.request.POST.get('save_to_customer'):
+		# TODO: This is going to scale incredibly poorly. Figure out a better solution
+		if self.request.POST.get('to_customer_list'):
 			return reverse('customers:customer-list')
-		elif self.request.POST.get('save_to_new_schaden'):
+		elif self.request.POST.get('to_new_schaden'):
 			return reverse('insurance:schaden-new')
+		elif self.request.POST.get('to_new_rekla'):
+			return reverse('warranty:new-ticket')
 		else:
 			return reverse('customers:customer-list')
 

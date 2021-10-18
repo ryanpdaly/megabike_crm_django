@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path, reverse
+from django.urls import path, re_path, reverse
 
 from apps.customers import views
 
@@ -8,6 +8,7 @@ urlpatterns = [
 	path('', views.CustomerListView.as_view(), name='customer-list'),
 	
 	path('new/', views.CustomerInputView.as_view(), name='customer-input'),
+	path('new/forward=<str:forward_to>', views.CustomerInputView.as_view(), name='customer-input'),
 
 	path('kd<int:pk>/details/', views.customer_detail_view, name='customer-detail'),		
 	path('kd<int:pk>/update/', views.CustomerUpdateView.as_view(), name='customer-update'),

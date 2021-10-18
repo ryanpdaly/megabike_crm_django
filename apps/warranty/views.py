@@ -42,6 +42,7 @@ class CreateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateVi
 			customer_options = customer_models.Customer.objects.all()
 
 		context['customer_options'] = customer_options
+		context['customer_input_forward'] = "to_new_rekla"
 
 		return context
 
@@ -86,6 +87,7 @@ class CreateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateVi
 							"kdnr_checked": kdnr_checked,
 							"kdnr_input": kdnr_input,
 							"customer_search": customer_search,
+							"customer_input_forward": "to_new_rekla",
 						}
 			)
 
