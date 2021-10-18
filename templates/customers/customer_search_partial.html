@@ -1,9 +1,5 @@
 {# customer_search_partial.html #}
 {% load static %}
-<div>Redirecting to: {{customer_input_forward}} <br/>
-{% if customer_input_forward %}True{%else%}False{%endif%}	
-</div>
-
 <div class="d-flex justify-content-center">
 	{{ customer_search.non_field_errors }}
 	<div class="fieldWrapper">
@@ -76,6 +72,7 @@
 					async: true,
 				}).done(function(response){
 					$("#input_modal").html(response);
+					// TODO: Is this name logic still necessary?
 					$("#save").replaceWith('<input type="submit" id="save" name={% if customer_input_forward %} "{{customer_input_forward}}"{% else %}"to_customer_list"{%endif%} value="Speichern" class="btn btn-primary">')
 					$('#input_modal').modal('show')
 				});
