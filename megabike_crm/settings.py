@@ -15,7 +15,7 @@ import os
 from pathlib import Path
 
 try:
-   from megabike_crm.local_settings import *
+    from megabike_crm.local_settings import *
 except ImportError:
     pass 
 
@@ -33,7 +33,7 @@ SECRET_KEY = '1b^hzox3ssx0_sln0e^7@0l#a4g(=j5b!5b+0ym5*#itm98zly'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.0.152',]
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.0.152', ]
 
 
 # Application definition
@@ -51,7 +51,7 @@ THIRD_PARTY_APPS = [
     'tempus_dominus'
 ]
 
-LOCAL_APPS =[
+LOCAL_APPS = [
     'apps.contact',
     'apps.common',
     'apps.customers',
@@ -125,7 +125,6 @@ LANGUAGE_CODE = 'de-de'
 
 TIME_ZONE = 'Europe/Berlin'
 
-# TODO: Are both of these the wrong format? Should they be %d.%m.%Y?
 DATE_FORMAT = 'd.m.Y'
 DATE_INPUT_FORMATS = 'd.m.Y'
 
@@ -157,7 +156,7 @@ LOGGING = {
             'style': '{'
         }
     },
-    'handlers':{
+    'handlers': {
         'file': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
@@ -169,13 +168,14 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'timestamp'
         },
-        'mail_admins':{
+        'mail_admins': {
             'level': 'WARNING',
             'class': 'django.utils.log.AdminEmailHandler',
             'formatter': 'timestamp'
         }
     },
     'loggers': {
+        # TODO: Setup general logger
         """
         '': {
             'handlers': ['file', 'console',],
@@ -185,7 +185,7 @@ LOGGING = {
         """
         'django': {
             'handlers': ['file', 'console', 'mail_admins'],
-            #'level': 'DEBUG',
+            # 'level': 'DEBUG',
             'propagate': True,
             'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG')
         },

@@ -41,7 +41,8 @@ def input_insurance(request, rn, insurance):
 	if request.method == "POST":
 		post_data = request.POST.copy()
 
-		# TODO: Reduce repetition
+		# Properly formats/converts input dates
+		# TODO: Make this a util function in common in order to reduce repetition
 		if 'beginn' in post_data:
 			input_date = post_data['beginn']
 			post_data['beginn'] = datetime.datetime.strptime(input_date, '%d.%m.%Y')
@@ -106,7 +107,7 @@ class InfoPage(LoginRequiredMixin, generic.base.TemplateView, common_mixins.Noti
 
 		return data
 
-	# TODO: There is no reason this needs to be in this class. Should probably be in a common/utils file
+	# TODO: Move to a common util file
 	def read_json(self, path):
 		with open(path, 'r', encoding="UTF-8") as file:
 			return json.load(file)
@@ -270,11 +271,15 @@ class SchadenDetailModal(LoginRequiredMixin, generic.DetailView):
 
 class SchadenCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView, common_mixins.NotificationsMixin):
 	model = models.Schadensmeldung
+
+	# TODO: Setup permissions
 	permission_required = ()
 	
 	template_name = 'insurance/schadensmeldung_new.html'
-	success_url = reverse_lazy('insurance:schaden-list',
-								kwargs={'status': 'open', 'company': 'all'})
+	success_url = reverse_lazy(
+		'insurance:schaden-list',
+		kwargs={'status': 'open', 'company': 'all'},
+	)
 	form_class = forms.SchadensmeldungForm
 
 	def get_context_data(self, **kwargs):
@@ -352,7 +357,7 @@ class SchadenCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateV
 								)
 
 	def post(self, request, *args, **kwargs):
-		# Handles POST requests, instatiates form instance and formsets with POST variables and checks validity
+		# Handles POST requests, instantiates form instance and formsets with POST variables and checks validity
 		self.object = None
 		form_class = self.get_form_class()
 		

@@ -40,9 +40,10 @@ class UpdateBikeForm(forms.ModelForm):
 
 
 class AssonaForm(forms.ModelForm):
-	# TODO: This places a form-control box behind the file button. Fix that
 	def __init__(self, *args, **kwargs):
 		super(AssonaForm, self).__init__(*args, **kwargs)
+
+		# Adds bootstrap styling to fields
 		for field in self.fields:
 			if field == 'versicherungskarte':
 				self.fields[field].widget.attrs.update({
@@ -56,15 +57,13 @@ class AssonaForm(forms.ModelForm):
 	class Meta:
 		model = models.AssonaInfo
 		fields = ('rahmennummer', 'vertragsnummer', 'beginn', 'versicherungskarte',)
-		# widgets = {'beginn': SelectDateWidget(years=valid_years)}
-
 		widgets = {
 			'beginn': DatePicker(
-				attrs = {
+				attrs={
 					'append': 'fa fa-calendar',
 					'icon_toggle': True,
 				},
-				options = {
+				options={
 					'format': 'DD.MM.YYYY',
 				}
 			)
@@ -72,9 +71,10 @@ class AssonaForm(forms.ModelForm):
 
 
 class BikeleasingForm(forms.ModelForm):
-	# TODO: This places a form-control box behind the file button. Fix that
 	def __init__(self, *args, **kwargs):
 		super(BikeleasingForm, self).__init__(*args, **kwargs)
+
+		# Adds bootstrap styling to fields
 		for field in self.fields:
 			if field == 'versicherungskarte':
 				self.fields[field].widget.attrs.update({
@@ -87,16 +87,22 @@ class BikeleasingForm(forms.ModelForm):
 
 	class Meta:
 		model = models.BikeleasingInfo
-		fields = ('rahmennummer', 'nutzer_id', 'paket', 'inspektion', 'leasingbank', 'beginn',
-					'versicherungskarte')
-
+		fields = (
+			'rahmennummer',
+			'nutzer_id',
+			'paket',
+			'inspektion',
+			'leasingbank',
+			'beginn',
+			'versicherungskarte'
+		)
 		widgets = {
 			'beginn': DatePicker(
-				attrs = {
+				attrs={
 					'append': 'fa fa-calendar',
 					'icon_toggle': True,
 				},
-				options = {
+				options={
 					'format': 'DD.MM.YYYY',
 				}
 			)
@@ -104,9 +110,10 @@ class BikeleasingForm(forms.ModelForm):
 
 
 class BusinessbikeForm(forms.ModelForm):
-	# TODO: This places a form-control box behind the file button. Fix that
 	def __init__(self, *args, **kwargs):
 		super(BusinessbikeForm, self).__init__(*args, **kwargs)
+
+		# Adds bootstrap styling to fields
 		for field in self.fields:
 			if field == 'versicherungskarte':
 				self.fields[field].widget.attrs.update({
@@ -119,26 +126,31 @@ class BusinessbikeForm(forms.ModelForm):
 
 	class Meta:
 		model = models.BusinessbikeInfo
-		# TODO: Explicitly list desired fields
-		fields = ('rahmennummer', 'beginn', 'ende', 'policenummer', 'paket', 'verschleiss_guthaben',
-					'versicherungskarte',)
-
+		fields = (
+			'rahmennummer',
+			'beginn',
+			'ende',
+			'policenummer',
+			'paket',
+			'verschleiss_guthaben',
+			'versicherungskarte',
+		)
 		widgets = {
 			'beginn': DatePicker(
-				attrs = {
+				attrs={
 					'append': 'fa fa-calendar',
 					'icon_toggle': True,
 				},
-				options = {
+				options={
 					'format': 'DD.MM.YYYY',
 				}
 			),
 			'ende': DatePicker(
-				attrs = {
+				attrs={
 					'append': 'fa fa-calendar',
 					'icon_toggle': True,
 				},
-				options = {
+				options={
 					'format': 'DD.MM.YYYY',
 				}
 			)
@@ -146,9 +158,10 @@ class BusinessbikeForm(forms.ModelForm):
 
 
 class EnraForm(forms.ModelForm):
-	# TODO: This places a form-control box behind the file button. Fix that
 	def __init__(self, *args, **kwargs):
 		super(EnraForm, self).__init__(*args, **kwargs)
+
+		# Adds bootstrap styling to fields
 		for field in self.fields:
 			if field == 'versicherungskarte':
 				self.fields[field].widget.attrs.update({
@@ -161,16 +174,14 @@ class EnraForm(forms.ModelForm):
 
 	class Meta:
 		model = models.EnraInfo
-		# TODO: Explicitly list desired fields
 		fields = ('rahmennummer', 'beginn', 'policenummer', 'versicherungskarte',)
-
 		widgets = {
 			'beginn': DatePicker(
-				attrs = {
+				attrs={
 					'append': 'fa fa-calendar',
 					'icon_toggle': True,
 				},
-				options = {
+				options={
 					'format': 'DD.MM.YYYY',
 				}
 			)
@@ -178,9 +189,10 @@ class EnraForm(forms.ModelForm):
 
 
 class EuroradForm(forms.ModelForm):
-	# TODO: This places a form-control box behind the file button. Fix that
 	def __init__(self, *args, **kwargs):
 		super(EuroradForm, self).__init__(*args, **kwargs)
+
+		# Adds bootstrap styling to fields
 		for field in self.fields:
 			if field == 'versicherungskarte':
 				self.fields[field].widget.attrs.update({
@@ -193,16 +205,14 @@ class EuroradForm(forms.ModelForm):
 
 	class Meta:
 		model = models.EuroradInfo
-		# TODO: Explicitly list desired fields
 		fields = ('rahmennummer', 'beginn', 'vertragsnummer', 'versicherungskarte')
-
 		widgets = {
 			'beginn': DatePicker(
-				attrs = {
+				attrs={
 					'append': 'fa fa-calendar',
 					'icon_toggle': True,
 				},
-				options = {
+				options={
 					'format': 'DD.MM.YYYY',
 				}
 			)
@@ -212,22 +222,31 @@ class EuroradForm(forms.ModelForm):
 class SchadensmeldungForm(forms.ModelForm):
 	class Meta:
 		model = models.Schadensmeldung
-		fields = ('unternehmen', 'schadensnummer', 'auftragsnr', 'rechnungsnr',
-					'reparatur_datum', 'zahlungsreferenz', 'bearbeiter')
+		fields = (
+			'unternehmen',
+			'schadensnummer',
+			'auftragsnr',
+			'rechnungsnr',
+			'reparatur_datum',
+			'zahlungsreferenz',
+			'bearbeiter',
+		)
+		widgets = {
+			'reparatur_datum': DatePicker(
+				attrs={
+					'append': 'fa fa-calendar',
+					'icon_toggle': True,
+				},
+				options={
+					'format': 'DD.MM.YYYY',
+				}
+			)
+		}
 
-		widgets = {'reparatur_datum': DatePicker(
-			attrs={
-				'append': 'fa fa-calendar',
-				'icon_toggle': True,
-			},
-			options={
-				'format': 'DD.MM.YYYY',
-			}
-			)}
-	
-		
 	def __init__(self, *args, **kwargs):
 		super(SchadensmeldungForm, self).__init__(*args, **kwargs)
+
+		# Adds bootstrap styling to fields
 		for field in self.fields:
 			self.fields[field].widget.attrs.update({
 				'class': 'form-control'
@@ -241,6 +260,8 @@ class SchadensmeldungStatusForm(forms.ModelForm):
 
 	def __init__(self, *args, **kwargs):
 		super(SchadensmeldungStatusForm, self).__init__(*args, **kwargs)
+
+		# Adds bootstrap styling to fields
 		for field in self.fields:
 			self.fields[field].widget.attrs.update({
 				'class': 'form-control'
@@ -254,6 +275,8 @@ class SchadensmeldungFileForm(forms.ModelForm):
 
 	def __init__(self, *args, **kwargs):
 		super(SchadensmeldungFileForm, self).__init__(*args, **kwargs)
+
+		# Adds bootstrap styling to fields
 		for field in self.fields:
 			self.fields[field].widget.attrs.update({
 				'class': 'form-control'
@@ -270,10 +293,10 @@ class CustomStatusFormset(BaseInlineFormSet):
 	def __init__(self, *args, **kwargs):
 		super(CustomStatusFormset, self).__init__(*args, **kwargs)
 
+		# Adds bootstrap styling to fields
 		for form in self.forms:
 			for field in form.fields:
 				form.fields[field].widget.attrs.update({'class': 'form-control'})
-
 
 
 StatusFormset = inlineformset_factory(

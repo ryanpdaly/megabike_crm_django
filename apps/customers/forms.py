@@ -29,6 +29,7 @@ class CustomerSearchForm(forms.ModelForm):
 		fields = ['kundennummer']
 		widgets = {'kundennummer':forms.NumberInput(attrs={'placeholder':'Kundennummer', 'id':'kdnr_checked'})}
 
+	# Adds bootstrap styling to fields
 	def __init__(self, *args, **kwargs):
 		super(CustomerSearchForm, self).__init__(*args, **kwargs)
 		for field in self.fields:
