@@ -48,17 +48,13 @@
 
 <script src="{% static 'js/jquery-3.6.0.js' %}"></script>
 
-{# TODO: Us local static file instead of CDN #}
+{# TODO: Use local static file instead of CDN #}
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" 
 	integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" 
 	crossorigin="anonymous">
 </script>
 
 {# Creates event listener for clicks on button to create customer, opens modal #}
-{% comment %}
-	TODO: this shouldn't always redirect to new_schaden, also need to be able to redirect to new_rekla.
-	Pass "redirect" parameter to this view?
-{% endcomment %}
 <script>
 	$('#results-container').on("click", function(e){
 			if(e.target && e.target.nodeName == "SPAN"){
