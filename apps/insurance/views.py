@@ -285,6 +285,10 @@ class SchadenCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateV
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
 
+		# Sets name of save button on CustomerInput Form, used to set get_success_url
+		context['customer_input_forward'] = "to_new_schaden"
+
+		# Filter customers using input from search box
 		kdnr_input = self.request.GET.get("kdnr_input")
 
 		if kdnr_input:
@@ -309,12 +313,15 @@ class SchadenCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateV
 		customer_search = customer_forms.CustomerSearchForm()
 		status_form = forms.StatusFormset()
 
+		# Handles Ajax request from our customer search box
 		if self.request.is_ajax():
+
+			# Filter customers using input from search box
 			kdnr_input = self.request.GET.get('kdnr_input')
 			self.kwargs['kdnr_input'] = kdnr_input
-
 			customer_options = customer_models.Customer.objects.filter(kundennummer__icontains=kdnr_input)
 
+			# Check if customer from search options is checked
 			kdnr_checked = self.request.GET.get('kdnr_checked')
 
 			if kdnr_checked:
@@ -341,6 +348,7 @@ class SchadenCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateV
 					"kdnr_checked": kdnr_checked,
 					"kdnr_input": kdnr_input,
 					"customer_search": customer_search,
+					"customer_input_forward": "to_new_schaden",
 				}
 			)
 
@@ -349,12 +357,12 @@ class SchadenCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateV
 			return JsonResponse(data=data_dict, safe=False)
 
 		return render(request, self.template_name,
-			self.get_context_data(form = form,
-									status_form = status_form,
-									customer_search = customer_search
-									#files_form = files_form
-									)
-								)
+			self.get_context_data(
+				form = form,
+				status_form = status_form,
+				customer_search = customer_search,
+			)
+		)
 
 	def post(self, request, *args, **kwargs):
 		# Handles POST requests, instantiates form instance and formsets with POST variables and checks validity
@@ -377,15 +385,12 @@ class SchadenCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateV
 		else:
 			return self.form_invalid(request, form, status_form, customer_search)
 
-
 	# TODO: Signature of method does not match that of ModelFormClass --> form_valid(self, form)
 	def form_valid(self, request, form, status_form, customer_search):
 		# Called if all forms valid. Creates Schadensmeldung and SchadensmeldungStatus instances, redirects to success url
 		self.object = form.save(commit=False)
-		
 		# pre-processing for Schadensmeldung Ticket goes here
 		self.object.kunde_id = customer_search.cleaned_data['kundennummer']
-		
 		self.object.save()
 
 		status_form = status_form.save(commit=False)
@@ -395,13 +400,16 @@ class SchadenCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateV
 
 		return HttpResponseRedirect(self.get_success_url())
 
+	# Called if form invalid, re-renders context data with data-filled forms and errors
 	# TODO: Signature of method does not match that of FormMixin --> form_invalid(self, form)
 	def form_invalid(self, request, form, status_form, files_form):
-		# Called if form invalid, re-renders context data with data-filled forms and errors
-
-		return render(request, self.template_name, self.get_context_data(form=form,
-																status_form=status_form,
-																)
+		return render(
+			request, 
+			self.template_name, 
+			self.get_context_data(
+				form=form,
+				status_form=status_form,
+			)
 		)
 
 

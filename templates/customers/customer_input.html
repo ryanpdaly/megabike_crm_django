@@ -12,24 +12,28 @@
       {% csrf_token %}
       <div class="modal-body">
       	<table>
-			{{ form.as_table }}
-		</table>
-		<br/>
-		<h4 class="mb-0 text-gray-800">Fahrzeug hinzufügen</h4>
-		<table>
-			{{ bikes.as_table }}
-		</table>
+			   {{ form.as_table }}
+    		</table>
+    		<br/>
+    		<h4 class="mb-0 text-gray-800">Fahrzeug hinzufügen</h4>
+    		<table>
+    			{{ bikes.as_table }}
+    		</table>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        <input type="submit" value="Save" class="btn btn-primary">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+        <input type="submit" id="save" name="{{view.kwargs.forward_to}}" value="Speichern" class="btn btn-primary">
       </div>
     </form>
   </div>
 </div>
 
+
 <script src="{% static 'js/jquery-3.6.0.js' %}"></script>
 <script src="{% static 'js/jquery.form.js' %}"></script>
+<script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+
 <script>
     var form_options = { target: '#modal', success: function(response) {} };
     $('#news-create').ajaxForm(form_options);

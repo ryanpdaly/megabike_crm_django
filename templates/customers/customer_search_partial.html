@@ -4,35 +4,37 @@
 	{{ customer_search.non_field_errors }}
 	<div class="fieldWrapper">
 		{{ customer_search.kundennummer.errors }}
-
 		{{ customer_search.kundennummer.as_hidden }} <br/>
 	</div>
 	<div>
 		<i id="search-icon" class="fas fa-search"></i>
 		<input id="user-input" 
-			{% if not kdnr_input %} placeholder="Kundennummer">
-			{% else %} value={{kdnr_input}}>
+			{% if not kdnr_input %} 
+				placeholder="Kundennummer">
+			{% else %} 
+				value={{kdnr_input}}>
 			{% endif %}
 	</div>
 </div>
 
-<div class="customer-search-list border rounded top-buffer">
+<div class="customer-search-list border rounded top-buffer" id='results-container'>
 {% if customer_options.count %}
-		<div class="form-check">
+	<div class="form-check">
 		{% for customer in customer_options %}
 			<div class="ml-2">
-				<input class="form-check-input" type="radio" name="customerRadios" id="kd{{customer.kundennummer}}Radio" value="{{customer.kundennummer}}" {% if kdnr_checked == customer.kundennummer%} checked {% endif %}>
+				<input class="form-check-input" type="radio" name="customerRadios" id="kd{{customer.kundennummer}}Radio" value="{{customer.kundennummer}}" 
+					{% if kdnr_checked == customer.kundennummer%} 
+						checked 
+					{% endif %}>
 				<label class="form-check-label" for="kd{{customer.kundennummer}}Radio">{{customer.kundennummer}}: {{customer.nachname}}
 				</label><br/>
 			</div>
 		{% endfor %}
-		</div>
+	</div>
 {% else %}
 	<div class="d-flex justify-content-center top-buffer">
-		{% comment 'This modal doesn't respond. Not entirely sure why. --> Need to set up event binding after dynamic loading%}		
-		<a class="btn btn-primary btn-lg btn-icon-split" data-toggle="modal" data-target="#modal" data-url="{% url 'customers:customer-input-modal' %}">
-		{% endcomment %}
-		<a href="{% url 'customers:customer-list' %}" class="btn btn-primary btn-xl btn-icon-split">
+		<a class="btn btn-primary btn-xl btn-icon-split" id="new_customer" data-toggle="input_modal" data-target="#input_modal" 
+			data-url="{% url 'customers:customer-input' forward_to=customer_input_forward %}">
 			<span class="icon text-white-50"><i class="fas fa-plus-square"></i></span>
 			<span class="text">Kunde anlegen?</span>
 		</a>
@@ -40,20 +42,36 @@
 {% endif %}
 </div>
 
+<div class="modal" id="input_modal" tabindex="-1" role="dialog">
+
+</div>
 
 <script src="{% static 'js/jquery-3.6.0.js' %}"></script>
-<script>
-	$('#modal').on('show.bs.modal', function (event) {
-		var button = $(event.relatedTarget)
-	    var form_url = button.data('url')
 
-	    var modal = $(this)
-	    
-	    $.ajax({
-	        url: form_url,
-	        context: document.body,
-	    }).done(function(response) {
-	        modal.html(response);
-	    });
-	})
+{# TODO: Use local static file instead of CDN #}
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" 
+	integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" 
+	crossorigin="anonymous">
+</script>
+
+{# Creates event listener for clicks on button to create customer, opens modal #}
+<script>
+	$('#results-container').on("click", function(e){
+			if(e.target && e.target.nodeName == "SPAN"){
+
+				var button = $("#new_customer");
+				var form_url = button.data("url")
+				
+				$.ajax({
+					url: form_url,
+					context: document.body,
+					async: true,
+				}).done(function(response){
+					$("#input_modal").html(response);
+					// TODO: Is this name logic still necessary?
+					$("#save").replaceWith('<input type="submit" id="save" name={% if customer_input_forward %} "{{customer_input_forward}}"{% else %}"to_customer_list"{%endif%} value="Speichern" class="btn btn-primary">')
+					$('#input_modal').modal('show')
+				});
+			}
+		});
 </script>
