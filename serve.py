@@ -38,6 +38,10 @@ class DjangoApplication(object):
 			'server.socket_port': self.PORT,
 			'engine.autoreload_on': False,
 			'log.screen': True,
+
+			'server.ssl_module': 'builtin',
+			'server.ssl_certificate': 'ssl_certs/cert.pem',
+			'server.ssl_private_key': 'ssl_certs/privkey.pem',
 		})
 		self.mount_static(settings.STATIC_URL, settings.STATIC_ROOT)
 
@@ -45,7 +49,7 @@ class DjangoApplication(object):
 		cherrypy.tree.graft(WSGIHandler())
 		cherrypy.engine.start()
 
-		self.open_browser()
+		# self.open_browser()
 
 		cherrypy.engine.block()
 

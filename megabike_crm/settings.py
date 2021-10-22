@@ -29,13 +29,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '1b^hzox3ssx0_sln0e^7@0l#a4g(=j5b!5b+0ym5*#itm98zly'
-
 # SECURITY WARNING: don't run with debug turned on in production!
 if PRODUCTION is True:
     DEBUG = False
+
+    with open('megabike_crm/secret_key.txt') as f:
+        SECRET_KEY = f.read().strip()
+
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = True
 else: 
     DEBUG = True
+    SECRET_KEY = '1b^hzox3ssx0_sln0e^7@0l#a4g(=j5b!5b+0ym5*#itm98zly'
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.0.152', ]
 
@@ -68,7 +74,6 @@ INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 
 # Installed Apps Settings
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
 TEMPUS_DOMINUS_LOCALIZE = True
 TEMPUS_DOMINUS_INCLUDE_ASSETS = True
 

@@ -131,3 +131,6 @@ dmypy.json
 
 # Employee Names & Privacy stuff
 employees.json
+
+# SSL Certificates
+ssl_certs/
