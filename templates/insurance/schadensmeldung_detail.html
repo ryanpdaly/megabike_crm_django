@@ -60,14 +60,25 @@
 						</tr>
 						<tr>
 							<th scope='row'>Rechnungsnummer:</th>
-							<td> {% if schadensmeldung.rechnungsnr %}
+							<td>{% if schadensmeldung.rechnungsnr %}
 									{{ schadensmeldung.rechnungsnr }} vom {{ schadensmeldung.reparatur_datum }}
-								 {% endif %}
+								{% else %}
+									---
+							 	{% endif %}
 							</td>
 						</tr>
 						<tr>
 							<th scope='row'>Schadensnummer:</th>
 							<td>{{ schadensmeldung.get_unternehmen_display }} {{ schadensmeldung.schadensnummer }}</td>
+						</tr>
+						<tr>
+							<th scope='row'>Zahlungsreferenz:</th>
+							<td>{% if schadensmeldung.zahlungsreferenz %}
+									{{ schadensmeldung.zahlungsreferenz }}
+								{% else %}
+									---
+								{% endif %}
+							</td>
 						</tr>
 						<tr>
 							<th scope='row'>Status:</th>
