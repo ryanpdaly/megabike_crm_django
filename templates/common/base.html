@@ -63,7 +63,8 @@
             <hr class="sidebar-divider my-0">
 
             <li class="nav-item inactive">
-                <a class="nav-link" href="{% url 'contact:call-list' abteilung='all' filter='all' %}">
+                {# TODO: Abteilung filter should be dependent on user. --> user.get_profile.abteilung#}
+                <a class="nav-link" href="{% url 'contact:call-list' abteilung='all' filter='open' %}">
                     <i class="fas fa-phone"></i>
                     <span>Kontaktanfragen</span>
                 </a>

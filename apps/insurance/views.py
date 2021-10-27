@@ -169,11 +169,14 @@ def schaden_list(request, status, company):
 		'Wertgarantie': 'we',
 	}
 	
+	# TODO: This is not DRY. Use one list for both model and view
 	statuses = {
 		'KV eingereicht': 'kv',
 		'KV freigegeben': 'kvf',
 		'Rechnung eingereicht': 're',
+		'In Nachbearbeitung': 'nb',
 		'Abzurechnen': 'azr',
+		'Restsumme offen': 'rs',
 		'Bezahlt': 'be',
 		'Abgelehnt': 'ab',
 	}
