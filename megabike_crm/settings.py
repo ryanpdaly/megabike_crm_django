@@ -14,6 +14,7 @@ import logging
 import os
 from pathlib import Path
 
+# TODO: This should absolutely throw an error
 try:
     from megabike_crm.local_settings import *
 except ImportError:
@@ -28,10 +29,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '1b^hzox3ssx0_sln0e^7@0l#a4g(=j5b!5b+0ym5*#itm98zly'
-
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if PRODUCTION is True:
+    DEBUG = False
+
+    with open('megabike_crm/secret_key.txt') as f:
+        SECRET_KEY = f.read().strip()
+
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = True
+else: 
+    DEBUG = True
+    SECRET_KEY = '1b^hzox3ssx0_sln0e^7@0l#a4g(=j5b!5b+0ym5*#itm98zly'
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.0.152', ]
 
@@ -64,7 +74,6 @@ INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 
 # Installed Apps Settings
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
 TEMPUS_DOMINUS_LOCALIZE = True
 TEMPUS_DOMINUS_INCLUDE_ASSETS = True
 
@@ -139,8 +148,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+
+if PRODUCTION is True:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+else:
+    STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
@@ -175,8 +187,8 @@ LOGGING = {
         }
     },
     'loggers': {
-        # TODO: Setup general logger
         """
+        # TODO: Setup general logger
         '': {
             'handlers': ['file', 'console',],
             'level': 'INFO',
@@ -184,10 +196,14 @@ LOGGING = {
         },
         """
         'django': {
-            'handlers': ['file', 'console', 'mail_admins'],
+            'handlers': [ 
+                'console',
+                'mail_admins'
+            ],
             # 'level': 'DEBUG',
             'propagate': True,
             'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG')
         },
     },
 }
+
