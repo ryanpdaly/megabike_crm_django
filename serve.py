@@ -13,8 +13,8 @@ from django.conf import settings
 from django.core.handlers.wsgi import WSGIHandler
 
 class DjangoApplication(object):
-	HOST = "192.168.0.152"
-	PORT = 8080
+	HOST = settings.HOST
+	PORT = settings.PORT
 
 	def mount_static(self, url, root):
 		"""
@@ -26,6 +26,7 @@ class DjangoApplication(object):
 			'tools.staticdir.dir': root,
 			'tools.expires.on': True,
 			'tools.expires.secs': 86400
+
 		}
 		cherrypy.tree.mount(None, url, {'/': config})
 
@@ -57,5 +58,5 @@ class DjangoApplication(object):
 		cherrypy.engine.exit()
 
 if __name__ == "__main__":
-	print("Your app is running at http://192.168.0.152:8080")
+	print(f"Your app is running at https://{DjangoApplication.HOST}:{DjangoApplication.PORT}")
 	DjangoApplication().run()
