@@ -130,9 +130,10 @@ class EnraInfo(models.Model):
     beginn = models.DateField()
     policenummer = models.CharField(max_length=20)
 
-    versicherungskarte = models.FileField(blank=True,
-                                          upload_to=set_path_and_rename,
-                                          )
+    versicherungskarte = models.FileField(
+                            blank=True,
+                            upload_to=set_path_and_rename,
+                          )
 
     def __str__(self):
         return 'ENRA'
@@ -218,8 +219,10 @@ class SchadensmeldungStatus(models.Model):
         ('kv', 'KV eingereicht'),
         ('kvf', 'KV freigegeben'),
         ('re', 'Rechnung eingereicht'),
-        ('be', 'Bezahlt'),
+        ('nb', 'In Nachbearbeitung'),
         ('azr', 'Abzurechnen'),
+        ('rs', 'Restsumme offen'),
+        ('be', 'Bezahlt'),
         ('ab', 'Abgelehnt'),
     )
 

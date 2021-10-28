@@ -60,14 +60,25 @@
 						</tr>
 						<tr>
 							<th scope='row'>Rechnungsnummer:</th>
-							<td> {% if schadensmeldung.rechnungsnr %}
+							<td>{% if schadensmeldung.rechnungsnr %}
 									{{ schadensmeldung.rechnungsnr }} vom {{ schadensmeldung.reparatur_datum }}
-								 {% endif %}
+								{% else %}
+									---
+							 	{% endif %}
 							</td>
 						</tr>
 						<tr>
 							<th scope='row'>Schadensnummer:</th>
 							<td>{{ schadensmeldung.get_unternehmen_display }} {{ schadensmeldung.schadensnummer }}</td>
+						</tr>
+						<tr>
+							<th scope='row'>Zahlungsreferenz:</th>
+							<td>{% if schadensmeldung.zahlungsreferenz %}
+									{{ schadensmeldung.zahlungsreferenz }}
+								{% else %}
+									---
+								{% endif %}
+							</td>
 						</tr>
 						<tr>
 							<th scope='row'>Status:</th>
@@ -136,7 +147,6 @@
 					</h6>
 				</a>
 				<div class="collapse card-body show" id="collapseStatus">
-
 					<button type="button" class="d-none d-sm-inline-block btn btn-primary shadow-sm btn-block" 
 							data-toggle="modal" data-target="#modal" 
 							data-url="{% url 'insurance:schaden-status' pk=schadensmeldung.id %}">

@@ -14,6 +14,7 @@ import logging
 import os
 from pathlib import Path
 
+# TODO: This should absolutely throw an error
 try:
     from megabike_crm.local_settings import *
 except ImportError:
@@ -27,19 +28,22 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '1b^hzox3ssx0_sln0e^7@0l#a4g(=j5b!5b+0ym5*#itm98zly'
-
 # SECURITY WARNING: don't run with debug turned on in production!
-if PRODUCTION:
+if PRODUCTION is True:
     DEBUG = False
-else:
-    DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.0.152',]
-if PRODUCTION:
-    DEFAULT_DOMAIN = ALLOWED_HOSTS[2]
-else:
-    DEFAULT_DOMAIN = ALLOWED_HOSTS[0]
+    with open('megabike_crm/secret_key.txt') as f:
+        SECRET_KEY = f.read().strip()
+
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = True
+else: 
+    DEBUG = True
+    SECRET_KEY = '1b^hzox3ssx0_sln0e^7@0l#a4g(=j5b!5b+0ym5*#itm98zly'
+
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.0.152', ]
+
 
 # Application definition
 
@@ -55,9 +59,10 @@ DEFAULT_APPS = [
 
 THIRD_PARTY_APPS = [
     'django_apscheduler',
+    'tempus_dominus'
 ]
 
-LOCAL_APPS =[
+LOCAL_APPS = [
     'apps.contact',
     'apps.common',
     'apps.customers',
@@ -69,7 +74,10 @@ LOCAL_APPS =[
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+# Installed Apps Settings
+TEMPUS_DOMINUS_LOCALIZE = True
+TEMPUS_DOMINUS_INCLUDE_ASSETS = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -130,6 +138,7 @@ LANGUAGE_CODE = 'de-de'
 TIME_ZONE = 'Europe/Berlin'
 
 DATE_FORMAT = 'd.m.Y'
+DATE_INPUT_FORMATS = 'd.m.Y'
 
 USE_I18N = True
 
@@ -147,35 +156,59 @@ SITE_ID = 0
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+
+if PRODUCTION is True:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+else:
+    STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
 
 # TODO: Setup email logging
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    'handlers':{
+    'formatters': {
+        'timestamp': {
+            'format': '{asctime} {levelname} {message}',
+            'style': '{'
+        }
+    },
+    'handlers': {
         'file': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
             'filename': 'logs/megabikeCRM-info.log',
+            'formatter': 'timestamp',
         },
         'console': {
+            'level': 'DEBUG',
             'class': 'logging.StreamHandler',
+            'formatter': 'timestamp'
         },
-        'mail_admins':{
+        'mail_admins': {
             'level': 'WARNING',
             'class': 'django.utils.log.AdminEmailHandler',
+            'formatter': 'timestamp'
         }
     },
     'loggers': {
-        'django': {
-            'handlers': ['file', 'console', 'mail_admins'],
+        # TODO: Setup general logger
+        '': {
+            'handlers': ['file', 'console',],
+            'level': 'INFO',
             'propagate': True,
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO')
+        },
+        'django': {
+            'handlers': [ 
+                'console',
+                'file'
+                'mail_admins'
+            ],
+            'propagate': True,
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG')
         },
     },
 }
@@ -185,6 +218,7 @@ Scheduler config to:
     - Store jobs in project database
     - Execute jobs in threads inside the application process
 """
+SCHEDULER_AUTOSTART = True
 SCHEDULER_CONFIG = {
     "apscheduler.jobstores.default": {
         "class": "django_apscheduler.jobstores:DjangoJobStore"
@@ -193,4 +227,4 @@ SCHEDULER_CONFIG = {
         "type": "threadpool"
     }
 }
-SCHEDULER_AUTOSTART = True
+

@@ -1,3 +1,4 @@
+import datetime
 import logging
 
 from django.contrib.auth.decorators import login_required, permission_required
@@ -14,6 +15,9 @@ from apps.customers import models as customer_models
 from apps.customers import forms as customer_forms
 
 
+logger = logging.getLogger(__name__)
+
+
 class TicketList(LoginRequiredMixin, generic.ListView, common_mixins.NotificationsMixin):
 	model = models.ReklaTicket
 	template_name = 'warranty/list_all.html'
@@ -21,6 +25,7 @@ class TicketList(LoginRequiredMixin, generic.ListView, common_mixins.Notificatio
 	def get_context_data(self, **kwargs):
 		data = super().get_context_data(**kwargs)
 		return data
+
 
 class CreateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView, common_mixins.NotificationsMixin):
 	model = models.ReklaTicket
@@ -42,6 +47,7 @@ class CreateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateVi
 			customer_options = customer_models.Customer.objects.all()
 
 		context['customer_options'] = customer_options
+		context['customer_input_forward'] = "to_new_rekla"
 
 		return context
 
@@ -67,7 +73,7 @@ class CreateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateVi
 
 			if kdnr_checked:
 				kdnr_checked = int(kdnr_checked)
-				customer_search = customer_forms.CustomerSearchForm(initial={'kundennummer':kdnr_checked})
+				customer_search = customer_forms.CustomerSearchForm(initial={'kundennummer': kdnr_checked})
 
 				if customer_models.Customer.objects.filter(kundennummer__in=customer_options).exists():
 					logging.debug("Selected customer in customer options list")
@@ -75,34 +81,46 @@ class CreateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateVi
 				else:
 					logging.debug("Selected customer NOT in customer options list")
 					self.kwargs['kdnr_checked'] = None
-					kdnr_checked=None
+					kdnr_checked = None
 
 			else:
-				customer_search = customer_forms.CustomerSearchForm(initial={'kundennummer':kdnr_input})
+				customer_search = customer_forms.CustomerSearchForm(initial={'kundennummer': kdnr_input})
 
 			html = render_to_string(
 				template_name="customers/customer_search_partial.html",
-				context={"customer_options": customer_options,
-							"kdnr_checked": kdnr_checked,
-							"kdnr_input": kdnr_input,
-							"customer_search": customer_search,
-						}
+				context={
+					"customer_options": customer_options,
+					"kdnr_checked": kdnr_checked,
+					"kdnr_input": kdnr_input,
+					"customer_search": customer_search,
+					"customer_input_forward": "to_new_rekla",
+				}
 			)
 
 			data_dict = {"html_from_view": html}
 
 			return JsonResponse(data=data_dict, safe=False)	
 
-		return render(request, self.template_name,
-			self.get_context_data(form = form,
-									status_form = status_form,
-									files_form = files_form,
-									customer_search = customer_search,
-									)
-								)
+		return render(
+			request,
+			self.template_name,
+			self.get_context_data(
+				form=form,
+				status_form=status_form,
+				files_form=files_form,
+				customer_search=customer_search,
+			)
+		)
 
 	def post(self, request, *args, **kwargs):
 		# Handles POST requests, instatiates form instance and formsets with POST variables and checks validity
+
+		# TODO: This seems janky as hell. Figure out how to do this in the regular form processing/cleaning of Django.
+		post_data = request.POST.copy()
+		input_date = post_data['angenommen']
+		post_data['angenommen'] = datetime.datetime.strptime(input_date, '%d.%m.%Y')
+		request.POST = post_data
+
 		self.object = None
 		form_class = self.get_form_class()
 		form = self.get_form(form_class)
@@ -110,14 +128,14 @@ class CreateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateVi
 		customer_search = customer_forms.CustomerSearchForm(self.request.POST, instance=form.instance)
 		status_form = forms.StatusFormset(self.request.POST, instance=form.instance)
 		files_form = forms.FileFormset(self.request.POST, self.request.FILES, instance=form.instance)
-		
 
-		# This does not check if the kdnr entered is valid
+		# TODO: This does not check if the kdnr entered is valid
 		if form.is_valid() and status_form.is_valid() and customer_search.is_valid():
 			return self.form_valid(request, form, status_form, files_form, customer_search)
 		else:
 			return self.form_invalid(request, form, status_form, files_form, customer_search)
 
+	# TODO: Signature of method does not match that of base class
 	def form_valid(self, request, form, status_form, files_form, customer_search):
 		# Called if all forms valid. Creates ReklaTicket and ReklaTicketStatus instances, redirects to success url
 		self.object = form.save(commit=False)
@@ -140,14 +158,20 @@ class CreateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateVi
 
 		return HttpResponseRedirect(self.get_success_url())
 
+	# TODO: Add customer_search to argument list
 	def form_invalid(self, request, form, status_form, files_form):
 		# Called if form invalid, re-renders context data with data-filled forms and errors
 
-		return render(request, self.template_name, self.get_context_data(form=form,
-																status_form=status_form,
-																files_form=files_form,
-																)
+		return render(
+			request,
+			self.template_name,
+			self.get_context_data(
+				form=form,
+				status_form=status_form,
+				files_form=files_form,
+			)
 		)
+
 
 class DisplayTicket(LoginRequiredMixin, generic.DetailView, common_mixins.NotificationsMixin):
 	model = models.ReklaTicket
@@ -163,6 +187,8 @@ class DisplayTicket(LoginRequiredMixin, generic.DetailView, common_mixins.Notifi
 
 		return data
 
+
+# TODO: Rename to be less ambiguous, maybe something like EditTicket
 class UpdateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.UpdateView, common_mixins.NotificationsMixin):
 	model = models.ReklaTicket
 	permission_required = ('warranty.add_reklaticket',)
@@ -170,6 +196,7 @@ class UpdateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.UpdateVi
 	success_url = reverse_lazy('warranty:main')
 
 	form_class = forms.NewTicketForm
+
 
 class AddFile(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView, common_mixins.NotificationsMixin):
 	model = models.ReklaFile
@@ -189,6 +216,8 @@ class AddFile(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView, c
 
 		return super().form_valid(form)
 
+
+# TODO: Why doesn't this use the StatusUpdateForm created in forms?
 class UpdateStatus(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView, common_mixins.NotificationsMixin):
 	model = models.ReklaStatusUpdate
 	permission_required = ('warranty.add_reklaticket',)
@@ -206,12 +235,13 @@ class UpdateStatus(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateVi
 		form.instance.rekla_ticket = rekla_ticket[0]
 		return super().form_valid(form)
 
+
+# TODO: Value pk is not used
 def display_file(request, pk, sk):
 	file_object = get_object_or_404(models.ReklaFile, id=sk)
-	filename = file_object.file
 
-	context={
-		'file_object':file_object,
+	context = {
+		'file_object': file_object,
 
 		'open_contact_tickets': common_mixins.get_user_contact_tickets(request),
 		'faellige_insurance_tickets': common_mixins.get_faellige_insurance_tickets(request),

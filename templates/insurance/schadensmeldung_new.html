@@ -1,13 +1,17 @@
 {% extends 'common/base.html' %}
 {% load static %}
 
+{% block head %}
+
+{% endblock %}
+
 {% block header %}
 	<h1 class="h2 mb-0 text-gray-800">Schadensmeldung erstellen</h1>
 {% endblock %}
 
 {% block content %}
 	<div class="container-fluid">
-		<form method='POST' enctype="multipart/form-data">
+		<form action="" method='POST' enctype="multipart/form-data">
 			{% csrf_token %}
 			<div class="row top-buffer">
 				<div class="col-xl-6">
@@ -19,6 +23,7 @@
 							<div id="replaceable-content">
 								{% include 'customers/customer_search_partial.html' %}
 							</div>
+							<br/> {# TODO: Get rid of this. Put form into its own div with top-buffer #}
 							<table>
 								{{ form.as_table }}
 							</table>
@@ -43,9 +48,10 @@
 	</div>
 {% endblock %}
 
-
 {% block javascript %}
 	{{ block.super }}
 	<script type="text/javascript" src="{% static 'js/main.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/jquery.form.js' %}"></script>
+
+	{{ form.media }}
 {% endblock %}

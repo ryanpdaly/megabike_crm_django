@@ -21,3 +21,19 @@
 		<input type="submit" value="Submit">
 	</form>
 {% endblock %}
+
+{% block javascript %}
+	{{ block.super }}
+	<script type="text/javascript" src="{% static 'js/jquery.form.js' %}"></script>
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+		  integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+		  crossorigin="anonymous">
+
+	<!-- JQuery UI -->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+	integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+	crossorigin="anonymous"></script>
+
+	{{ ins_form.media }}
+{% endblock %}

@@ -65,7 +65,6 @@ def bike_input_view(request, pk):
 			bike_form.save()
 
 			return HttpResponseRedirect(reverse('customers:customer-detail', kwargs={'pk':pk}))
-
 	else:
 		bike_form = forms.BikeForm(initial={'kunde':pk})
 
@@ -126,17 +125,8 @@ def customer_detail_view(request, pk):
 class CustomerInputView(LoginRequiredMixin, generic.CreateView, common_mixins.NotificationsMixin):
 	model = models.Customer
 	template_name = 'customers/customer_input.html'
-	success_url = reverse_lazy('customers:customer-list')
 
 	form_class = forms.CustomerForm
-
-	def get_context_data(self, **kwargs):
-		data = super().get_context_data(**kwargs)
-		if self.request.POST:
-			data['bikes'] = forms.BikeFormset(self.request.POST)
-		else:
-			data['bikes'] = forms.BikeFormset()
-		return data
 
 	def form_valid(self, form):
 		context = self.get_context_data()
@@ -145,7 +135,29 @@ class CustomerInputView(LoginRequiredMixin, generic.CreateView, common_mixins.No
 		if bikes.is_valid():
 			bikes.instance = self.object
 			bikes.save()
-		return super().form_valid(form)
+		return super().form_valid(form)	
+
+
+	def get_context_data(self, **kwargs):
+		data = super().get_context_data(**kwargs)
+
+		if self.request.POST:
+			data['bikes'] = forms.BikeFormset(self.request.POST)
+		else:
+			data['bikes'] = forms.BikeFormset()
+		return data
+
+	def get_success_url(self):
+		# TODO: This is going to scale incredibly poorly. Figure out a better solution
+		if self.request.POST.get('to_customer_list'):
+			return reverse('customers:customer-list')
+		elif self.request.POST.get('to_new_schaden'):
+			return reverse('insurance:schaden-new')
+		elif self.request.POST.get('to_new_rekla'):
+			return reverse('warranty:new-ticket')
+		else:
+			return reverse('customers:customer-list')
+
 
 class CustomerListView(LoginRequiredMixin, generic.ListView, common_mixins.NotificationsMixin):
 	model = models.Customer
