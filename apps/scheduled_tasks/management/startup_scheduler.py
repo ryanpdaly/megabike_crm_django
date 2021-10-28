@@ -34,8 +34,8 @@ def email_faellig_versicherung():
 			schaden_list = schaden_list.exclude(pk=schaden.pk)
 
 		# TODO: Figure out how to add domain to our url.
-		# domain = 'localhost:8000/'
-		domain = shortcuts.get_current_site()
+		domain = 'localhost:8000/'
+		#domain = shortcuts.get_current_site()
 		schaden.url = f'{domain}{reverse("insurance:schaden-detail", kwargs={"pk":schaden.id,})}'
 
 	context = {

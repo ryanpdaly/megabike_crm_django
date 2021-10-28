@@ -2,7 +2,9 @@
 
 import os
 import django
+import logging
 import webbrowser
+
 from threading import Timer
 
 os.environ["DJANGO_SETTINGS_MODULE"] = "megabike_crm.settings"
@@ -12,9 +14,18 @@ import cherrypy
 from django.conf import settings
 from django.core.handlers.wsgi import WSGIHandler
 
+from apscheduler.schedulers.blocking import BlockingScheduler
+from apscheduler.triggers.cron import CronTrigger
+from django_apscheduler.jobstores import DjangoJobStore
+
+from apps.scheduled_tasks.management import startup_scheduler
+
 class DjangoApplication(object):
 	HOST = settings.HOST
 	PORT = settings.PORT
+
+	scheduler = BlockingScheduler(timezone=settings.TIME_ZONE)
+	scheduler.add_jobstore(DjangoJobStore(), 'default')
 
 	def mount_static(self, url, root):
 		"""
@@ -52,11 +63,37 @@ class DjangoApplication(object):
 
 		# self.open_browser()
 
+		if settings.SCHEDULER_AUTOSTART is True:
+			DjangoApplication().start_apscheduler()
+			scheduler.log("Scheduler initiated")
+
 		cherrypy.engine.block()
 
 	def exit(self):
 		cherrypy.engine.exit()
 
+	def start_apscheduler(self):
+		if settings.DEBUG:
+			logging.getLogger('apscheduler').setLevel(logging.INFO)
+		else:
+			logging.getLogger('apscheduler').setLevel(logging.WARNING)
+
+		self.scheduler.add_job(
+			startup_scheduler.email_faellig_versicherung,
+			trigger=CronTrigger(minute="*/1"),
+			id="insurance_email",
+			max_instances=1,
+			replace_existing=True
+		)
+
+		scheduler.start()
+
 if __name__ == "__main__":
 	print(f"Your app is running at https://{DjangoApplication.HOST}:{DjangoApplication.PORT}")
 	DjangoApplication().run()
+
+	'''
+	if settings.SCHEDULER_AUTOSTART is True:
+		DjangoApplication().start_apscheduler()
+		scheduler.log("Scheduler initiated")
+	'''

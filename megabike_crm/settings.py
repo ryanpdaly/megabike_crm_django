@@ -204,7 +204,7 @@ LOGGING = {
         'django': {
             'handlers': [ 
                 'console',
-                'file'
+                'file',
                 'mail_admins'
             ],
             'propagate': True,
