@@ -13,16 +13,25 @@ def set_upload_path(bike, filename):
     # TODO: can't delete this because it's used in a migration. Fix that.
     pass
 
-
+# FIXME: This function is incredibly unflexible.
 def set_path_and_rename(instance, filename):
+    """
+    Utility function that renames uploaded insurance cards to form
+        kdXXXXX/versicherungskarten/UUID4_IDENTIFIER.ext
+    """
+
     ext = filename.split('.')[-1]
     filename = f'kd{instance.rahmennummer.kunde.kundennummer}/versicherungskarten/{uuid4()}.{ext}'
 
     return filename
 
 
-# Rework, combine with other set_path_and_rename?
+# FIXME: This function is unflexible. Rework, combine with set_path_and_rename
 def set_schadenfile_path_and_name(instance, filename):
+    """
+    Utility function that renames uploaded files to form:
+        kdXXXXX / COMPANY SCHADEN# /UUID4_IDENTIFIER.ext
+    """
     ext = filename.split('.')[-1]
 
     kdnr = instance.schadensmeldung.kunde.kundennummer
@@ -34,7 +43,12 @@ def set_schadenfile_path_and_name(instance, filename):
     return filename
 
 
+# FIXME: Is this model actually used anywhere?
 class InsuranceCompanies(models.Model):
+    """
+    Django model with options for all insurance companies
+    """
+
     COMPANIES = (
         ('no', 'None'),
         ('as', 'Assona'),
@@ -49,11 +63,16 @@ class InsuranceCompanies(models.Model):
                                     choices=COMPANIES,
                                     )
 
+    # FIXME: This should show which company in some way or another
     def __str__(self):
         return 'Insurance Company'
 
 
 class AssonaInfo(models.Model):
+    """
+    A Django model for Assona insurance policies
+    """
+
     rahmennummer = models.ForeignKey(customer_models.Bike, on_delete=models.CASCADE, to_field='rahmennummer')
     vertragsnummer = models.CharField(max_length=10)
     beginn = models.DateField()
@@ -70,6 +89,10 @@ class AssonaInfo(models.Model):
 
 
 class BikeleasingInfo(models.Model):
+    """
+    A Django model for BikeleasingService insurance policies
+    """
+
     PAKET_OPTIONS = [('P', 'Premium'), ('P+', 'Premium Plus')]
     BANK_OPTIONS = [('A', 'ALS Leasing GmbH'), ('H', 'Hofmann Leasing GmbH'),
                     ('D', 'Digital Mobility Leasing GmbH')]
@@ -89,7 +112,6 @@ class BikeleasingInfo(models.Model):
     def __str__(self):
         return f'Bikeleasing: {self.get_paket_display()}'
 
-    # {self.get_paket_display} -> Throws a recursion error? Need to see display though
 
     def get_fields(self):
         # This needs to show display for our choice fields
@@ -97,6 +119,10 @@ class BikeleasingInfo(models.Model):
 
 
 class BusinessbikeInfo(models.Model):
+    """
+    A Django model for Businessbike insurance policies
+    """
+
     PAKET_OPTIONS = (
         ('D', 'Durchsicht'),
         ('I', 'Inspektion'),
@@ -125,6 +151,10 @@ class BusinessbikeInfo(models.Model):
 
 
 class EnraInfo(models.Model):
+    """
+    A Django model for ENRA insurance policies
+    """
+
     rahmennummer = models.ForeignKey(customer_models.Bike, on_delete=models.CASCADE, to_field='rahmennummer')
 
     beginn = models.DateField()
@@ -143,6 +173,10 @@ class EnraInfo(models.Model):
 
 
 class EuroradInfo(models.Model):
+    """
+    A Django model for Eurorad insurance policies
+    """
+
     rahmennummer = models.ForeignKey(customer_models.Bike, on_delete=models.CASCADE, to_field='rahmennummer')
 
     beginn = models.DateField()
@@ -165,6 +199,10 @@ SCHADEN_STATUS_ERLEDIGT = ['be', 'ab', 'azr', ]
 
 # Rename to schaden? Name unneccesarily long
 class Schadensmeldung(models.Model):
+    """
+    A Django model for insurance claim tickets
+    """
+
     kunde = models.ForeignKey(customer_models.Customer, on_delete=models.CASCADE)
 
     COMPANIES = (
@@ -208,6 +246,10 @@ class Schadensmeldung(models.Model):
 
 # Rename to SchadensStatus, name unecessarily long.
 class SchadensmeldungStatus(models.Model):
+    """
+    A Django model for Status updates to a given Schadensmeldung object
+    """
+
     schadensmeldung = models.ForeignKey(Schadensmeldung, on_delete=models.CASCADE)
 
     date = models.DateField()
@@ -243,6 +285,10 @@ class SchadensmeldungStatus(models.Model):
 
 
 class SchadensmeldungFile(models.Model):
+    """
+    A Django model for files belonging to a given Schadensmeldung object
+    """
+
     schadensmeldung = models.ForeignKey(Schadensmeldung, on_delete=models.CASCADE)
     date = models.DateField()
 

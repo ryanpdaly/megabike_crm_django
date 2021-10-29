@@ -11,16 +11,29 @@ from apps.customers import forms as customer_forms
 
 
 class NewTicketForm(forms.ModelForm):
+	"""
+	Django Modelform used to create ReklaTicket objects
+	"""
+
 	def __init__(self, *args, **kwargs):
+		"""
+		Custom __init__ behavior to enable Bootstrap form styling
+		"""
+
 		super(NewTicketForm, self).__init__(*args, **kwargs)
 
-		# Adds bootstrap styling to fields
 		for field in self.fields:
 			self.fields[field].widget.attrs.update({
 				'class': 'form-control'
 				})
 
 	class Meta:
+		"""
+		Included fields(widgets): sachbearbeiter, angenommen(DatePicker), 
+			hersteller, artikelnr, bezeichnung, menge, auftragsnur, 
+			fehlerbeschreibung
+		"""
+
 		model = models.ReklaTicket
 		fields = (
 			'sachbearbeiter',
@@ -46,45 +59,80 @@ class NewTicketForm(forms.ModelForm):
 
 
 class StatusUpdateForm(forms.ModelForm):
+	"""
+	Django Modelform used to create ReklaStatusUpdate objects
+	"""
+
 	def __init__(self, *args, **kwargs):
+		"""
+		Custom __init__ behavior to enable Bootstrap form styling
+		"""
+
 		super(StatusUpdateForm, self).__init__(*args, **kwargs)
 
-		# Adds bootstrap styling to fields
 		for field in self.fields:
 			self.fields[field].widget.attrs.update({
 				'class': 'form-control'
 				})
 
 	class Meta:
+		"""
+		Included fields(widgets): status, anmerkung
+		"""
+
 		model = models.ReklaStatusUpdate
 		fields = ('status', 'anmerkung')
 
 
 class AddReklaFile(forms.ModelForm):
+	"""
+	Django Modelform used to create ReklaFile objects
+	"""
+
 	def __init__(self, *args, **kwargs):
+		"""
+		Custom __init__ behavior to enable Bootstrap form styling
+		"""
+
 		super(AddReklaFile, self).__init__(*args, **kwargs)
 
-		# Adds bootstrap styling to fields
 		for field in self.fields:
 			self.fields[field].widget.attrs.update({
 				'class': 'form-control'
 				})
 
 	class Meta:
+		"""
+		Included fields: beschreibung, file, anmerkung
+		"""
+
 		model = models.ReklaFile
 		fields = ('beschreibung', 'file', 'anmerkung',)
 
 
 class CustomStatusFormset(BaseInlineFormSet):
+	"""
+	Django BaseInlineFormset to include StatusUpdateForm on page 
+		displaying NewTicketForm
+	"""
+
 	def __init__(self, *args, **kwargs):
+		"""
+		Custom __init__ behavior to enable Bootstrap form styling
+		"""
+
 		super(CustomStatusFormset, self).__init__(*args, **kwargs)
 
-		# Adds bootstrap styling to fields
 		for form in self.forms:
 			for field in form.fields:
 				form.fields[field].widget.attrs.update({'class': 'form-control'})
 
 	def clean(self):
+		"""
+		Custom clean behavior to raise ValidationError if no status
+			selected
+		"""
+
 		for form in self.forms:
 			status = form.cleaned_data.get('status')
 			if not status:

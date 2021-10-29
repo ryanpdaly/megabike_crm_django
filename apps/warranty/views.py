@@ -19,15 +19,24 @@ logger = logging.getLogger(__name__)
 
 
 class TicketList(LoginRequiredMixin, generic.ListView, common_mixins.NotificationsMixin):
+	"""
+	Django Listview used to display a list of ReklaTicket objects
+	"""
+
 	model = models.ReklaTicket
 	template_name = 'warranty/list_all.html'
 
+	# FIXME: Why is this called if there is no custom behavior?
 	def get_context_data(self, **kwargs):
 		data = super().get_context_data(**kwargs)
 		return data
 
 
 class CreateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView, common_mixins.NotificationsMixin):
+	"""
+	Django CreateView used to create ReklaTicket objects
+	"""
+
 	model = models.ReklaTicket
 	permission_required = ('warranty.add_reklaticket',)
 
@@ -37,6 +46,9 @@ class CreateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateVi
 	form_class = forms.NewTicketForm
 
 	def get_context_data(self, **kwargs):
+		"""
+		Custom get_context_data used to enable customer search functionality
+		"""
 		context = super().get_context_data(**kwargs)
 
 		kdnr_input = self.request.GET.get("kdnr_input")
@@ -52,6 +64,10 @@ class CreateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateVi
 		return context
 
 	def get(self, request, *args, **kwargs):
+		"""
+		Custom get behavior used to handle AJAX requests
+		"""
+
 		# Handles GET requests, instantiates blank form and formsets
 		self.object = None
 
@@ -113,6 +129,11 @@ class CreateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateVi
 		)
 
 	def post(self, request, *args, **kwargs):
+		"""
+		Custom post behavior used to check additional forms, formats
+			dates input in forms
+		"""
+
 		# Handles POST requests, instatiates form instance and formsets with POST variables and checks validity
 
 		# TODO: This seems janky as hell. Figure out how to do this in the regular form processing/cleaning of Django.
@@ -137,12 +158,15 @@ class CreateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateVi
 
 	# TODO: Signature of method does not match that of base class
 	def form_valid(self, request, form, status_form, files_form, customer_search):
+		"""
+		Custom form_valid behavior used to process additional forms on page
+		"""
+
 		# Called if all forms valid. Creates ReklaTicket and ReklaTicketStatus instances, redirects to success url
-		self.object = form.save(commit=False)
 		
+		self.object = form.save(commit=False)
 		# pre-processing for ReklaTicket goes here
 		self.object.kunde_id = customer_search.cleaned_data['kundennummer']
-		
 		self.object.save()
 
 		status_form = status_form.save(commit=False)
@@ -158,8 +182,13 @@ class CreateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateVi
 
 		return HttpResponseRedirect(self.get_success_url())
 
-	# TODO: Add customer_search to argument list
+	# TODO: Add customer_search to argument list?
 	def form_invalid(self, request, form, status_form, files_form):
+		"""
+		Custom form_invalid behavior used to return input values from
+			additional forms on page
+		"""
+
 		# Called if form invalid, re-renders context data with data-filled forms and errors
 
 		return render(
@@ -174,10 +203,20 @@ class CreateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateVi
 
 
 class DisplayTicket(LoginRequiredMixin, generic.DetailView, common_mixins.NotificationsMixin):
+	"""
+	Django DetailView used to display details of a given ReklaTicket
+		object
+	"""
+
 	model = models.ReklaTicket
 	template_name_suffix = '_detail'
 
 	def get_context_data(self, **kwargs):
+		"""
+		Custom get_context_data used to include past and current 
+			statuses
+		"""
+
 		data = super().get_context_data(**kwargs)
 		
 		data['status_updates'] = models.ReklaStatusUpdate.objects.filter(rekla_ticket=self.kwargs['pk']).order_by('-id')
@@ -190,6 +229,10 @@ class DisplayTicket(LoginRequiredMixin, generic.DetailView, common_mixins.Notifi
 
 # TODO: Rename to be less ambiguous, maybe something like EditTicket
 class UpdateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.UpdateView, common_mixins.NotificationsMixin):
+	"""
+	Django UpdateView used to edit attributes of ReklaTicket objects
+	"""
+
 	model = models.ReklaTicket
 	permission_required = ('warranty.add_reklaticket',)
 	template_name_suffix = '_update_modal'
@@ -199,6 +242,10 @@ class UpdateTicket(LoginRequiredMixin, PermissionRequiredMixin, generic.UpdateVi
 
 
 class AddFile(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView, common_mixins.NotificationsMixin):
+	"""
+	Django CreateView used to create ReklaFile objects
+	"""
+
 	model = models.ReklaFile
 	permission_required = ('warranty.add_reklaticket',)
 	fields = ('beschreibung', 'file', 'anmerkung',)
@@ -206,11 +253,20 @@ class AddFile(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView, c
 	template_name = 'warranty/add_file.html'
 
 	def get_context_data(self, **kwargs):
+		"""
+		Custom get_context_data used to retrieve ticket using pk 
+			keyword from URL
+		"""
+
 		data = super().get_context_data(**kwargs)
 		data['ticket_id'] = self.kwargs['pk']
 		return data
 
 	def form_valid(self, form):
+		"""
+		Custom form_valid used to set rekla_ticket using pk keyword from URL
+		"""
+
 		rekla_ticket = models.ReklaTicket.objects.filter(id=self.kwargs['pk'])
 		form.instance.rekla_ticket = rekla_ticket[0]
 
@@ -219,6 +275,10 @@ class AddFile(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView, c
 
 # TODO: Why doesn't this use the StatusUpdateForm created in forms?
 class UpdateStatus(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView, common_mixins.NotificationsMixin):
+	"""
+	Django CreateView used to create ReklaStatusUpdate objects
+	"""
+
 	model = models.ReklaStatusUpdate
 	permission_required = ('warranty.add_reklaticket',)
 	fields = ('status', 'anmerkung')
@@ -226,11 +286,21 @@ class UpdateStatus(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateVi
 	template_name = 'warranty/update_status.html'
 
 	def get_context_data(self, **kwargs):
+		"""
+		Custom get_context_data behavior used to set ReklaTicket object
+			using pk keyword from URL
+		"""
+
 		data = super().get_context_data(**kwargs)
 		data['ticket_id'] = self.kwargs['pk']
 		return data
 
 	def form_valid(self, form):
+		"""
+		Custom form_valid behavior used to set ReklaTicket object using
+			pk keyword from URL
+		"""
+
 		rekla_ticket = models.ReklaTicket.objects.filter(id=self.kwargs['pk'])
 		form.instance.rekla_ticket = rekla_ticket[0]
 		return super().form_valid(form)
@@ -238,6 +308,10 @@ class UpdateStatus(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateVi
 
 # TODO: Value pk is not used
 def display_file(request, pk, sk):
+	"""
+	Function based view used to display files belonging to a given ReklaTicket object
+	"""
+
 	file_object = get_object_or_404(models.ReklaFile, id=sk)
 
 	context = {

@@ -33,7 +33,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 if PRODUCTION is True:
     DEBUG = False
 
-    with open('megabike_crm/secret_key.txt') as f:
+    with open(os.path.join(BASE_DIR,'megabike_crm/secret_key.txt')) as f:
         SECRET_KEY = f.read().strip()
 
     CSRF_COOKIE_SECURE = True
@@ -172,7 +172,7 @@ LOGGING = {
         'file': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
-            'filename': 'logs/megabikeCRM-info.log',
+            'filename': os.path.join(BASE_DIR, 'logs/megabikeCRM-info.log'),
             'formatter': 'timestamp',
         },
         'console': {

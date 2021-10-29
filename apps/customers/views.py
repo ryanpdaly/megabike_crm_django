@@ -19,6 +19,16 @@ from apps.warranty import models as warranty_models
 # TODO: Rework this as CBV?
 @login_required
 def bike_detail_view(request, pk, rn):
+	"""
+	Function based view used to display the details of a bike object
+
+	Parameters
+	----------
+	request: A Django request object
+	pk: The 'kundennummer' of the customer the bike belongs to
+	rn: The 'rahmennummer' of the bike
+	"""
+
 	customer_instance = get_object_or_404(models.Customer, pk=pk)
 	bike_instance = get_object_or_404(models.Bike, rahmennummer=rn)
 	insurance = bike_instance.insurance
@@ -56,6 +66,15 @@ def bike_detail_view(request, pk, rn):
 # TODO: Rework this as CBV?
 @login_required
 def bike_input_view(request, pk):
+	"""
+	A function based view used to create bike objects
+
+	Parameters
+	----------
+	request: A Django request object
+	pk: The 'kundennummer' of the customer to whom the bike belongs
+	"""
+
 	customer_instance = get_object_or_404(models.Customer, pk=pk)
 
 	if request.method == "POST":
@@ -83,6 +102,10 @@ def bike_input_view(request, pk):
 	return render(request, 'customers/bike_input.html', context=context)
 
 class BikeUpdateView(LoginRequiredMixin, generic.UpdateView, common_mixins.NotificationsMixin):
+	"""
+	A Django UpdateView used to update the attributes of a bike object
+	"""
+
 	model = models.Bike
 	fields = '__all__'
 
@@ -93,6 +116,10 @@ class BikeUpdateView(LoginRequiredMixin, generic.UpdateView, common_mixins.Notif
 # TODO: Rework as CBV?
 @login_required
 def customer_detail_view(request, pk):
+	"""
+	A Django function based view used to display the details of a customer object
+	"""
+
 	customer_instance = get_object_or_404(models.Customer, pk=pk)
 	bikes = models.Bike.objects.filter(kunde=pk)
 	
@@ -123,12 +150,20 @@ def customer_detail_view(request, pk):
 
 # TODO: This does not check if customer already exists, does not handle error elequently.
 class CustomerInputView(LoginRequiredMixin, generic.CreateView, common_mixins.NotificationsMixin):
+	"""
+	A Django CreateView used to create customer objects
+	"""
+
 	model = models.Customer
 	template_name = 'customers/customer_input.html'
 
 	form_class = forms.CustomerForm
 
 	def form_valid(self, form):
+		"""
+		Custom form_valid that checks and saves forms from BikeFormset
+		"""
+
 		context = self.get_context_data()
 		bikes = context['bikes']
 		self.object = form.save()
@@ -139,6 +174,10 @@ class CustomerInputView(LoginRequiredMixin, generic.CreateView, common_mixins.No
 
 
 	def get_context_data(self, **kwargs):
+		"""
+		Custom get_context_data that adds BikeFormset to context_data 
+		"""
+
 		data = super().get_context_data(**kwargs)
 
 		if self.request.POST:
@@ -148,6 +187,11 @@ class CustomerInputView(LoginRequiredMixin, generic.CreateView, common_mixins.No
 		return data
 
 	def get_success_url(self):
+		"""
+		Reads the "name" attribute of the save button on the form in 
+		order to forward dynamically
+		"""
+
 		# TODO: This is going to scale incredibly poorly. Figure out a better solution
 		if self.request.POST.get('to_customer_list'):
 			return reverse('customers:customer-list')
@@ -160,12 +204,21 @@ class CustomerInputView(LoginRequiredMixin, generic.CreateView, common_mixins.No
 
 
 class CustomerListView(LoginRequiredMixin, generic.ListView, common_mixins.NotificationsMixin):
+	"""
+	A Django ListView that displays a list of customer objects
+	"""
+
 	model = models.Customer
 	template_name = 'customers/customer_list.html'
 
+	# What does this even do? Why is this even here?
 	register = template.Library()
 
 class CustomerUpdateView(LoginRequiredMixin, generic.UpdateView, common_mixins.NotificationsMixin):
+	"""
+	A Django UpdateView used to update customer object attributes
+	"""
+
 	model = models.Customer
 
 	template_name_suffix = '_update'

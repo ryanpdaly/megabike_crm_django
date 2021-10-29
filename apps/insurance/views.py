@@ -26,6 +26,10 @@ logger = logging.getLogger(__name__)
 # TODO: Rework as CBV
 @login_required
 def input_insurance(request, rn, insurance):
+	"""
+	Function based view used to input insurance policies
+	"""
+
 	bike_instance = get_object_or_404(customer_models.Bike, rahmennummer=rn)
 	kdnr = bike_instance.kunde.kundennummer
 	rn = bike_instance.rahmennummer
@@ -81,8 +85,12 @@ def input_insurance(request, rn, insurance):
 
 
 # TODO: Rework as CBV
+# FIXME: Rename to something less ambiguous like insurance_policies_list
 @login_required
 def list_all(request):
+	"""
+	Function based view used to display all insurance policies
+	"""
 
 	policies = customer_models.Bike.objects.exclude(insurance='no')
 
@@ -98,6 +106,10 @@ def list_all(request):
 
 
 class InfoPage(LoginRequiredMixin, generic.base.TemplateView, common_mixins.NotificationsMixin):
+	"""
+	Django Templateview used to display basic general information about insurance companies
+	"""
+
 	template_name = "insurance/info_page.html"
 
 	def get_context_data(self, **kwargs):
@@ -107,7 +119,8 @@ class InfoPage(LoginRequiredMixin, generic.base.TemplateView, common_mixins.Noti
 
 		return data
 
-	# TODO: Move to a common util file
+	# FIXME: This doesn't need to be in class, move to a common util
+	#		file
 	def read_json(self, path):
 		with open(path, 'r', encoding="UTF-8") as file:
 			return json.load(file)
@@ -116,6 +129,10 @@ class InfoPage(LoginRequiredMixin, generic.base.TemplateView, common_mixins.Noti
 # TODO: Rework as CBV
 @login_required
 def display_policy(request, rn):
+	"""
+	Function based view used to display insurance policy details
+	"""
+
 	bike_instance = get_object_or_404(customer_models.Bike, rahmennummer=rn)
 	insurance = bike_instance.insurance
 
@@ -157,6 +174,10 @@ def display_policy(request, rn):
 # TODO: Rework as CBV
 @login_required
 def schaden_list(request, status, company):
+	"""
+	Function based view used to display a list of Schadensmeldung objects
+	"""
+
 	company_filters = {
 		'Alle': 'all',
 		'Assona': 'as',
@@ -169,7 +190,7 @@ def schaden_list(request, status, company):
 		'Wertgarantie': 'we',
 	}
 	
-	# TODO: This is not DRY. Use one list for both model and view
+	# FIXME: This is not DRY. Use one list for both model and view
 	statuses = {
 		'KV eingereicht': 'kv',
 		'KV freigegeben': 'kvf',
@@ -181,11 +202,11 @@ def schaden_list(request, status, company):
 		'Abgelehnt': 'ab',
 	}
 	
-	# TODO: change insurance_current_status filter to use status instead of status display,
+	# FIXME: change insurance_current_status filter to use status instead of status display,
 	#  then use our erledigt_status list from insurance.models
 	erledigt = ['Bezahlt', 'Abgelehnt', ]
 
-	# TODO: Rename schaden_list, shadows function-view name
+	# FIXME: Rename schaden_list, shadows function-view name
 	if company != 'all':
 		schaden_list = models.Schadensmeldung.objects.filter(unternehmen=company)
 	else:
@@ -253,8 +274,11 @@ class SchadenDetail(LoginRequiredMixin, generic.DetailView, common_mixins.Notifi
 		return data
 
 
-# TODO: This view doesn't open the modal, seems to redirect to normal SchadenDetail
 class SchadenDetailModal(LoginRequiredMixin, generic.DetailView):
+	"""
+	Django Detailview used to display attributes of a given Schadensmeldung object
+	"""
+
 	model = models.Schadensmeldung
 	template = 'schadensmeldung_detail_modal.html'
 
@@ -273,6 +297,10 @@ class SchadenDetailModal(LoginRequiredMixin, generic.DetailView):
 
 
 class SchadenCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView, common_mixins.NotificationsMixin):
+	"""
+	Django Createview used to create new Schadensmeldung objects
+	"""
+
 	model = models.Schadensmeldung
 
 	# TODO: Setup permissions
@@ -418,6 +446,11 @@ class SchadenCreate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateV
 
 # TODO: Errors are not displayed on modal, redirects to page without any styling
 class SchadenEdit(LoginRequiredMixin, PermissionRequiredMixin, generic.UpdateView, common_mixins.NotificationsMixin):
+	"""
+	A Django Updateview used to edit the attributes of a given 
+		Schadensmeldung object
+	"""
+
 	model = models.Schadensmeldung
 	permission_required = ()
 	
@@ -439,6 +472,11 @@ class SchadenEdit(LoginRequiredMixin, PermissionRequiredMixin, generic.UpdateVie
 
 
 class SchadenStatusUpdate(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView, common_mixins.NotificationsMixin):
+	"""
+	Django Createview used to create SchadensmeldungStatus objects 
+		associated with a given Schadensmeldung object
+	"""
+
 	model = models.SchadensmeldungStatus
 	permission_required = ()
 
@@ -462,6 +500,11 @@ class SchadenStatusUpdate(LoginRequiredMixin, PermissionRequiredMixin, generic.C
 
 
 class SchadensmeldungAddFile(LoginRequiredMixin, generic.CreateView):
+	"""
+	Django Createview used to create SchadensmeldungFile objects
+		associated with a given Schadensmeldung object
+	"""
+
 	model = models.SchadensmeldungFile
 
 	# TODO: Why doesn't this use the form from insurance/forms.py?
@@ -481,6 +524,10 @@ class SchadensmeldungAddFile(LoginRequiredMixin, generic.CreateView):
 		return super().form_valid(form)
 
 def display_file(request, pk, sk):
+	"""
+	Function based view used to display SchadensmeldungFile objects
+	"""
+
 	file_object = get_object_or_404(models.SchadensmeldungFile, id=sk)
 
 	context={
