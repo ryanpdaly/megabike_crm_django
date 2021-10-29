@@ -1,9 +1,12 @@
 import json
+import os
+
+from django.conf import settings
 
 
-# TODO: Nothing in here is really a model. Rename/relocate?
+# FIXME: Nothing in here is really a model. Rename/relocate?
 
-# TODO: Where does this function even belong? Do I need a utils file?
+# FIXME: Where does this function even belong? Do I need a utils file?
 def json_to_tuple_list(file_in):
 	list_out = []
 
@@ -16,12 +19,12 @@ def json_to_tuple_list(file_in):
 	return list_out
 
 
-# TODO: Name this consistently? e.g. ABTEILUNGEN, MITARBEITER, LIEFERANTEN
+# FIXME: Name this consistently? e.g. ABTEILUNGEN, MITARBEITER, LIEFERANTEN
 ABTEILUNG_OPTIONS = (
 	('werkstatt', 'Werkstatt'),
 	('verkauf', 'Verkauf'),
 	('buero', 'Büro'),
 )
 
-MITARBEITER_ALL = json_to_tuple_list('local_lists/employees.json')
-LIEFERANTEN = json_to_tuple_list('local_lists/distributors.json')
+MITARBEITER_ALL = json_to_tuple_list(os.path.join(settings.BASE_DIR, 'local_lists/employees.json'))
+LIEFERANTEN = json_to_tuple_list(os.path.join(settings.BASE_DIR, 'local_lists/distributors.json'))

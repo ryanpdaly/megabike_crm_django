@@ -10,6 +10,20 @@ from apps.warranty import models as warranty_models
 
 
 def get_user_contact_tickets(request):
+	"""
+	A function used to retrieve phone contact notification data relevant to 
+	user for all function based views
+
+	Parameters
+	----------
+	request: A django request object
+
+	Returns
+	----------
+	open_contact_tickets: A querset of open contact tickets, excluding
+		those from user groups to which the user does not belong
+	"""
+
 	user_groups = request.user.groups.values_list('name', flat=True)
 
 	# TODO: This is defined in two places, fix that
@@ -27,7 +41,23 @@ def get_user_contact_tickets(request):
 
 	return open_contact_tickets
 
+# FIXME: The name of this function does not suggest that it only 
+#			returns a list if user belongs to proper group
 def get_faellige_insurance_tickets(request):
+	"""
+	A function used to retrieve insurance notification data relevant to 
+	user for all function based views
+
+	Parameters
+	----------
+	request: A django request object
+
+	Returns
+	----------
+	tickets_out: If user in insurance_responsibility group -a queryset
+		containing overdue insurance tickets
+	"""
+
 	user_groups = request.user.groups.values_list('name', flat=True)
 	if "insurance_responsibility" in user_groups:
 
@@ -53,7 +83,23 @@ def get_faellige_insurance_tickets(request):
 	else:
 		return None
 
+# FIXME: The name of this function does not suggest that it only 
+#			returns a list if user belongs to proper group
 def get_faellige_warranty_tickets(request):
+	"""
+	A function used to retrieve warranty notification data relevant to 
+	user for all function based views
+
+	Parameters
+	----------
+	request: A django request object
+
+	Returns
+	----------
+	tickets_out: If user in warranty_responsibility group - a queryset
+		containing overdue warranty tickets
+	"""
+
 	user_groups = request.user.groups.values_list('name', flat=True)
 
 	if "warranty_responsibility" in user_groups:
@@ -76,9 +122,17 @@ def get_faellige_warranty_tickets(request):
 	else:
 		return None
 
-# A mixin to pass required context data to our class based views in order to show alerts
 class NotificationsMixin(ContextMixin):
+	"""
+	A class mixin used to retrieve notification data relevant to user for all
+		class based views
+	"""
+
 	def get_context_data(self, *args, **kwargs):
+		"""
+		A class method that adds open contact tickets, insurance tickets, warranty tickets relevant to user to view context data 
+		"""
+
 		data = super().get_context_data(*args, **kwargs)
 
 		data['open_contact_tickets'] = self.get_user_contact_tickets()
@@ -88,13 +142,22 @@ class NotificationsMixin(ContextMixin):
 		return data
 
 	def get_faellige_insurance_tickets(self):
+		"""
+		A class method that checks if user is in the 
+		insurance_responsibility group and, if so, returns a queryset 
+		of open overdue tickets
+		"""
+
 		user_groups = self.request.user.groups.values_list('name', flat=True)
 		if "insurance_responsibility" in user_groups:
 
 			insurance_tickets = insurance_models.Schadensmeldung.objects.all()
 			insurance_tickets_excluded = []
 
-			# This will become terribly inefficient as we get more and more tickets. Solve this with either a different search/filter method or archiving old tickets.
+			# This will become terribly inefficient as we get more and 
+			# more tickets. Solve this with either a different 
+			# search/filter method or archiving old tickets.
+
 			for ticket in insurance_tickets:
 				newest_status = insurance_models.SchadensmeldungStatus.objects.filter(schadensmeldung=ticket).order_by('-id')[0]
 
@@ -112,6 +175,12 @@ class NotificationsMixin(ContextMixin):
 			return None
 
 	def get_faellige_warranty_tickets(self):
+		"""
+		A class method that checks if user is in the 
+		warranty_responsibility user group and, if so, returns a 
+		queryset of overdue warranty tickets
+		"""
+
 		user_groups = self.request.user.groups.values_list('name', flat=True)
 
 		if "warranty_responsibility" in user_groups:
@@ -135,6 +204,11 @@ class NotificationsMixin(ContextMixin):
 			return None
 
 	def get_user_contact_tickets(self):
+		"""
+		A class method that returns all open contact tickets relevant 
+			to the user based on user groups
+		"""
+
 		user_groups = self.request.user.groups.values_list('name', flat=True)
 
 		ABTEILUNG_GROUPS = {
@@ -154,6 +228,10 @@ class NotificationsMixin(ContextMixin):
 
 
 class CustomerSearchMixin:
+	"""
+	A class mixin to retrieve customer information for use with our 
+	customer search functionality in class based views
+	"""
 	def get_context_data(self, request, *args, **kwargs):
 		data = super().get_context_data(request, *args, **kwargs)
 

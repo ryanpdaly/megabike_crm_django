@@ -9,15 +9,27 @@ from apps.common import models as common_models
 from apps.customers import models as customers
 
 
+# FIXME: This function is incredibly unflexible, rewrite in common 
+# 			util file
 def set_path_and_rename(instance, filename):
+	"""
+	Sets path and name of uploaded file to form:
+		'kdXXXXX/UUID4_IDENTIFIER'
+	"""
+
 	ext = filename.split('.')[-1]
 	filename = f'kd{instance.rekla_ticket.kunde.kundennummer}/{uuid4()}.{ext}'
 
 	return filename
 
+# FIXME: This is buried here
 REKLA_STATUS_ERLEDIGT = ['erledigt']
 
 class ReklaTicket(models.Model):
+	"""
+	Django Model representing warranty cases
+	"""
+
 	kunde = models.ForeignKey(customers.Customer, on_delete=models.CASCADE)
 
 	sachbearbeiter = models.CharField(
@@ -50,6 +62,10 @@ class ReklaTicket(models.Model):
 		)
 
 class ReklaStatusUpdate(models.Model):
+	"""
+	Django model representing status updates to warranty tickets
+	"""
+
 	STATUS_LIST = (
 		('offen', 'Offen'),
 		('gemeldet', 'Beim Hersteller gemeldet'),
@@ -79,6 +95,10 @@ class ReklaStatusUpdate(models.Model):
 		super(ReklaStatusUpdate, self).save()
 
 class ReklaFile(models.Model):
+	"""
+	Django model representing files attached to warranty tickets
+	"""
+
 	rekla_ticket = models.ForeignKey(ReklaTicket, on_delete = models.CASCADE)
 	date = models.DateField()
 	beschreibung = models.CharField(max_length=30)

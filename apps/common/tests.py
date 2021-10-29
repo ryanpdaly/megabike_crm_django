@@ -4,6 +4,9 @@ from django.urls import reverse
 
 
 class TestViewBasics(object):
+	"""
+	A class that tests the basic functionality of our class based views
+	"""
 
 	@classmethod
 	def setUpTestData(self):

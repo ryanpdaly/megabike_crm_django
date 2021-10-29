@@ -7,8 +7,11 @@ from apps.common import models as common_models
 
 
 class PhoneContact(models.Model):
+	"""
+	A Django Model for customer phone contact tickets
+	"""
 	
-	# Use list from common.models?
+	# FIXME: Use list from common.models or from local_lists
 	ABTEILUNG_OPTIONS = (
 		('werkstatt', 'Werkstatt'),
 		('verkauf', 'Verkauf'),
@@ -46,11 +49,19 @@ class PhoneContact(models.Model):
 		return f'{self.date}: {self.kundenname}'
 
 	def save(self):
+		"""
+		A class method that sets the sets the date of creation for 
+		phone contact ticket
+		"""
+
 		if not self.id:
 			self.date = datetime.date.today()
 		super(PhoneContact, self).save()
 
 class OutgoingCall(models.Model):
+	"""
+	A Django Model representing outgoing calls
+	"""
 	called_on = models.DateTimeField(auto_now_add=True)
 
 	auftragsnr = models.CharField(max_length=16,)

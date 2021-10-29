@@ -41,8 +41,8 @@ class DjangoApplication(object):
 			'log.screen': True,
 
 			'server.ssl_module': 'builtin',
-			'server.ssl_certificate': 'ssl_certs/cert.pem',
-			'server.ssl_private_key': 'ssl_certs/privkey.pem',
+			'server.ssl_certificate': os.path.join(settings.BASE_DIR, 'ssl_certs/cert.pem'),
+			'server.ssl_private_key': os.path.join(settings.BASE_DIR, 'ssl_certs/privkey.pem'),
 		})
 		self.mount_static(settings.STATIC_URL, settings.STATIC_ROOT)
 

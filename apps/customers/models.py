@@ -3,10 +3,17 @@ from django.urls import reverse, reverse_lazy
 
 
 class Customer(models.Model):
+	"""
+	Django Model used to represent customers
+	"""
+
 	kundennummer = models.IntegerField(unique=True, primary_key=True)
 	nachname = models.CharField(max_length=30)
 
 	class Meta:
+		"""
+		Sets verbose names of customers to Kunde/Kunden
+		"""
 		verbose_name = "Kunde"
 		verbose_name_plural = "Kunden"
 
@@ -17,8 +24,12 @@ class Customer(models.Model):
 		return reverse('customers:customer-detail', args=[str(self.kundennummer)])
 
 
-# TODO: We should not be able to set insurance without simultaneously creating an insurance policy object from our insurance app
+# FIXME: We should not be able to set insurance without simultaneously creating an insurance policy object from our insurance app
 class Bike(models.Model):
+	"""
+	Django Model used to represent bikes belonging to customers
+	"""
+
 	INSURANCE_OPTIONS = (
 		('no', 'None'),
 		('as', 'Assona'),

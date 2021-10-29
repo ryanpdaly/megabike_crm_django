@@ -7,6 +7,9 @@ from apps.common import mixins as common_mixins
 # TODO: Rework as CBV
 @login_required
 def leasing_info_page(request, unternehmen):
+	"""
+	Function based view used to display basic, general information for leasing companies
+	"""
 
 	context = {
 		'open_contact_tickets': common_mixins.get_user_contact_tickets(request),
