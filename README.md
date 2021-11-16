@@ -1,2 +1,2 @@
 # megabike_crm_django
- A CRM tool for Megabike in Django
+ A basic CRM tool in Django, written for use in the service department of a bike shop.
